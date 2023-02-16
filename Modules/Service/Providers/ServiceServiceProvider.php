@@ -4,6 +4,8 @@ namespace Modules\Service\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Service\Repositories\Interfaces\ServiceRepositoryInterface;
+use Modules\Service\Repositories\ServiceRepository;
 
 
 class ServiceServiceProvider extends ServiceProvider
