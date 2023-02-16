@@ -29,6 +29,3 @@ Route::post('reset/password', [RestePasswordController::class, 'reset']);
 
 
 
-Route::apiResource('service', ServiceController::class);
-Route::apiResource('Category', CategoryController::class);
-
