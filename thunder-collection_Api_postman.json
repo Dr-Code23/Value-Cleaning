@@ -1,0 +1,351 @@
+{
+    "info": {
+        "name": "Api",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": ""
+    },
+    "item": [
+        {
+            "name": "Service",
+            "item": [
+                {
+                    "name": "Service",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/service",
+                            "path": [
+                                "api",
+                                "service"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "127",
+                                "0",
+                                "0",
+                                "1"
+                            ],
+                            "port": "8000"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Category",
+            "item": [
+                {
+                    "name": "category",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/Category",
+                            "path": [
+                                "api",
+                                "Category"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "127",
+                                "0",
+                                "0",
+                                "1"
+                            ],
+                            "port": "8000"
+                        }
+                    }
+                },
+                {
+                    "name": "category/create",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/Category",
+                            "path": [
+                                "api",
+                                "Category"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "127",
+                                "0",
+                                "0",
+                                "1"
+                            ],
+                            "port": "8000"
+                        },
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "title",
+                                    "value": "cleaning",
+                                    "type": "default"
+                                },
+                                {
+                                    "key": "gallery",
+                                    "src": "c:\\Users\\p41\\Desktop\\code.png",
+                                    "type": "file"
+                                },
+                                {
+                                    "key": "gallery",
+                                    "src": "c:\\Users\\p41\\Desktop\\code.png",
+                                    "type": "file"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "register",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/register",
+                            "path": [
+                                "api",
+                                "register"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "127",
+                                "0",
+                                "0",
+                                "1"
+                            ],
+                            "port": "8000"
+                        },
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "name",
+                                    "value": "mohammed"
+                                },
+                                {
+                                    "key": "email",
+                                    "value": "mohammed.poop4444@gmail.com"
+                                },
+                                {
+                                    "key": "address",
+                                    "value": "sohage"
+                                },
+                                {
+                                    "key": "phone",
+                                    "value": "01126929865"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "123456789"
+                                },
+                                {
+                                    "key": "password_confirmation",
+                                    "value": "123456789"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "login",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/login",
+                            "path": [
+                                "api",
+                                "login"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "127",
+                                "0",
+                                "0",
+                                "1"
+                            ],
+                            "port": "8000"
+                        },
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "name",
+                                    "value": "mohammed",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "email",
+                                    "value": "mohammed.poop4444@gmail.com"
+                                },
+                                {
+                                    "key": "address",
+                                    "value": "sohage",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "phone",
+                                    "value": "01126929865",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "123456789"
+                                },
+                                {
+                                    "key": "password_confirmation",
+                                    "value": "123456789",
+                                    "disabled": true
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "forgetpassword",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/change/password",
+                            "path": [
+                                "api",
+                                "change",
+                                "password"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "127",
+                                "0",
+                                "0",
+                                "1"
+                            ],
+                            "port": "8000"
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiM2QyMjg3OWQ3MmFjNWM4MWRlMTA0M2MwNDMwMzRlNmU1NzQ0ODlkNzczNjlkMzQyNGFlMDdjZjI5NTBmYTVmOWI4NWIxMzY5MzE1NmE2YjYiLCJpYXQiOjE2NDQ3NDQwODYuODM5NDU2LCJuYmYiOjE2NDQ3NDQwODYuODM5NDY1LCJleHAiOjE2NzYyODAwODYuODI5ODA0LCJzdWIiOiI1Iiwic2NvcGVzIjpbXX0.IHnOJivYrPqO6ywSbmzSN9f04FH7bzRhnOC225E35nAi5A_qu-TJFA1H2Wn1Hp5mFzEqcpiZwyz3Zcq4nVGHJeeVZ-fD0ROQuQaq-p24RDxLIu16XSFcg_k14Xc30UxbQdErX6UU6bGahIUHWQkMKJ7gBlkLEX0LlFEmpfazcUw_P88mr_jJub2WuHrACnh8kAL4qVt8z4Asi6mKU_YiyCxVHNczuuV6gdIW1-1t1Ied39l5fwALEKkJES6UJRRO4r4cqJ5gierDoOc0D3WKGZEBiRifyg2mAv35aO6CUoXyiy_2bzcGZTGM1X4HHSNxYEVY-lb9lfniGU5Zu7idDa40JH_bFDt99qm2HruQ-WSg_yrNAKlzD-SR13RvkkFnRCJ76P2lZSM53I0VtFIH0cxlo4rMdl_MY37hrcL1vAaTgkmT0d8--YImyM9NMxS4LUZuD2EV962FGfhaTZoxqMxgpgj3K68pTgOahSCjc9DnEVH9RUypbV-vZWTIcURAOCz1g2dn0c4TuCGdAwB3KEimOhTgAltT4OrTv7_Y1k5w6EoTkyFBkM_ziDrlSKR0MtvGvFJic6BeVJqPdvYepTFWfOi4CgL5zbkE82XnHVHWmXGrmgEJpsNUTYG6Jgl2djA06Qzd6y61L4S8GGg7bMxFSQUUgtyb2nFbWNECQyQ",
+                                "disabled": true
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "email",
+                                    "value": "mohammed.poop444@gmail.com",
+                                    "type": "default"
+                                },
+                                {
+                                    "key": "code",
+                                    "value": "519666",
+                                    "disabled": true,
+                                    "type": "default"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "12345678910",
+                                    "disabled": true,
+                                    "type": "default"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "check reset verification code",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/forgot/check-code",
+                            "path": [
+                                "api",
+                                "forgot",
+                                "check-code"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "127",
+                                "0",
+                                "0",
+                                "1"
+                            ],
+                            "port": "8000"
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiM2QyMjg3OWQ3MmFjNWM4MWRlMTA0M2MwNDMwMzRlNmU1NzQ0ODlkNzczNjlkMzQyNGFlMDdjZjI5NTBmYTVmOWI4NWIxMzY5MzE1NmE2YjYiLCJpYXQiOjE2NDQ3NDQwODYuODM5NDU2LCJuYmYiOjE2NDQ3NDQwODYuODM5NDY1LCJleHAiOjE2NzYyODAwODYuODI5ODA0LCJzdWIiOiI1Iiwic2NvcGVzIjpbXX0.IHnOJivYrPqO6ywSbmzSN9f04FH7bzRhnOC225E35nAi5A_qu-TJFA1H2Wn1Hp5mFzEqcpiZwyz3Zcq4nVGHJeeVZ-fD0ROQuQaq-p24RDxLIu16XSFcg_k14Xc30UxbQdErX6UU6bGahIUHWQkMKJ7gBlkLEX0LlFEmpfazcUw_P88mr_jJub2WuHrACnh8kAL4qVt8z4Asi6mKU_YiyCxVHNczuuV6gdIW1-1t1Ied39l5fwALEKkJES6UJRRO4r4cqJ5gierDoOc0D3WKGZEBiRifyg2mAv35aO6CUoXyiy_2bzcGZTGM1X4HHSNxYEVY-lb9lfniGU5Zu7idDa40JH_bFDt99qm2HruQ-WSg_yrNAKlzD-SR13RvkkFnRCJ76P2lZSM53I0VtFIH0cxlo4rMdl_MY37hrcL1vAaTgkmT0d8--YImyM9NMxS4LUZuD2EV962FGfhaTZoxqMxgpgj3K68pTgOahSCjc9DnEVH9RUypbV-vZWTIcURAOCz1g2dn0c4TuCGdAwB3KEimOhTgAltT4OrTv7_Y1k5w6EoTkyFBkM_ziDrlSKR0MtvGvFJic6BeVJqPdvYepTFWfOi4CgL5zbkE82XnHVHWmXGrmgEJpsNUTYG6Jgl2djA06Qzd6y61L4S8GGg7bMxFSQUUgtyb2nFbWNECQyQ",
+                                "disabled": true
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "email",
+                                    "value": "mohammed.poop444@gmail.com",
+                                    "type": "default"
+                                },
+                                {
+                                    "key": "code",
+                                    "value": "794263",
+                                    "type": "default"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "update password",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://127.0.0.1:8000/api/reset/password",
+                            "path": [
+                                "api",
+                                "reset",
+                                "password"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "127",
+                                "0",
+                                "0",
+                                "1"
+                            ],
+                            "port": "8000"
+                        },
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "email",
+                                    "value": "mohammed.poop444@gmail.com",
+                                    "type": "default"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "123456789",
+                                    "type": "default"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
