@@ -91,12 +91,4 @@ return response()->json([
 
    
 }
-Illuminate\Contracts\Container\BindingResolutionException: Target [App\Repositories\Interfaces\ServiceRepositoryInterface] is not instantiable while building [App\Http\Controllers\Admin\ServiceController]. in file E:\Dc.Code\New folder\value-cleanning\vendor\laravel\framework\src\Illuminate\Container\Container.php on line 1103
-
-#0 E:\Dc.Code\New folder\value-cleanning\vendor\laravel\framework\src\Illuminate\Container\Container.php(898): Illuminate\Container\Container-&gt;notInstantiable(&#039;App\\Repositorie...&#039;)
-#1 E:\Dc.Code\New folder\value-cleanning\vendor\laravel\framework\src\Illuminate\Container\Container.php(770): Illuminate\Container\Container-&gt;build(&#039;App\\Repositorie...&#039;)
-#2 E:\Dc.Code\New folder\value-cleanning\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(856): Illuminate\Container\Container-&gt;resolve(&#039;App\\Repositorie...&#039;, Array, true)
-#3 E:\Dc.Code\New folder\value-cleanning\vendor\laravel\framework\src\Illuminate\Container\Container.php(706): Illuminate\Foundation\Application-&gt;resolve(&#039;App\\Repositorie...&#039;, Array)
-#4 E:\Dc.Code\New folder\value-cleanning\vendor\laravel\framework\src\Illuminate\Foundation\Application.php(841): Illuminate\Container\Container-&gt;make(&#039;App\\Repositorie...&#039;, Array)
-#5 E:\Dc.Code\New folder\value-cleanning\vendor\laravel\framework\src\Illuminate\Container\Container.php(1043): Illuminate\Foundation\Application-&gt;make(&#039;App\\Repositorie...&#039;)
-#6 E:\Dc.Code\New folder\valu
+ 
