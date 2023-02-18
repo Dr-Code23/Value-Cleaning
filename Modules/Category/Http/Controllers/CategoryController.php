@@ -6,19 +6,19 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Category\Entities\Category;
-
+use Modules\Category\Transformers\CategoryResource;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        $Categories= Category::latest()->paginate(10);  
+        $Categories= Category::latest()->get();
+        return CategoryResource::collection($Categories);
 
-        return response()->json(['statusCode' => 200,'status' => true , '$category' =>  $Categories ]);
     }
 
     /**
@@ -28,14 +28,14 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        
+
       }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return array|\Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -46,17 +46,23 @@ class CategoryController extends Controller
 
         $requestData = $request->all();
 
-         $category=Category::create($requestData); 
+         $category=Category::create($requestData);
 
 
-      
-        $category->addMediaFromRequest('gallery')->toMediaCollection('category_images');
+
+        $category->addMediaFromRequest('gallery')->toMediaCollection('categories');
         $category->save();
 
-       
-     
+
+
      //sending the model data to the frontend
-     return response()->json(['statusCode' => 200,'status' => true , '$category' =>  $category ]);
+     return [
+         'statusCode' => 200,
+         'status' => true ,
+         'message' => 'Category stored successfully ',
+         'data' => new CategoryResource($category)
+
+     ];
 
        }
 
@@ -64,12 +70,15 @@ class CategoryController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return CategoryResource
      */
     public function show($id)
     {
-        //
+        $Category = Category::find($id);
+
+        return new CategoryResource($Category);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -87,7 +96,7 @@ class CategoryController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function update(Request $request, $id)
     {
@@ -97,30 +106,18 @@ class CategoryController extends Controller
             'title' => 'required|string|max:255',
             "gallery" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
         ]);
-
-        $Category = Category::where('id', $id)->first();
-
-        if($request->gallery){
-        
-            foreach($request->gallery as $image ){
-                $Category->addMedia($image)->toMediaCollection('Category_images');
-            }
-
-            $Category->name = $request['title'];
-            $Category->description = $request['description'];
-            $Category->price = $request['price'];         
-            $Category->refresh(); 
-
-          }
-          
-          //sending the model request to the frontend
-        $Category->name = $request['title'];
-        $Category->gallery = $request['gallery'];
-        $Category->description = $request['description'];
-        $Category->price = $request['price'];
-
+        $Category = Category::find($id)->first();
+        $Category->title = $request->title;
         $Category->save();
-        return response()->json(['statusCode' => 200,'status' => true , '$category' =>  $Category ]);
+
+        if ($request->hasFile('gallery')) {
+            $Category->addMediaFromRequest('gallery')->toMediaCollection('categories');
+        }
+
+        return ['statusCode' => 200,'status' => true ,
+            'message' => 'Category updated successfully ',
+            'data' => new CategoryResource($Category)
+        ];
 
     }
 
@@ -128,14 +125,14 @@ class CategoryController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
         $Category = Category::find($id);
-        $Category->delete();   
+        $Category->delete();
 
-       $message="deleted " + $Category->title;
+       $message="deleted " ;
         return response()->json(['statusCode' => 200,'status' => true , 'message' =>  $message ]);
 
      }

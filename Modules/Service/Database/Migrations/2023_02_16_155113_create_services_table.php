@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('gallery');
             $table->string('description');
-            $table->unSignedBigInteger("category_id");
-            $table->foreign("category_id")->references("id")->on("categories");
-            $table->unSignedBigInteger("offer_id");
-            $table->integer('price');
+            $table->foreignId('category_id')
+                ->constrained('categories')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+            $table->double('price');
             $table->timestamps();
         });
     }

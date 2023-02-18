@@ -12,10 +12,10 @@ class Category extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $fillable = ['title',
-    'gallery',];
+    ];
 
 
-   
+
     protected static function newFactory()
     {
         return \Modules\Category\Database\factories\CategoryFactory::new();

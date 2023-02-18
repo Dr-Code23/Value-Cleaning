@@ -10,22 +10,15 @@ class ServiceRepository implements ServiceRepositoryInterface
 
     public function allServices()
     {
-        return Service::latest()->paginate(10);
+        return Service::latest()->get();
     }
 
     public function storeService($data)
-    {       
-      $Service=  Service::create($data);
-        if($data->gallery){
+    {
 
-            foreach($data->gallery as $image ){
-                $Service->addMedia($image)->toMediaCollection('service_images');
-            }
-          }
 
-          //sending the model data to the frontend
-          $Service->refresh();         
-          return $Service;
+
+          return Service::create($data);
 
     }
 
@@ -35,29 +28,17 @@ class ServiceRepository implements ServiceRepositoryInterface
     }
 
     public function updateService($data, $id)
-    {           
+    {
          $Service = Service::where('id', $id)->first();
 
-        if($data->gallery){
-        
-            foreach($data->gallery as $image ){
-                $Service->addMedia($image)->toMediaCollection('service_images');
-            }
 
-            $Service->name = $data['title'];
-            $Service->description = $data['description'];
-            $Service->price = $data['price'];         
-            $Service->refresh(); 
-
-          }
-          
           //sending the model data to the frontend
-        $Service->name = $data['title'];
-        $Service->gallery = $data['gallery'];
+        $Service->title = $data['title'];
         $Service->description = $data['description'];
         $Service->price = $data['price'];
-
+        $Service->category_id = $data['category_id'];
         $Service->save();
+       return $Service;
     }
 
     public function destroyService($id)
