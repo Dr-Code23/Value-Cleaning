@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\UserController;
+use App\Http\Controllers\Api\Auth\ChangePasswordController;
+use App\Http\Controllers\Api\Auth\UserProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
@@ -29,7 +31,10 @@ Route::post('reset/password', [RestePasswordController::class, 'reset']);
 
 Route::group(['middleware' => 'auth:api'], function () {
 
-    Route::get('logout', [AuthController::class, 'Logout']);
+    Route::get('logout', [UserProfileController::class, 'Logout']);
+    Route::get('profile', [UserProfileController::class, 'profile']);
+    Route::post('update/profile', [UserProfileController::class, 'UpdateProfile']);
+    Route::post('change-password', [ChangePasswordController::class, 'changePassword']);
 
 
 });
@@ -41,5 +46,4 @@ Route::prefix("admin")->middleware(['auth','role:admin'])->group(function(){
 });
 
 
-Route::group(['middleware' => 'auth:api'], function () {
-});
+

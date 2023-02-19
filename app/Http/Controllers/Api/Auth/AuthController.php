@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use App\Http\Controllers\Api\Resources\UserResource;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use JWTAuth;
@@ -22,7 +23,7 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed|min:6',
             'address' =>'required',
             'phone' =>'required',
-           
+
 
         ]);
         if($validator->fails()){
@@ -33,14 +34,18 @@ class AuthController extends Controller
         $user = User::create(array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password),
-           
+
             ]
         ));
-return response()->json([
-    'success' => true,
-    'message' => 'User successfully registered',
-    'user' => $user
-], 201);
+        $user->assignRole('user');
+
+
+
+        return ['statusCode' => 200,'status' => true ,
+            'message' => 'User successfully registered ',
+            'data' => new UserResource($user)
+        ];
+
 
 
     }
@@ -63,9 +68,9 @@ return response()->json([
         }
 
         //Request is validated
-        //Crean token
+        //Create token
         try {
-           
+
             if (! $token = Auth::attempt($credentials)) {
                 return response()->json([
                 	'success' => false,
@@ -78,9 +83,9 @@ return response()->json([
                 	'message' => 'Could not create token.',
                 ], 500);
         }
- 	
+
         $user = Auth::user();
-                
+
         return response()->json([
             'success' => true,
             'message' => 'User successfully login',
@@ -89,13 +94,5 @@ return response()->json([
         ]);
     }
 
-    public function logout()
-    {
-        Auth::logout();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Successfully logged out',
-        ]);
-    }
+
 }
- 
