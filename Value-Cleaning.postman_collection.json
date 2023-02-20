@@ -19,17 +19,17 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "mohammed",
+									"value": "mohammedkkkkkkkkkkk",
 									"type": "text"
 								},
 								{
 									"key": "email",
-									"value": "mohammed.poop44@gmail.com",
+									"value": "mohammed4ljk4@gmail.com",
 									"type": "text"
 								},
 								{
 									"key": "address",
-									"value": "sohage",
+									"value": "sohagee",
 									"type": "text"
 								},
 								{
@@ -75,14 +75,30 @@
 				{
 					"name": "update profile",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjc2ODAxMjk2LCJleHAiOjE2NzY4MDQ4OTYsIm5iZiI6MTY3NjgwMTI5NiwianRpIjoiRWVQTVpKdDlmaXFVbUFncyIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.C1ZQc7MeV7fzOqkBuxpV72aS7bcwf_ijJz96v5tHEZ8",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
 								{
 									"key": "name",
-									"value": "mohammed",
+									"value": "mohammedd",
 									"type": "text"
 								},
 								{
@@ -103,12 +119,14 @@
 								{
 									"key": "password",
 									"value": "123456789",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "password_confirmation",
 									"value": "123456789",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "photo",
@@ -140,7 +158,13 @@
 					"name": "login",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "urlencoded",
 							"urlencoded": [
@@ -151,7 +175,7 @@
 								},
 								{
 									"key": "email",
-									"value": "mohammed.poop44@gmail.com"
+									"value": "mohammed.poop@gmail.com"
 								},
 								{
 									"key": "address",
@@ -195,43 +219,43 @@
 				{
 					"name": "ChangePassword",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjc2OTI0NzM3LCJleHAiOjE2NzY5MjgzMzcsIm5iZiI6MTY3NjkyNDczNywianRpIjoicnI1YTNDOTZ2MG5Qc251VSIsInN1YiI6IjciLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.xBOWRH2LPKnPPsk0kfrG0aIumSD2YeLUrl2QxyoGhz0",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "name",
-									"value": "mohammed",
-									"disabled": true
+									"key": "current_password",
+									"value": "12345678910"
 								},
 								{
-									"key": "email",
-									"value": "mohammed.poop4444@gmail.com"
-								},
-								{
-									"key": "address",
-									"value": "sohage",
-									"disabled": true
-								},
-								{
-									"key": "phone",
-									"value": "01126929865",
-									"disabled": true
-								},
-								{
-									"key": "password",
+									"key": "new_password",
 									"value": "123456789"
 								},
 								{
-									"key": "password_confirmation",
-									"value": "123456789",
-									"disabled": true
+									"key": "new_password_confirmation",
+									"value": "123456789"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/login",
+							"raw": "http://127.0.0.1:8000/api/change-password",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -242,7 +266,7 @@
 							"port": "8000",
 							"path": [
 								"api",
-								"login"
+								"change-password"
 							]
 						}
 					},
@@ -425,7 +449,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjc2NzQ5MzA3LCJleHAiOjE2NzY3NTI5MDcsIm5iZiI6MTY3Njc0OTMwNywianRpIjoibHVBcjZSSlZ1bmVKdW5mNyIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.tKxl_6xkB-mzj0kWOhD0rlMA8kNzl0BTDmJM7p6UeH0",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjc2ODAxODg5LCJleHAiOjE2NzY4MDU0ODksIm5iZiI6MTY3NjgwMTg4OSwianRpIjoiekFlTUZFOWxFZk8zUVlWTCIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.8FnyPwTg5IH3PmwmVKf6AaSkBKwbOetNrX7H5azm8-M",
 									"type": "string"
 								}
 							]
@@ -519,7 +543,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/auth/facbook",
+							"raw": "http://127.0.0.1:8000/api/auth/facebook",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -531,7 +555,7 @@
 							"path": [
 								"api",
 								"auth",
-								"facbook"
+								"facebook"
 							]
 						}
 					},
@@ -581,7 +605,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/api/auth/facbook",
+							"raw": "http://127.0.0.1:8000/api/auth/google",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -593,7 +617,7 @@
 							"path": [
 								"api",
 								"auth",
-								"facbook"
+								"google"
 							]
 						}
 					},
@@ -654,7 +678,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL0FkbWluL0xvZ2luIiwiaWF0IjoxNjc2ODM2MTQyLCJleHAiOjE2NzY4Mzk3NDIsIm5iZiI6MTY3NjgzNjE0MiwianRpIjoiekVhOTBnOFBraUZuYng0OSIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.1hF039PVUJBDYAJyrYct7PJZYkU7cKEwQ9k2YtgrhuM",
+											"value": "",
 											"type": "string"
 										}
 									]
@@ -756,7 +780,7 @@
 										},
 										{
 											"key": "category_id",
-											"value": "2",
+											"value": "1",
 											"type": "text"
 										}
 									]
@@ -912,8 +936,24 @@
 						{
 							"name": "category",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL0FkbWluL0xvZ2luIiwiaWF0IjoxNjc2OTI3MDY1LCJleHAiOjE2NzY5MzA2NjUsIm5iZiI6MTY3NjkyNzA2NSwianRpIjoiNEF1bXJzb2F1b01tWk15diIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.50KtvzT-xVt-qtoaCeeVmKt93X1ebtUldinKk8QGHmM",
+											"type": "string"
+										}
+									]
+								},
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
 								"url": {
 									"raw": "http://127.0.0.1:8000/api/Category",
 									"protocol": "http",
@@ -938,7 +978,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/Category",
+									"raw": "http://127.0.0.1:8000/api/show/Category/1",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -949,7 +989,9 @@
 									"port": "8000",
 									"path": [
 										"api",
-										"Category"
+										"show",
+										"Category",
+										"1"
 									]
 								}
 							},
@@ -958,10 +1000,10 @@
 						{
 							"name": "category delete",
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/Category",
+									"raw": "http://127.0.0.1:8000/api/delete/Category/2",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -972,7 +1014,9 @@
 									"port": "8000",
 									"path": [
 										"api",
-										"Category"
+										"delete",
+										"Category",
+										"2"
 									]
 								}
 							},
@@ -1032,23 +1076,24 @@
 									"formdata": [
 										{
 											"key": "title",
-											"value": "cleaning",
+											"value": "cleaning4444",
 											"type": "default"
 										},
 										{
 											"key": "gallery",
 											"type": "file",
-											"src": "c:\\Users\\p41\\Desktop\\code.png"
+											"src": "/C:/Users/p41/Desktop/code.png"
 										},
 										{
 											"key": "gallery",
 											"type": "file",
-											"src": "c:\\Users\\p41\\Desktop\\code.png"
+											"src": "c:\\Users\\p41\\Desktop\\code.png",
+											"disabled": true
 										}
 									]
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/Category",
+									"raw": "http://127.0.0.1:8000/api/update/Category/1",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -1059,7 +1104,9 @@
 									"port": "8000",
 									"path": [
 										"api",
-										"Category"
+										"update",
+										"Category",
+										"1"
 									]
 								}
 							},
@@ -1075,6 +1122,21 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "email",
+											"value": "admin@gmail.com",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456789",
+											"type": "text"
+										}
+									]
+								},
 								"url": {
 									"raw": "http://127.0.0.1:8000/api/Admin/Login",
 									"protocol": "http",
@@ -1109,7 +1171,7 @@
 										},
 										{
 											"key": "email",
-											"value": "mohammed.poop44@gmail.com",
+											"value": "admin1111@gmail.com",
 											"type": "text"
 										},
 										{
@@ -1135,12 +1197,13 @@
 										{
 											"key": "photo",
 											"type": "file",
-											"src": "/C:/Users/p41/Desktop/code.png"
+											"src": "/C:/Users/p41/Desktop/code.png",
+											"disabled": true
 										}
 									]
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/register",
+									"raw": "http://127.0.0.1:8000/api/Admin/Register",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -1151,7 +1214,8 @@
 									"port": "8000",
 									"path": [
 										"api",
-										"register"
+										"Admin",
+										"Register"
 									]
 								}
 							},
@@ -1302,62 +1366,6 @@
 							"response": []
 						},
 						{
-							"name": "ChangePassword",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "name",
-											"value": "mohammed",
-											"disabled": true
-										},
-										{
-											"key": "email",
-											"value": "mohammed.poop4444@gmail.com"
-										},
-										{
-											"key": "address",
-											"value": "sohage",
-											"disabled": true
-										},
-										{
-											"key": "phone",
-											"value": "01126929865",
-											"disabled": true
-										},
-										{
-											"key": "password",
-											"value": "123456789"
-										},
-										{
-											"key": "password_confirmation",
-											"value": "123456789",
-											"disabled": true
-										}
-									]
-								},
-								"url": {
-									"raw": "http://127.0.0.1:8000/api/login",
-									"protocol": "http",
-									"host": [
-										"127",
-										"0",
-										"0",
-										"1"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"login"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "update profile",
 							"request": {
 								"method": "POST",
@@ -1432,7 +1440,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjc2NzQ5MzA3LCJleHAiOjE2NzY3NTI5MDcsIm5iZiI6MTY3Njc0OTMwNywianRpIjoibHVBcjZSSlZ1bmVKdW5mNyIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.tKxl_6xkB-mzj0kWOhD0rlMA8kNzl0BTDmJM7p6UeH0",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL0FkbWluL0xvZ2luIiwiaWF0IjoxNjc2OTI3MDY1LCJleHAiOjE2NzY5MzA2NjUsIm5iZiI6MTY3NjkyNzA2NSwianRpIjoiNEF1bXJzb2F1b01tWk15diIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.50KtvzT-xVt-qtoaCeeVmKt93X1ebtUldinKk8QGHmM",
 											"type": "string"
 										}
 									]
@@ -1465,7 +1473,7 @@
 									]
 								},
 								"url": {
-									"raw": "http://127.0.0.1:8000/api/profile",
+									"raw": "http://127.0.0.1:8000/api/Admin/profile",
 									"protocol": "http",
 									"host": [
 										"127",
@@ -1476,7 +1484,64 @@
 									"port": "8000",
 									"path": [
 										"api",
+										"Admin",
 										"profile"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ChangePassword Copy",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL0FkbWluL0xvZ2luIiwiaWF0IjoxNjc2OTI3MDY1LCJleHAiOjE2NzY5MzA2NjUsIm5iZiI6MTY3NjkyNzA2NSwianRpIjoiNEF1bXJzb2F1b01tWk15diIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.50KtvzT-xVt-qtoaCeeVmKt93X1ebtUldinKk8QGHmM",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "current_password",
+											"value": "123456789"
+										},
+										{
+											"key": "new_password",
+											"value": "1234567891"
+										},
+										{
+											"key": "new_password_confirmation",
+											"value": "1234567891"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/api/Admin-change-password",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"api",
+										"Admin-change-password"
 									]
 								}
 							},
