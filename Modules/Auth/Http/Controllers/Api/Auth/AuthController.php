@@ -3,11 +3,10 @@
 namespace Modules\Auth\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use JWTAuth;
 use Auth;
 use App\Models\User;
-use Request;
-
 use Modules\Auth\Http\Requests\CreateRequest;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 use Modules\Auth\Transformers\UserResource;
@@ -28,7 +27,7 @@ class AuthController extends Controller
 
 
 
-    public function register(CreateRequest $request)
+    public function register(Request $request)
     {
         //Validate data
         $user= $this->UserRepository->register($request);
