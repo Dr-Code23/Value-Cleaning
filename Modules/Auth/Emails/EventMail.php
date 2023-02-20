@@ -29,6 +29,6 @@ class EventMail extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_FROM_ADDRESS'))->view('Auth::eventmail');
+        return $this->from(env('MAIL_FROM_ADDRESS'))->view('eventmail');
     }
 }

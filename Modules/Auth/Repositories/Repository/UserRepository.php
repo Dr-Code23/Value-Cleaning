@@ -11,17 +11,20 @@ class UserRepository implements UserRepositoryInterface
 {
     public function register($data)
     {
-        if ($data->fails()) {
-            return response()->json($data->errors()->toJson(), 400);
-        }
+        return $data;
 
         //Request is valid, create new user
-        $user = User::create(array_merge(
-            $data->validated(),
-            ['password' => bcrypt($data->password),
+        $user = User::create([
+            'name'=> $data->name,
+            'email'=> $data->email,
+            'address'=> $data->adress,
+            'phone'=> $data->phone,
+            'password'=> hash($data->password),
 
-            ]
-        ));
+
+
+        ]);
+
         $user->assignRole('user');
         Auth::login($user);
         return $user ;
