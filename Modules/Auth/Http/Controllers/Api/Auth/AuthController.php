@@ -11,6 +11,7 @@ use Modules\Auth\Http\Requests\CreateRequest;
 use Modules\Auth\Http\Requests\loginRequest;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 use Modules\Auth\Transformers\UserResource;
+use JWTAuth;
 
 class AuthController extends Controller
 {
@@ -105,7 +106,8 @@ class AuthController extends Controller
 
 
         $token = jwtAuth::fromUser($userCreated);
-        return response()->json([$userCreated, 200, 'Access-Token' => $token]);
+        return response()->json(['statusCode' => 200,'status' => true ,
+            'message' => ' success  ','data' => new UserResource($userCreated),'Access-Token' => $token]);
     }
 
     /**
