@@ -30,26 +30,20 @@ class AuthController extends Controller
         //Validate data
         $user= $this->UserRepository->register($request);
 
-        return ['statusCode' => 200, 'status' => true,
-            'message' => 'User successfully registered ',
-            'data' => new UserResource($user)
-        ];
+        return $user;
 
 
     }
 
 
-    public function Login(Request $request)
+    public function Login(loginRequest $request)
     {
 
         $user= $this->UserRepository->login($request);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'User successfully login',
-            'user' => $user,
-            'token' => $user->token,
-        ]);
+        return  $user;
+
+
     }
 
     /**

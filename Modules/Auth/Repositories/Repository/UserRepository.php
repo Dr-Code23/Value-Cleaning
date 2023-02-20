@@ -4,30 +4,44 @@ namespace Modules\Auth\Repositories\Repository;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
+use Modules\Auth\Transformers\UserResource;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserRepository implements UserRepositoryInterface
 {
     public function register($data)
     {
-        return $data;
+if(!$data->rules()){
 
+
+    return response()->json([
+        'success' => false,
+        'message' => 'user credentials are invalid.',
+    ], 400);
+
+
+}
         //Request is valid, create new user
         $user = User::create([
             'name'=> $data->name,
             'email'=> $data->email,
             'address'=> $data->adress,
             'phone'=> $data->phone,
-            'password'=> hash($data->password),
+            'password'=> hash::make($data->password),
 
 
 
         ]);
 
         $user->assignRole('user');
+
         Auth::login($user);
-        return $user ;
+        return ['statusCode' => 200, 'status' => true,
+            'message' => 'User successfully registered ',
+            'data' => new UserResource($user)
+        ];
 
     }
     public function Login($data)
@@ -37,9 +51,7 @@ class UserRepository implements UserRepositoryInterface
 
 
         //Send failed response if request is not valid
-        if ($data->fails()) {
-            return response()->json(['error' => $data->messages()], 400);
-        }
+
 
         //Request is validated
         //Create token
@@ -64,7 +76,14 @@ class UserRepository implements UserRepositoryInterface
 
 
         }
-        return [auth()->user(),$token];
+
+        $user=  auth()->user();
+
+        return ['statusCode' => 200, 'status' => true,
+            'message' => 'User successfully registered ',
+            'data' => new UserResource($user),
+            'token'=>$token
+        ];
 
 
     }
