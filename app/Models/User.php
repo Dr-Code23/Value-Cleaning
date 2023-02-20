@@ -15,7 +15,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class User extends Authenticatable implements HasMedia ,JWTSubject
 
 {
-    use HasApiTokens, HasFactory, Notifiable,HasRoles,  InteractsWithMedia;
+    use HasApiTokens, HasFactory, Notifiable,HasRoles,InteractsWithMedia;
 
 
     /**
@@ -56,5 +56,11 @@ class User extends Authenticatable implements HasMedia ,JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+
+    public function providers()
+    {
+        return $this->hasMany(Provider::class,'user_id','id');
     }
 }

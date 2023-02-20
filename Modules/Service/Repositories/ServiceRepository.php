@@ -2,7 +2,7 @@
 
 namespace Modules\Service\Repositories;
 
-use Modules\Service\Repositories\Interfaces\ServiceRepositoryInterface;
+use Modules\Auth\Repositories\Repository\Interfaces\ServiceRepositoryInterface;
 use Modules\Service\Entities\Service;
 
 class ServiceRepository implements ServiceRepositoryInterface

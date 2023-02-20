@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Service\Entities\Service;
-use Modules\Service\Repositories\Interfaces\ServiceRepositoryInterface;
+use Modules\Auth\Repositories\Repository\Interfaces\ServiceRepositoryInterface;
 use Modules\Service\Transformers\ServiceResource;
 
 class ServiceController extends Controller

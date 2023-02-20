@@ -15,12 +15,13 @@ use Modules\Service\Http\Controllers\ServiceController;
 |
 */
 
-Route::middleware('auth:api')->get('/service', function (Request $request) {
-    return $request->user();
-});
 
-Route::get('Service', [ServiceController::class, 'index']);
+
+Route::middleware(['auth','role:admin'])->group(function(){
+
+Route::get('service', [ServiceController::class, 'index']);
 Route::post('create/service', [ServiceController::class, 'store']);
 Route::get('show/service/{id}',  [ServiceController::class, 'show']);
 Route::post('update/service/{id}',  [ServiceController::class, 'update']);
 Route::post('delete/service/{id}', [ServiceController::class, 'destroy']);
+});
