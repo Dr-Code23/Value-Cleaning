@@ -7,11 +7,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
+use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 use Modules\Auth\Transformers\UserResource;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
-class UserRepository implements UserRepositoryInterface
+class AdminRepository implements AdminRepositoryInterface
 {
     public function register($data)
     {
@@ -30,12 +30,12 @@ class UserRepository implements UserRepositoryInterface
 
         ]);
 
-        $user->assignRole('user');
+        $user->syncRoles(['admin']);
 
         Auth::login($user);
 
         return ['statusCode' => 200, 'status' => true,
-            'message' => 'User successfully registered ',
+            'message' => 'admin successfully registered ',
             'data' => new UserResource($user)
         ];
 
@@ -43,6 +43,7 @@ class UserRepository implements UserRepositoryInterface
     public function Login($data)
     {
         $credentials = $data->only('email', 'password');
+
 
         //Create token
         try {
@@ -59,7 +60,7 @@ class UserRepository implements UserRepositoryInterface
                 'message' => 'Could not create token.',
             ], 500);
         }
-        if(!auth()->user()->hasRole('user')){
+        if(!auth()->user()->hasRole('admin')){
 
             return response()->json(['error' => 'not allowed'], 400);
 
@@ -142,7 +143,7 @@ class UserRepository implements UserRepositoryInterface
             $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
         }
         return ['statusCode' => 200,'status' => true ,
-            'message' => 'user updated successfully ',
+            'message' => 'Admin updated successfully ',
             'data' => new UserResource($user)
         ];
     }

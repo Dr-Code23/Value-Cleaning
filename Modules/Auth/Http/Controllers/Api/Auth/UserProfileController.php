@@ -8,20 +8,20 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Auth;
 use Modules\Auth\Http\Requests\UpdateRequest;
+use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 
 class UserProfileController extends Controller
 {
+    private $UserRepository;
 
+    public function __construct(UserRepositoryInterface $UserRepository)
+    {
+        $this->UserRepository = $UserRepository;
+    }
 
     public function profile()
     {
-        $id =Auth::id();
-        $user = User::find($id);
-
-
-        return ['statusCode' => 200,'status' => true ,
-            'data' => new UserResource($user)
-        ];
+        return $this->UserRepository->profile();
 
     }
 
@@ -30,19 +30,7 @@ class UserProfileController extends Controller
     {
 
 
-        $input = $request;
-
-        $id =auth()->id();
-
-        $user = User::find($id);
-        $user->update($input);
-        if ($request->hasFile('photo')) {
-            $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
-        }
-        return ['statusCode' => 200,'status' => true ,
-            'message' => 'user updated successfully ',
-            'data' => new UserResource($user)
-        ];
+      return $this->UserRepository->UpdateProfile($request);
 
     }
 

@@ -12,20 +12,21 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Auth;
 use Modules\Auth\Http\Requests\UpdateRequest;
+use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 
 class AdminProfileController extends Controller
 {
+    private $AdminRepository;
 
+    public function __construct(AdminRepositoryInterface $AdminRepository)
+    {
+        $this->AdminRepository = $AdminRepository;
+    }
 
     public function AdminProfile()
     {
-        $id =Auth::id();
-        $user = User::find($id);
+        return $this->AdminRepository->profile();
 
-
-        return ['statusCode' => 200,'status' => true ,
-            'data' => new UserResource($user)
-        ];
 
     }
 
@@ -34,19 +35,8 @@ class AdminProfileController extends Controller
     {
 
 
-        $input = $request;
+        return $this->AdminRepository->UpdateProfile($request);
 
-        $id =auth()->id();
-
-        $user = User::find($id);
-        $user->update($input);
-        if ($request->hasFile('photo')) {
-            $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
-        }
-        return ['statusCode' => 200,'status' => true ,
-            'message' => 'admin updated successfully ',
-            'data' => new UserResource($user)
-        ];
 
     }
 

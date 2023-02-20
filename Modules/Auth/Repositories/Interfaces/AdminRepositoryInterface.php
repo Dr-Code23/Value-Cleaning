@@ -2,7 +2,7 @@
 
 namespace Modules\Auth\Repositories\Interfaces;
 
-interface UserRepositoryInterface
+interface AdminRepositoryInterface
 {
     public function register($data);
     public function Login($data);

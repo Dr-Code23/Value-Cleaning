@@ -8,27 +8,22 @@ use Auth;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Modules\Auth\Http\Requests\ChangePasswordRequest;
+use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 
 class ChangePasswordController extends Controller
 {
+    private $UserRepository;
+
+    public function __construct(UserRepositoryInterface $UserRepository)
+    {
+        $this->UserRepository = $UserRepository;
+    }
     public function changePassword(ChangePasswordRequest $request)
     {
 
+        $change= $this->UserRepository->changePassword($request);
 
-        $auth = Auth::user();
-
-        // The passwords matches
-        if (!Hash::check($request->get('current_password'), $auth->password))
-        {
-            return response()->json(['error', "Current Password is Invalid"]);
-        }
-
-
-
-        $user =  User::find($auth->id);
-        $user->password =  Hash::make($request->new_password);
-        $user->save();
-        return response()->json(['success', "Password Changed Successfully"]);
+        return $change;
 
     }
 }

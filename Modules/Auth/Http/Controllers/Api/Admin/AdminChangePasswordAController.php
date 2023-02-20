@@ -8,26 +8,20 @@ use Illuminate\Routing\Controller;
 use App\Models\User;
 use Auth;
 use Illuminate\Support\Facades\Hash;
+use Modules\Auth\Http\Requests\ChangePasswordRequest;
+use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 
 class AdminChangePasswordAController extends Controller
-{
+{ private $AdminRepository;
+
+    public function __construct(AdminRepositoryInterface $AdminRepository)
+    {
+        $this->AdminRepository = $AdminRepository;
+    }
     public function AdminchangePassword(ChangePasswordRequest $request)
     {
+        return $this->AdminRepository->changePassword($request);
 
-        $auth = Auth::user();
-
-        // The passwords matches
-        if (!Hash::check($request->get('current_password'), $auth->password))
-        {
-            return response()->json(['error', "Current Password is Invalid"]);
-        }
-
-
-
-        $user =  User::find($auth->id);
-        $user->password =  Hash::make($request->new_password);
-        $user->save();
-        return response()->json(['success', "Password Changed Successfully"]);
 
     }
 }

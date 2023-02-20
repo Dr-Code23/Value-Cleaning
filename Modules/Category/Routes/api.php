@@ -19,10 +19,11 @@ Route::middleware('auth:api')->get('/category', function (Request $request) {
 });
 
 
+Route::middleware(['auth','role:admin'])->group(function() {
 
-
-Route::get('Category', [CategoryController::class, 'index']);
-Route::post('create/Category', [CategoryController::class, 'store']);
-Route::get('show/Category/{id}',  [CategoryController::class, 'show']);
-Route::post('update/Category/{id}',  [CategoryController::class, 'update']);
-Route::post('delete/Category/{id}', [CategoryController::class, 'destroy']);
+    Route::get('Category', [CategoryController::class, 'index']);
+    Route::post('create/Category', [CategoryController::class, 'store']);
+    Route::get('show/Category/{id}', [CategoryController::class, 'show']);
+    Route::post('update/Category/{id}', [CategoryController::class, 'update']);
+    Route::post('delete/Category/{id}', [CategoryController::class, 'destroy']);
+});
