@@ -21,7 +21,12 @@ return new class extends Migration
                 ->constrained('categories')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+            $table->foreignId('offer_id')->nullable()
+                ->constrained('offers')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->double('price');
+            $table->boolean('active')->default(1);
             $table->timestamps();
         });
     }

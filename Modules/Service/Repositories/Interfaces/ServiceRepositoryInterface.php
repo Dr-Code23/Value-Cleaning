@@ -1,5 +1,5 @@
 <?php
-namespace Modules\Auth\Repositories\Repository\Interfaces;
+namespace Modules\Service\Repositories\Interfaces;
 
 Interface ServiceRepositoryInterface{
 

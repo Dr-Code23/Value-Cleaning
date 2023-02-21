@@ -15,11 +15,19 @@ class Service extends Model implements HasMedia
     'title',
     'description',
     "category_id",
-//    "offer_id",
-    'price'];
+    "offer_id",
+    'price',
+    'active',
+];
 
 
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
 
+    public function offer(){
+        return $this->belongsTo(Offer::class,'offer_id');
+    }
     protected static function newFactory()
     {
         return \Modules\Service\Database\factories\ServiceFactory::new();

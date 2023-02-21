@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use Modules\Category\Http\Controllers\CategoryController;
+use Modules\Category\Http\Controllers\Admin\CategoryController;
 
 /*
 |--------------------------------------------------------------------------

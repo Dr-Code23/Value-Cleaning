@@ -1,5 +1,6 @@
 {
     "Service": true,
     "Category": true,
-    "Auth": true
+    "Auth": true,
+    "Offer": true
 }

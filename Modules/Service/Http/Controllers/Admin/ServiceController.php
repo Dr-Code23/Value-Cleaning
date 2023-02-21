@@ -1,12 +1,11 @@
 <?php
 
-namespace Modules\Service\Http\Controllers;
+namespace Modules\Service\Http\Controllers\Admin;
 
-use Illuminate\Contracts\Support\Renderable;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Service\Entities\Service;
-use Modules\Auth\Repositories\Repository\Interfaces\ServiceRepositoryInterface;
+use Modules\Service\Repositories\Interfaces\ServiceRepositoryInterface;
 use Modules\Service\Transformers\ServiceResource;
 
 class ServiceController extends Controller
@@ -22,6 +21,19 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+
+
+    public function activate($id){
+        //sleep(3);
+        $item = Service::find($id);
+        if($item){
+            $item->active=!$item->active;
+            $item->save();
+            return response()->json(['status'=>$item->active,'msg'=>'updated successfully']);
+        }
+        return response()->json(['status'=>0,'msg'=>'invalid id']);
+    }
     public function index()
     {
         $Services =  $this->serviceRepository->allServices();
@@ -55,8 +67,8 @@ class ServiceController extends Controller
             'description' => 'required|string',
             'price' => 'required',
             'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
-            "category_id"=> 'required'
-
+            "category_id"=> 'required',
+            "offer_id"=>'max:2048',
 
         ]);
     //saving data
@@ -109,7 +121,8 @@ class ServiceController extends Controller
             'description' => 'required|string',
             'price' => 'required',
             'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
-            "category_id"=> 'required'
+            "category_id"=> 'required',
+
 
 
         ]);

@@ -1,24 +1,21 @@
 <?php
 
-namespace Modules\Service\Providers;
+namespace Modules\Offer\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
-use Modules\Service\Repositories\Interfaces\ServiceRepositoryInterface;
-use Modules\Service\Repositories\ServiceRepository;
 
-
-class ServiceServiceProvider extends ServiceProvider
+class OfferServiceProvider extends ServiceProvider
 {
     /**
      * @var string $moduleName
      */
-    protected $moduleName = 'Service';
+    protected $moduleName = 'Offer';
 
     /**
      * @var string $moduleNameLower
      */
-    protected $moduleNameLower = 'service';
+    protected $moduleNameLower = 'offer';
 
     /**
      * Boot the application events.
@@ -41,9 +38,6 @@ class ServiceServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
-
-        $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
-
     }
 
     /**

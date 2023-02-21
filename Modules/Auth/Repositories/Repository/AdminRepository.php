@@ -71,7 +71,7 @@ class AdminRepository implements AdminRepositoryInterface
         $user=  auth()->user();
 
         return ['statusCode' => 200, 'status' => true,
-            'message' => 'User successfully registered ',
+            'message' => 'Admin successfully registered ',
             'data' => new UserResource($user),
             'token'=>$token
         ];

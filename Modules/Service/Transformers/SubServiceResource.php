@@ -4,7 +4,7 @@ namespace Modules\Service\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ServiceResource extends JsonResource
+class SubServiceResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,12 +17,7 @@ class ServiceResource extends JsonResource
         return [
             'id'      =>  $this->id,
             'title'   => $this->title,
-            'description' =>$this->description,
-            'price' => $this->price,
-            "category_id"=> $this->category_id,
-            "offer_id"=> $this->offer_id,
-            'active' =>$this->active,
-            'images'  => $this->getFirstMediaUrl('services'),
+            "service_id"=> $this->service_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
