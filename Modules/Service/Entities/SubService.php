@@ -11,6 +11,7 @@ class SubService extends Model
     protected $table = 'sub-services';
     protected $fillable = [
         'title',
+        'price',
         'service_id'
     ];
     public function services()

@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('sub-services', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->double('price');
+
             $table->foreignId('service_id')
                 ->constrained('services')
                 ->cascadeOnUpdate()

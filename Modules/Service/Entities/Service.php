@@ -28,6 +28,11 @@ class Service extends Model implements HasMedia
     public function offer(){
         return $this->belongsTo(Offer::class,'offer_id');
     }
+    public function worker()
+    {
+        return $this->belongsToMany(Worker::class, 'service-worker', 'service_id', 'worker_id');
+    }
+
     protected static function newFactory()
     {
         return \Modules\Service\Database\factories\ServiceFactory::new();

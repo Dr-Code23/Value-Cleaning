@@ -2,5 +2,8 @@
     "Service": true,
     "Category": true,
     "Auth": true,
-    "Offer": true
+    "Offer": true,
+    "Worker": true,
+    "Favorite": true,
+    "Order": true
 }

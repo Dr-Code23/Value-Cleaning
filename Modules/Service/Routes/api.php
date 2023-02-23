@@ -25,7 +25,7 @@ Route::post('create/service', [ServiceController::class, 'store']);
 Route::get('show/service/{id}',  [ServiceController::class, 'show']);
 Route::post('update/service/{id}',  [ServiceController::class, 'update']);
 Route::post('delete/service/{id}', [ServiceController::class, 'destroy']);
-Route::post('Active/service/{id}', [ServiceController::class, 'activate']);
+Route::get('Active/service/{id}', [ServiceController::class, 'activate']);
 
 
 
