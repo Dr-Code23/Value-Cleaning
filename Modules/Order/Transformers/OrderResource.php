@@ -3,6 +3,8 @@
 namespace Modules\Order\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
+use Modules\Order\Entities\Order;
 
 class OrderResource extends JsonResource
 {
@@ -14,6 +16,20 @@ class OrderResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'worke_aera'=> $this->worke_aera,
+            'date' => $this->date,
+            'time' => $this->time,
+            'address' => $this->address,
+            'repeat' => $this->repeat,
+            'status' => $this->status,
+            'user_id' => Auth::id(),
+            'service' => Order::first()->services->title,
+            'total_price' => $this->total_price,
+            'order_code' => $this->order_code,
+            'gallery'  => $this->getFirstMediaUrl('Orders'),
+
+        ];
     }
 }

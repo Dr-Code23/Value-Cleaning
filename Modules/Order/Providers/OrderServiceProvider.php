@@ -4,6 +4,8 @@ namespace Modules\Order\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
+use Modules\Order\Repositories\Repository\OrderRepository;
 
 class OrderServiceProvider extends ServiceProvider
 {
@@ -38,6 +40,8 @@ class OrderServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->bind(OrderRepositoryInterface::class, OrderRepository::class);
+
     }
 
     /**

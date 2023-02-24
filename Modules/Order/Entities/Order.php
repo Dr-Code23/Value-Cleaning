@@ -14,8 +14,8 @@ class Order extends Model implements HasMedia
     use HasFactory,InteractsWithMedia;
 
     protected $fillable = [
-        'id',
-'worke-aera',
+
+'worke_aera',
 'date',
 'time',
 'address',
@@ -24,11 +24,11 @@ class Order extends Model implements HasMedia
 'user_id',
 'service_id',
 'total_price',
-'order-code',];
+'order_code',];
 
     public function services()
     {
-        return $this->hasMany(Service::class,'service_id','id');
+        return $this->belongsTo(Service::class,'id');
     }
 
     public function users()

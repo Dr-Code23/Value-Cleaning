@@ -17,6 +17,7 @@ class SubServiceResource extends JsonResource
         return [
             'id'      =>  $this->id,
             'title'   => $this->title,
+            'price'   => $this->price,
             "service_id"=> $this->service_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

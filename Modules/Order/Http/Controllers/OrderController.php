@@ -5,35 +5,56 @@ namespace Modules\Order\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Order\Entities\Order;
+use Modules\Order\Http\Requests\CreateRequest;
+use Modules\Order\Http\Requests\UpdateRequest;
+use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
 
 class OrderController extends Controller
 {
+    private $OrderRepository;
+
+    public function __construct(OrderRepositoryInterface $OrderRepository)
+    {
+        $this->OrderRepository = $OrderRepository;
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('order::index');
+        return $this->OrderRepository->index();
+    }
+
+    public function CansaledOrder()
+    {
+
+    return $this->OrderRepository->CansaledOrder();
+
+    }
+    public function FinishedOrder()
+
+    {
+
+    return $this->OrderRepository->FinishedOrder();
+
     }
 
     /**
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
-    {
-        return view('order::create');
-    }
+
 
     /**
      * Store a newly created resource in storage.
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request)
     {
-        //
+      return $this->OrderRepository->create($request);
     }
 
     /**
@@ -43,7 +64,12 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        return view('order::show');
+        return $this->OrderRepository->show($id);
+    }
+
+    public function OrderCode($id)
+    {
+        return $this->OrderRepository->OrderCode($id);
     }
 
     /**
@@ -51,9 +77,11 @@ class OrderController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function Cansale($id)
     {
-        return view('order::edit');
+        return $this->OrderRepository->Cansale($id);
+
+
     }
 
     /**
@@ -62,9 +90,9 @@ class OrderController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        //
+      return $this->OrderRepository->Update($request, $id)   ;
     }
 
     /**
@@ -74,6 +102,7 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return $this->OrderRepository->delete($id)   ;
+
     }
 }

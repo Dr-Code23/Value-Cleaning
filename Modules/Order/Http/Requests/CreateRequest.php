@@ -14,7 +14,15 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'worke_aera'=> 'required',
+            'date' => 'required',
+            'time' => 'required',
+            'address' => 'required',
+            'repeat' => 'required',
+            'service_id' => 'required',
+            'total_price' => 'required',
+            'gallery'  =>'required',
+
         ];
     }
 
