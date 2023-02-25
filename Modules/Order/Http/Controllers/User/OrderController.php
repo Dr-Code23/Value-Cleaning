@@ -1,11 +1,10 @@
 <?php
 
-namespace Modules\Order\Http\Controllers;
+namespace Modules\Order\Http\Controllers\User;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Order\Entities\Order;
 use Modules\Order\Http\Requests\CreateRequest;
 use Modules\Order\Http\Requests\UpdateRequest;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
@@ -71,12 +70,11 @@ class OrderController extends Controller
     {
         return $this->OrderRepository->OrderCode($id);
     }
+    public function UpdateOeserToAdmin( Request $request,$id)
+    {
+        return $this->OrderRepository->UpdateOeserToAdmin($request,$id);
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
+    }
     public function Cansale($id)
     {
         return $this->OrderRepository->Cansale($id);

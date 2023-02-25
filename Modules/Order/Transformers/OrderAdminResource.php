@@ -5,8 +5,9 @@ namespace Modules\Order\Transformers;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Modules\Order\Entities\Order;
+use Modules\Service\Entities\Service;
 
-class OrderResource extends JsonResource
+class OrderAdminResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,11 +25,10 @@ class OrderResource extends JsonResource
             'address' => $this->address,
             'repeat' => $this->repeat,
             'status' => $this->status,
-            'user_id' => Auth::id(),
+            'user' => Order::find($this->id)->users,
             'service' => Order::find($this->id)->services,
             'workers' => Order::find($this->id)->workers,
             'total_price' => $this->total_price,
-            'order_code' => $this->order_code,
             'gallery'  => $this->getFirstMediaUrl('Orders'),
 
         ];

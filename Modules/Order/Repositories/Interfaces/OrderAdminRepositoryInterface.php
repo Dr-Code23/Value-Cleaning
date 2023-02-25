@@ -2,24 +2,24 @@
 
 namespace Modules\Order\Repositories\Interfaces;
 
-interface OrderRepositoryInterface
+use Illuminate\Http\Request;
+
+interface OrderAdminRepositoryInterface
 {
 
     public function index();
     public function CansaledOrder();
     public function FinishedOrder();
 
-    public function OrderCode($id);
 
     public function UpdateOeserToAdmin($data ,$id);
 
-    public function create($data);
+
+    public function ChangeStutes($data, $id);
 
 
     public function show($id);
-    public function Cansale($id);
 
-    public function Update($data,$id);
 
     public function delete($id);
 

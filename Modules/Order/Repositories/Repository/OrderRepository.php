@@ -6,7 +6,9 @@ namespace Modules\Order\Repositories\Repository;
 use Illuminate\Support\Facades\Auth;
 use Modules\Order\Entities\Order;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
+use Modules\Order\Transformers\OrderAdminResource;
 use Modules\Order\Transformers\OrderResource;
+use Modules\Service\Entities\Service;
 
 class OrderRepository implements OrderRepositoryInterface
 {
@@ -121,6 +123,26 @@ class OrderRepository implements OrderRepositoryInterface
             'message' => 'Order updated successfully ',
             'data' => new OrderResource($Order)
         ];
+    }
+    public function UpdateOeserToAdmin($data ,$id)
+    {
+
+
+
+
+        $Order = Order::find($id);
+
+
+
+        $Order->workers()->sync($data->all());
+
+
+       return ['statusCode' => 200,'status' => true ,
+        'message' => 'Order updated successfully ',
+        'data' => new OrderAdminResource($Order)
+    ] ;
+
+
     }
 
 

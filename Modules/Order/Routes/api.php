@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Http\Request;
-use Modules\Order\Http\Controllers\OrderController;
+use Modules\Order\Http\Controllers\Admin\OrderAdminController;
+use Modules\Order\Http\Controllers\User\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,4 +34,15 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('delete/Order/{id}', [OrderController::class, 'destroy']);
 
 
+});
+Route::middleware(['auth','role:admin'])->prefix("admin")->group(function() {
+    Route::post('Worker/update/Order/{id}', [OrderAdminController::class, 'UpdateOeserToAdmin']);
+    Route::post('Status/Order/{id}', [OrderAdminController::class, 'ChangeStutes']);
+    Route::get('Order', [OrderAdminController::class, 'index']);
+    Route::get('CansaledOrder', [OrderAdminController::class, 'CansaledOrder']);
+
+    Route::get('FinishedOrder', [OrderAdminController::class, 'FinishedOrder']);
+    Route::post('update/Order/{id}', [OrderAdminController::class, 'update']);
+    Route::get('show/Order/{id}', [OrderAdminController::class, 'show']);
+    Route::post('delete/Order/{id}', [OrderAdminController::class, 'destroy']);
 });

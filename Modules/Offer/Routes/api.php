@@ -14,11 +14,9 @@ use Modules\Offer\Http\Controllers\Admin\OfferController;
 |
 */
 
-Route::middleware('auth:api')->get('/offer', function (Request $request) {
-    return $request->user();
-});
 
-Route::middleware(['auth','role:admin'])->group(function(){
+
+Route::middleware(['auth','role:admin'])->prefix("admin")->group(function(){
 
     Route::get('Offer', [OfferController::class, 'index']);
     Route::post('create/Offer', [OfferController::class, 'store']);

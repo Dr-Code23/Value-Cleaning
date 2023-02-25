@@ -14,13 +14,10 @@ use Modules\Worker\Http\Controllers\WorkerController;
 |
 */
 
-Route::middleware('auth:api')->get('/worker', function (Request $request) {
-    return $request->user();
-});
 
 
 
-Route::middleware(['auth','role:admin'])->group(function(){
+Route::middleware(['auth','role:admin'])->prefix("admin")->group(function(){
     Route::get('Active/worker/{id}', [WorkerController::class, 'activate']);
     Route::get('worker', [WorkerController::class, 'index']);
     Route::post('create/worker', [WorkerController::class, 'store']);

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Service\Entities\Service;
+use Modules\Worker\Entities\Worker;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -28,17 +29,17 @@ class Order extends Model implements HasMedia
 
     public function services()
     {
-        return $this->belongsTo(Service::class,'id');
+        return $this->hasMany(Service::class,'id','service_id');
     }
 
     public function users()
     {
-        return $this->hasMany(User::class,'user_id','id');
+        return $this->hasMany(User::class,'id','user_id');
     }
 
-    public function worker()
+    public function workers()
     {
-        return $this->belongsToMany(Worker::class, 'order-worker', 'order_id', 'worker_id');
+        return $this->belongsToMany(Worker::class);
     }
     protected static function newFactory()
     {

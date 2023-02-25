@@ -18,7 +18,7 @@ use Modules\Service\Http\Controllers\User\HomeController;
 
 
 
-Route::middleware(['auth','role:admin'])->group(function(){
+Route::middleware(['auth','role:admin'])->prefix("admin")->group(function(){
 
 Route::get('service', [ServiceController::class, 'index']);
 Route::post('create/service', [ServiceController::class, 'store']);

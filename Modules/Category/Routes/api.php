@@ -14,12 +14,10 @@ use Modules\Category\Http\Controllers\Admin\CategoryController;
 |
 */
 
-Route::middleware('auth:api')->get('/category', function (Request $request) {
-    return $request->user();
-});
 
 
-Route::middleware(['auth','role:admin'])->group(function() {
+
+Route::middleware(['auth','role:admin'])->prefix("admin")->group(function() {
 
     Route::get('Category', [CategoryController::class, 'index']);
     Route::post('create/Category', [CategoryController::class, 'store']);

@@ -4,6 +4,8 @@ namespace Modules\Worker\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Order\Entities\Order;
+use Modules\Service\Entities\Service;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -25,7 +27,10 @@ class Worker extends Model implements HasMedia
     {
         return $this->belongsToMany(Service::class);
     }
-
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class);
+    }
     protected static function newFactory()
     {
         return \Modules\Worker\Database\factories\WorkerFactory::new();
