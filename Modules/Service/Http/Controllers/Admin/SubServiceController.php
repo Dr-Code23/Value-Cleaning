@@ -48,12 +48,18 @@ class SubServiceController extends Controller
      */
     public function show($id)
     {
-        $SubService=SubService::find($id);
+        $SubService=SubService::findOrFail($id);
         return ['statusCode' => 200,
             'status' => true ,
             'data' => new SubServiceResource($SubService) ];
     }
-
+    public function showWith($id)
+    {
+        $SubService=SubService::where('service_id',$id)->get();
+        return ['statusCode' => 200,
+            'status' => true ,
+            'data' => $SubService ];
+    }
     /**
      * Show the form for editing the specified resource.
      * @param int $id

@@ -19,6 +19,13 @@ class Worker extends Model implements HasMedia
 'NIN'
     ];
 
+
+
+    public function services()
+    {
+        return $this->belongsToMany(Service::class);
+    }
+
     protected static function newFactory()
     {
         return \Modules\Worker\Database\factories\WorkerFactory::new();

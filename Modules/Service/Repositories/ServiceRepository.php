@@ -22,14 +22,41 @@ class ServiceRepository implements ServiceRepositoryInterface
             $data["price"] =  $data["price"] - ($myoffer['offer_price']/100 * $data["price"]);
         }
 
+
+
 //        $requestData["sale_price"] =  $requestData["regular_price"] - ($myoffer['offer_price']/100 * $requestData["regular_price"]);
 //    }else{
 //$requestData["sale_price"] = $requestData["regular_price"];
 //}
-          return Service::create($data);
+        $sevice= Service::create($data);
+
+        $sevice->workers()->sync($data['worker_id']);
+        return $sevice;
+
+
+    }
+    public function AddServiceWoeker($data, $id)
+    {
+        $sevice=Service::findOrFail($id);
+
+
+        $sevice->workers()->sync($data->all());
+
+    }
+    public function updateServiceWoeker($data, $id)
+    {
 
     }
 
+    public function DeleteWoekerFromService($data,$id)
+    {
+        $sevice=Service::findOrFail($id);
+
+        $sevice->workers()->detach($data->worker_id);
+
+        return ['statusCode' => 200,'status' => true ,'message' => 'service Deleted successfully ',];
+
+    }
     public function findService($id)
     {
         return Service::find($id);

@@ -3,6 +3,7 @@
 namespace Modules\Service\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Service\Entities\Service;
 
 class ServiceResource extends JsonResource
 {
@@ -22,6 +23,7 @@ class ServiceResource extends JsonResource
             "category_id"=> $this->category_id,
             "offer_id"=> $this->offer_id,
             'active' =>$this->active,
+            'workers' => Service::find($this->id)->workers,
             'images'  => $this->getFirstMediaUrl('services'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

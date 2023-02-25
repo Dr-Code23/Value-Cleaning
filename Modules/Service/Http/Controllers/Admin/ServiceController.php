@@ -69,6 +69,7 @@ class ServiceController extends Controller
             'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
             "category_id"=> 'required',
             "offer_id"=>'max:2048',
+            "worker_id"=>'max:2048',
 
         ]);
     //saving data
@@ -83,6 +84,31 @@ class ServiceController extends Controller
 
     }
 
+
+
+
+
+    public function AddServiceWoeker(Request $request, $id)
+    {
+        $service= $this->serviceRepository->AddServiceWoeker($request,$id);
+
+
+
+        return ['statusCode' => 200,'status' => true , 'data' => $service ];
+
+
+    }
+
+
+    public function DeleteWoekerFromService(Request $request,$id)
+    {
+        return $this->serviceRepository->DeleteWoekerFromService($request,$id);
+
+
+
+
+
+    }
     /**
      * Display the specified resource.
      *

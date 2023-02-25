@@ -4,6 +4,9 @@ namespace Modules\Service\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Category\Entities\Category;
+use Modules\Offer\Entities\Offer;
+use Modules\Worker\Entities\Worker;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 class Service extends Model implements HasMedia
@@ -28,9 +31,9 @@ class Service extends Model implements HasMedia
     public function offer(){
         return $this->belongsTo(Offer::class,'offer_id');
     }
-    public function worker()
+    public function workers()
     {
-        return $this->belongsToMany(Worker::class, 'service-worker', 'service_id', 'worker_id');
+        return $this->belongsToMany(Worker::class);
     }
 
     protected static function newFactory()

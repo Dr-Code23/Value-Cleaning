@@ -23,24 +23,22 @@ class HomeController extends Controller
      */
     public function UserHome()
     {
-        $SubServices= SubService::latest()->get();
         $Service = Service::where('active', 1)->get();
         $categories= Category::latest()->get();
         $offer =Offer::latest()->get();
-        return response()->json(["offers"=> OfferResource::collection($offer), "Service"=>SubServiceResource::collection($Service) ,"SubServices" =>SubServiceResource::collection($SubServices) ,"categories" =>CategoryResource::collection($categories) ]);
+
+        return response()->json(["offers"=> OfferResource::collection($offer), "Service"=>SubServiceResource::collection($Service) ,"categories" =>CategoryResource::collection($categories) ]);
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
 
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
+    public function SubService($id)
+    {
+        $SubService=SubService::where('service_id',$id)->get();
+        return ['statusCode' => 200,
+            'status' => true ,
+            'data' => $SubService ];
+    }
 
 }
