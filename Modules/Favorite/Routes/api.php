@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Modules\Favorite\Http\Controllers\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/favorite', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth','role:user'])->group(function(){
+    Route::get('Favorite', [FavoriteController::class, 'index']);
+    Route::post('create/Favorite', [FavoriteController::class, 'store']);
+    Route::get('show/Favorite/{id}', [FavoriteController::class, 'show']);
+    Route::post('delete/Favorite/{id}', [FavoriteController::class, 'destroy']);
+
+
 });

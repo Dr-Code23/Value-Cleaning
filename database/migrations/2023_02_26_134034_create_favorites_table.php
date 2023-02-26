@@ -13,14 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Order', function (Blueprint $table) {
+        Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->double('worke-aera');
-            $table->date('date');
-            $table->time('time');
-            $table->string('address');
-            $table->enum('repeat', ['once', 'weekly', 'monthly']);
-            $table->enum('status', ['In Process', 'Cansaled', 'Finished'])->default('In Process');;
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->cascadeOnUpdate()
@@ -29,9 +23,6 @@ return new class extends Migration
                 ->constrained('services')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->double('total_price');
-            $table->integer('order-code');
-
             $table->timestamps();
         });
     }
@@ -43,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Order');
+        Schema::dropIfExists('favorites');
     }
 };

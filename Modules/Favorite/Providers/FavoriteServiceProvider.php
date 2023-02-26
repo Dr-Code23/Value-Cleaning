@@ -4,6 +4,8 @@ namespace Modules\Favorite\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Favorite\Repositories\Interfaces\FavoriteRepositoryInterface;
+use Modules\Favorite\Repositories\Repository\FavoriteRepository;
 
 class FavoriteServiceProvider extends ServiceProvider
 {
@@ -38,6 +40,8 @@ class FavoriteServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->bind(FavoriteRepositoryInterface::class, FavoriteRepository::class);
+
     }
 
     /**

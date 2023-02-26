@@ -45,8 +45,11 @@ class OrderRepository implements OrderRepositoryInterface
     {
 
 
+        if (Auth::guard('api')->check()) {
+            $userID = auth('api')->user()->getKey();
+        }
 
-
+        $data['user_id']=$userID;
         $Order = Order::create($data->all());
         $Order['order_code']= '#'.str_pad($Order->id + 1, 8, "0", STR_PAD_LEFT);
 

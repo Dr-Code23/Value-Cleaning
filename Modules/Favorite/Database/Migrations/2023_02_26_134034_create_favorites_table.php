@@ -13,16 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('workers', function (Blueprint $table) {
+        Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('address');
-            $table->bigInteger('phone');
-            $table->bigInteger('NIN')->unique();
-            $table->boolean('active')->default(1);
-
-
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+            $table->foreignId('service_id')
+                ->constrained('services')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('workers');
+        Schema::dropIfExists('favorites');
     }
 };

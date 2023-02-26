@@ -5,8 +5,10 @@ namespace Modules\Favorite\Transformers;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Modules\Favorite\Entities\Favorite;
+use Modules\Order\Entities\Order;
+use Modules\Service\Entities\Service;
 
-class FavoriteResource extends JsonResource
+class FavoriteShowResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,6 +20,7 @@ class FavoriteResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'user_id' => Auth::id(),
             'service' => Favorite::find($this->id)->services,
 
 

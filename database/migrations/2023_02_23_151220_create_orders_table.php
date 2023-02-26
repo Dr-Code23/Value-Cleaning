@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->double('worke-aera');
-            $table->date('date');
+            $table->double('worke_aera');
+            $table->text('date');
             $table->time('time');
             $table->string('address');
             $table->enum('repeat', ['once', 'weekly', 'monthly']);
@@ -30,7 +30,7 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             $table->double('total_price');
-            $table->integer('order-code');
+            $table->string('order_code');
 
             $table->timestamps();
         });

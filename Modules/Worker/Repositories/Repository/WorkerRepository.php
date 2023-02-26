@@ -3,8 +3,8 @@
 namespace Modules\Worker\Repositories\Repository;
 
 
-use Modules\Worker\Repositories\Interfaces\WorkerRepositoryInterface;
 use Modules\Worker\Entities\Worker;
+use Modules\Worker\Repositories\Interfaces\WorkerRepositoryInterface;
 use Modules\Worker\Transformers\WorkerResource;
 
 class WorkerRepository implements WorkerRepositoryInterface
