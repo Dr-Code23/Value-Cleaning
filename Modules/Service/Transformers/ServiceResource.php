@@ -3,6 +3,9 @@
 namespace Modules\Service\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Order\Entities\Order;
+use Modules\Review\Entities\Review;
+use Modules\Review\Transformers\ReviewResource;
 use Modules\Service\Entities\Service;
 
 class ServiceResource extends JsonResource
@@ -15,6 +18,8 @@ class ServiceResource extends JsonResource
      */
     public function toArray($request)
     {
+       $Review= Review::where('service_id',$this->id)->get();
+        $Reviews=  ReviewResource::collection($Review);
         return [
             'id'      =>  $this->id,
             'title'   => $this->title,
@@ -25,6 +30,8 @@ class ServiceResource extends JsonResource
             'active' =>$this->active,
             'workers' => Service::find($this->id)->workers,
             'images'  => $this->getFirstMediaUrl('services'),
+            'Review' => $Reviews,
+            'job_done' =>Order::where(["service_id"=>$this->id,'status'=>'Finished'])->count(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

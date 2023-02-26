@@ -5,5 +5,6 @@
     "Offer": true,
     "Worker": true,
     "Favorite": true,
-    "Order": true
+    "Order": true,
+    "Review": true
 }

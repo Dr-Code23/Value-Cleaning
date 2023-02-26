@@ -13,6 +13,7 @@ use Modules\Service\Entities\Service;
 use Modules\Service\Entities\SubService;
 use Modules\Service\Http\Requests\CreateSubServiceRequest;
 use Modules\Service\Http\Requests\UpdateSubServiceRequest;
+use Modules\Service\Transformers\ServiceResource;
 use Modules\Service\Transformers\SubServiceResource;
 
 class HomeController extends Controller
@@ -31,7 +32,13 @@ class HomeController extends Controller
 
     }
 
-
+    public function ServiceDetalis($id)
+    {
+        $SubService=Service::find($id);
+        return ['statusCode' => 200,
+            'status' => true ,
+            'data' =>  new ServiceResource($SubService ) ];
+    }
 
     public function SubService($id)
     {
