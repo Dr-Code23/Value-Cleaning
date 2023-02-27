@@ -17,7 +17,7 @@ class ServiceRepository implements ServiceRepositoryInterface
     public function storeService($data)
     {
 
-        if (isset($data['offer_id']) ){
+        if (isset($data['offer_id']) ){ //when
             $myoffer = Offer::where("id",$data["offer_id"])->select("offer_price")->first();
             $data["price"] =  $data["price"] - ($myoffer['offer_price']/100 * $data["price"]);
         }

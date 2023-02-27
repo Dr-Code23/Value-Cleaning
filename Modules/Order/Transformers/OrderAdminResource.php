@@ -17,6 +17,7 @@ class OrderAdminResource extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id' => $this->id,
             'worke_aera'=> $this->worke_aera,
@@ -25,9 +26,9 @@ class OrderAdminResource extends JsonResource
             'address' => $this->address,
             'repeat' => $this->repeat,
             'status' => $this->status,
-            'user' => Order::find($this->id)->users,
-            'service' => Order::find($this->id)->services,
-            'workers' => Order::find($this->id)->workers,
+            'user' => $this->users,
+            'service' => $this->services,
+            'workers' => $this->workers,
             'total_price' => $this->total_price,
             'gallery'  => $this->getFirstMediaUrl('Orders'),
 

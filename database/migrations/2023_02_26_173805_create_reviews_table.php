@@ -16,11 +16,12 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->longText('comments')->nullable();
-            $table->integer('star_rating');
+            $table->float('star_rating');
             $table->foreignId('service_id')
                 ->constrained('services')
                 ->cascadeOnUpdate()
-                ->cascadeOnDelete(); $table->foreignId('user_id')
+                ->cascadeOnDelete();
+            $table->foreignId('user_id')
                 ->constrained('users')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();

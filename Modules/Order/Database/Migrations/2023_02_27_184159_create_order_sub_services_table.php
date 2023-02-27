@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('favorites', function (Blueprint $table) {
+        Schema::create('order_sub_services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                ->constrained('users')
+            $table->foreignId('sub_services_id')
+                ->constrained('sub-services')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->foreignId('service_id')
-                ->constrained('services')
+            $table->foreignId('order_id')
+                ->constrained('orders')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
             $table->timestamps();
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Favorites');
+        Schema::dropIfExists('order_subservices');
     }
 };

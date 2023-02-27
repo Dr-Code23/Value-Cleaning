@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->longText('comments')->nullable();
-            $table->double('star_rating');
+            $table->float('star_rating');
             $table->foreignId('service_id')
                 ->constrained('services')
                 ->cascadeOnUpdate()

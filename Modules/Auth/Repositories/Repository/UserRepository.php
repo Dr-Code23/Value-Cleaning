@@ -18,6 +18,8 @@ class UserRepository implements UserRepositoryInterface
 
 
 
+       // 'email' => 'sometimes|email|unique:users,email,'. $request->user_id
+
         //Request is valid, create new user
         $user = User::create([
             'name'=> $data->name,

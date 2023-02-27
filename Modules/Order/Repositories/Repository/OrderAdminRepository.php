@@ -37,7 +37,7 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     public function CansaledOrder()
     {
 
-        $Order=  Order::latest()->Where('Status','Cansaled')->get();
+        $Order=  Order::where('status','Cansaled')->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'CansaledOrder' =>  OrderAdminIndexResource::collection($Order)
         ];
@@ -45,18 +45,11 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     public function FinishedOrder()
     {
 
-        $Order=  Order::latest()->Where('Status','Finished' )->get();
+        $Order=  Order::Where('Status','Finished' )->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'FinishedOrder' =>  OrderAdminIndexResource::collection($Order)
         ];
     }
-
-
-
-
-
-
-
 
     public function show($id)
     {
@@ -71,22 +64,13 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
 
     }
 
-
-
-
-
     public function UpdateOeserToAdmin($data ,$id)
     {
 
 
-
-
         $Order = Order::find($id);
 
-
-
         $Order->workers()->sync($data->all());
-
 
        return ['statusCode' => 200,'status' => true ,
         'message' => 'Order updated successfully ',
