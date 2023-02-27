@@ -26,7 +26,7 @@ class FavoriteController extends Controller
 
     public function store(Request $request)
     {
-        return $this->FavoriteRepository->create($request);
+        return $this->FavoriteRepository->store($request);
     }
 
     /**
@@ -47,6 +47,6 @@ class FavoriteController extends Controller
      */
     public function destroy($id)
     {
-        return $this->FavoriteRepository->delete($id);
+        return $this->FavoriteRepository->destroy($id);
     }
 }

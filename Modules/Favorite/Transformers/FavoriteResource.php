@@ -3,8 +3,6 @@
 namespace Modules\Favorite\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
-use Modules\Favorite\Entities\Favorite;
 
 class FavoriteResource extends JsonResource
 {
@@ -18,7 +16,7 @@ class FavoriteResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'service' => Favorite::find($this->id)->services,
+            'service' => $this->services,
 
 
         ];

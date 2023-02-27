@@ -131,7 +131,7 @@ class AdminRepository implements AdminRepositoryInterface
     }
 
 
-    public function UpdateProfile($data)
+    public function updateProfile($data)
     {
         $input = $data;
 

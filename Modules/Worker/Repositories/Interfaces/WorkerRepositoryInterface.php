@@ -7,14 +7,14 @@ interface WorkerRepositoryInterface
 
     public function index();
 
-    public function create($data);
+    public function store($data);
 
-
+    public function tasks($id);
     public function show($id);
 
     public function Update($data,$id);
 
-    public function delete($id);
+    public function destory($id);
 
 
 }

@@ -3,7 +3,6 @@
 namespace Modules\Review\Repositories\Repository;
 
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Modules\Review\Entities\Review;
 use Modules\Review\Repositories\Interfaces\ReviewRepositoryInterface;
@@ -13,47 +12,39 @@ class ReviewRepository implements ReviewRepositoryInterface
 {
 
 
+    public function index()
+    {
 
-    public function index(){
-
-        $Review=  Review::latest()->get();
+        $Review = Review::with(['users', 'services', 'workers'])->latest()->get();
         return ['statusCode' => 200, 'status' => true,
-            'data' =>  ReviewResource::collection($Review)
+            'data' => ReviewResource::collection($Review)
         ];
 
     }
 
-    public function reviewstore($data)
+    public function reviewStore($data)
     {
 
-        $data['user_id']= Auth::user()->id;
+        $data['user_id'] = Auth::user()->id;
 
-            $Review=  Review::create($data->all());
-            return ['statusCode' => 200, 'status' => true,
-                'message' => 'Review successfully created ',
-                'data' => new ReviewResource($Review)
-            ];
-
-
-
-
+        $Review = Review::create($data->all());
+        return ['statusCode' => 200, 'status' => true,
+            'message' => 'Review successfully created ',
+            'data' => new ReviewResource($Review)
+        ];
 
 
     }
 
-    public function reviewupdate($data,$id)
+    public function reviewUpdate($data, $id)
     {
-       $userid= Auth::user()->id;
-        $Review =Review::where('user_id',$userid)->where('service_id',$id)->first();
+        $userId = Auth::user()->id;
+        $Review = Review::where(['user_id'=> $userId,'service_id'=>$id])->with(['users', 'services', 'workers'])->first();
         $Review->update($data->all());
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Review successfully updated ',
             'data' => new ReviewResource($Review)
         ];
-
-
-
-
 
 
     }
@@ -62,27 +53,30 @@ class ReviewRepository implements ReviewRepositoryInterface
     public function show($id)
     {
 
-        $Review = Review::find($id);
+        $Review = Review::find($id)->with(['users', 'services']);
 
-
-        return ['statusCode' => 200,'status' => true ,
-            'data' => new ReviewShowResource($Review)
+        return ['statusCode' => 200, 'status' => true,
+            'data' => new ReviewResource($Review)
         ];
     }
 
 
+    public function destroy($id)
+    {
+        $Userid = Auth::user()->id;
+        try {
 
+        Review::where(['user_id'=> $Userid,'service_id'=>$id])->delete();
 
+        $msg = 'Deleted';
+        return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
 
-    public function delete($id){
-        $Userid= Auth::user()->id;
+        } catch (\Exception $e) {
 
-       Review::query()->where('user_id',$Userid)->where('service_id',$id)->delete();
+            return response()->json(['statusCode' => 400, 'status' => false]);
 
+        }   }
 
-
-        $msg='Deleted';
-        return response()->json(['statusCode' => 200,'status' => true , 'message' =>  $msg ]);    }
 
 
 

@@ -29,22 +29,16 @@ class OrderController extends Controller
     public function CansaledOrder()
     {
 
-    return $this->OrderRepository->CansaledOrder();
+    return $this->OrderRepository->cansaledOrder();
 
     }
     public function FinishedOrder()
 
     {
 
-    return $this->OrderRepository->FinishedOrder();
+        return $this->OrderRepository->finishedOrder();
 
     }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-
 
     /**
      * Store a newly created resource in storage.
@@ -53,7 +47,7 @@ class OrderController extends Controller
      */
     public function store(CreateRequest $request)
     {
-      return $this->OrderRepository->create($request);
+        return $this->OrderRepository->store($request);
     }
 
     /**
@@ -68,18 +62,17 @@ class OrderController extends Controller
 
     public function OrderCode($id)
     {
-        return $this->OrderRepository->OrderCode($id);
+        return $this->OrderRepository->orderCode($id);
     }
+
     public function UpdateOeserToAdmin( Request $request,$id)
     {
-        return $this->OrderRepository->UpdateOeserToAdmin($request,$id);
-
+        return $this->OrderRepository->updateOeserToAdmin($request, $id);
     }
+
     public function Cansale($id)
     {
         return $this->OrderRepository->Cansale($id);
-
-
     }
 
     /**
@@ -100,7 +93,7 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        return $this->OrderRepository->delete($id)   ;
+        return $this->OrderRepository->destroy($id);
 
     }
 }

@@ -35,7 +35,7 @@ class AdminProfileController extends Controller
     {
 
 
-        return $this->AdminRepository->UpdateProfile($request);
+        return $this->AdminRepository->updateProfile($request);
 
 
     }

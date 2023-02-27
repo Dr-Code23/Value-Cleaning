@@ -12,7 +12,7 @@ interface UserRepositoryInterface
     public function reset($data);
     public function profile();
 
-    public function UpdateProfile($data);
+    public function updateProfile($data);
     public function changePassword($data);
 
 }

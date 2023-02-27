@@ -43,15 +43,6 @@ class ServiceController extends Controller
 
       }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -69,32 +60,25 @@ class ServiceController extends Controller
             'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
             "category_id"=> 'required',
             "offer_id"=>'max:2048',
-            "worker_id"=>'max:2048',
+            "worker_id"=>'required',
 
         ]);
-    //saving data
 
-    // check if $request->gallery array has images. if true, we save them
-
-       $service= $this->serviceRepository->storeService($data);
+        $service= $this->serviceRepository->storeService($data);
         $service->addMediaFromRequest('gallery')->toMediaCollection('services');
         $service->save();
 
-    return ['statusCode' => 200,'status' => true , 'data' => new ServiceResource($service) ];
+    return ['statusCode' => 200,'status' => true ];
 
     }
 
-
-
-
-
     public function AddServiceWoeker(Request $request, $id)
     {
-        $service= $this->serviceRepository->AddServiceWoeker($request,$id);
+        $service = $this->serviceRepository->addServiceWoeker($request, $id);
 
 
 
-        return ['statusCode' => 200,'status' => true , 'data' => $service ];
+        return ['statusCode' => 200,'status' => true  ];
 
 
     }
@@ -102,11 +86,7 @@ class ServiceController extends Controller
 
     public function DeleteWoekerFromService(Request $request,$id)
     {
-        return $this->serviceRepository->DeleteWoekerFromService($request,$id);
-
-
-
-
+        return $this->serviceRepository->deleteWoekerFromService($request, $id);
 
     }
     /**
@@ -123,16 +103,7 @@ class ServiceController extends Controller
             'data' => new ServiceResource($Service) ];
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
 
-    }
     /**
      * Update the specified resource in storage.
      *
@@ -143,13 +114,12 @@ class ServiceController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
+
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required',
             'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
             "category_id"=> 'required',
-
-
 
         ]);
 
@@ -161,7 +131,7 @@ class ServiceController extends Controller
         return ['statusCode' => 200,
             'status' => true ,
             'message' => 'service updated successfully ',
-            'data' => new ServiceResource($service) ];
+             ];
 
     }
     /**

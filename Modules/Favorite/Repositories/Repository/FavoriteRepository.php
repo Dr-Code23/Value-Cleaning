@@ -18,14 +18,14 @@ class FavoriteRepository implements FavoriteRepositoryInterface
 
     public function index(){
 
-        $Favorite=  Favorite::latest()->get();
+        $Favorite = Favorite::with('services')->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'data' =>  FavoriteResource::collection($Favorite)
         ];
 
     }
 
-    public function create($data)
+    public function store($data)
     {
         if (Auth::guard('api')->check()) {
             $userID = auth('api')->user()->getKey();
@@ -34,20 +34,22 @@ class FavoriteRepository implements FavoriteRepositoryInterface
 
 
         //Check if the proudct exist or return 404 not found.
-        try { $service = Service::findOrFail($serviceID);} catch (ModelNotFoundException $e) {
+        try {
+            $service = Service::findOrFail($serviceID)->with('services');
+        } catch (ModelNotFoundException $e) {
             return response()->json([
                 'message' => 'The service you\'re trying to add does not exist.',
             ], 404);
         }
 
         //check if the the same serrvice is already in the Cart, if true update the quantity, if not create a new one.
-        $Favorite = Favorite::where( ['user_id'=>$userID,'service_id' => $serviceID])->first();
+        $Favorite = Favorite::where(['user_id' => $userID, 'service_id' => $serviceID])->first();
         if ($Favorite) {
-            Favorite::where(['user_id'=>$userID, 'service_id' => $serviceID]);
+            Favorite::where(['user_id' => $userID, 'service_id' => $serviceID]);
             return response()->json(['message' => 'The Favourite exite'], 200);
 
         } else {
-            $Favorite=  Favorite::create(['user_id'=>$userID, 'service_id' => $serviceID]);
+            $Favorite = Favorite::create(['user_id' => $userID, 'service_id' => $serviceID])->with('services');
             return ['statusCode' => 200, 'status' => true,
                 'message' => 'Favorite successfully created ',
                 'data' => new FavoriteResource($Favorite)
@@ -55,38 +57,30 @@ class FavoriteRepository implements FavoriteRepositoryInterface
 
         }
 
-
-
-
     }
-
-
-
 
     public function show($id)
     {
 
-        $Favorite = Favorite::find($id);
+        $favorite = Favorite::where('id', $id)->with('services');
 
 
-        return ['statusCode' => 200,'status' => true ,
-            'data' => new FavoriteShowResource($Favorite)
+        return ['statusCode' => 200, 'status' => true,
+            'data' => new FavoriteShowResource($favorite)
         ];
     }
 
 
+    public function destroy($id)
+    {
+        $favorite = Favorite::find($id);
 
 
+        $favorite->delete();
 
-    public function delete($id){
-        $Favorite = Favorite::find($id);
-
-
-    $Favorite->delete();
-
-        $msg='Deleted';
-        return response()->json(['statusCode' => 200,'status' => true , 'message' =>  $msg ]);    }
-
+        $msg = 'Deleted';
+        return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
+    }
 
 
 }

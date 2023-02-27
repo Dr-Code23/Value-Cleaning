@@ -18,8 +18,7 @@ class ServiceResource extends JsonResource
      */
     public function toArray($request)
     {
-       $Review= Review::where('service_id',$this->id)->get();
-        $Reviews=  ReviewResource::collection($Review);
+
         return [
             'id'      =>  $this->id,
             'title'   => $this->title,
@@ -28,10 +27,9 @@ class ServiceResource extends JsonResource
             "category_id"=> $this->category_id,
             "offer_id"=> $this->offer_id,
             'active' =>$this->active,
-            'workers' => Service::find($this->id)->workers,
+            'workers' => $this->workers,
             'images'  => $this->getFirstMediaUrl('services'),
-            'Review' => $Reviews,
-            'job_done' =>Order::where(["service_id"=>$this->id,'status'=>'Finished'])->count(),
+            'Review' => $this->revices,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

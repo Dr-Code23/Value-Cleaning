@@ -45,19 +45,13 @@ class WorkerController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-
-
-    /**
      * Store a newly created resource in storage.
      * @param Request $request
      * @return Renderable
      */
     public function store(CreateRequest $request)
     {
-        $worker=$this->WorkerRepository->create($request->all());
+        $worker = $this->WorkerRepository->store($request->all());
 
         return $worker;
     }
@@ -82,10 +76,16 @@ class WorkerController extends Controller
     public function update(UpdateRequest $request, $id)
     {
 
-        $worker=  $this->WorkerRepository->Update($request->all(), $id);
+        $worker = $this->WorkerRepository->Update($request->all(), $id);
 
 
-       return $worker;
+        return $worker;
+    }
+
+    public function tasks($id)
+    {
+
+        return $this->WorkerRepository->tasks($id);
     }
 
     /**
@@ -95,6 +95,6 @@ class WorkerController extends Controller
      */
     public function destroy($id)
     {
-        return $this->WorkerRepository->delete($id);
+        return $this->WorkerRepository->destory($id);
     }
 }

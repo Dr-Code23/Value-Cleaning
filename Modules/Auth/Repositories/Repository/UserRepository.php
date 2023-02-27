@@ -132,7 +132,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
 
-    public function UpdateProfile($data)
+    public function updateProfile($data)
     {
         $input = $data;
 

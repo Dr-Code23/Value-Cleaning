@@ -45,5 +45,8 @@ Route::middleware(['auth','role:user'])->group(function() {
     Route::get('UserHome', [HomeController::class, 'UserHome']);
     Route::get('All/SubService/{id}', [HomeController::class, 'SubService']);
     Route::get('Service/{id}', [HomeController::class, 'ServiceDetalis']);
+    Route::get('Service/{id}', [HomeController::class, 'ServiceDetalis']);
+    Route::get('jobDone/{id}', [HomeController::class, 'jobDone']);
+
 
 });

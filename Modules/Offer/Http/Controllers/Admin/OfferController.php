@@ -22,11 +22,6 @@ class OfferController extends Controller
         return OfferResource::collection($offers);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-
 
     /**
      * Store a newly created resource in storage.
@@ -35,11 +30,15 @@ class OfferController extends Controller
      */
     public function store(CreateRequest $request)
     {
+
         $offer=Offer::create($request->all());
         $offer->addMediaFromRequest('image')->toMediaCollection('offers');
         $offer->save();
 
         return ['statusCode' => 200,'status' => true ,'message'=>'Created successfully' ,'data' => new OfferResource($offer) ];
+
+
+
     }
 
     /**

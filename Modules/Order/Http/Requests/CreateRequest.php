@@ -23,6 +23,7 @@ class CreateRequest extends FormRequest
             'total_price' => 'required',
             'gallery'  =>'required',
 
+
         ];
     }
 

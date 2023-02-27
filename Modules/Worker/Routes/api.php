@@ -24,6 +24,7 @@ Route::middleware(['auth','role:admin'])->prefix("admin")->group(function(){
     Route::post('update/worker/{id}', [WorkerController::class, 'update']);
     Route::get('show/worker/{id}', [WorkerController::class, 'show']);
     Route::post('delete/worker/{id}', [WorkerController::class, 'destroy']);
+    Route::get('tasks/{id}', [WorkerController::class, 'tasks']);
 
 
 });

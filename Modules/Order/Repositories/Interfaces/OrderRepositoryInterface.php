@@ -6,22 +6,24 @@ interface OrderRepositoryInterface
 {
 
     public function index();
-    public function CansaledOrder();
-    public function FinishedOrder();
 
-    public function OrderCode($id);
+    public function cansaledOrder();
 
-    public function UpdateOeserToAdmin($data ,$id);
+    public function finishedOrder();
 
-    public function create($data);
+    public function orderCode($id);
+
+
+    public function store($data);
 
 
     public function show($id);
+
     public function Cansale($id);
 
     public function Update($data,$id);
 
-    public function delete($id);
+    public function destroy($id);
 
 
 }

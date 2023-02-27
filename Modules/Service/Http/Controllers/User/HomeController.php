@@ -9,6 +9,7 @@ use Modules\Category\Entities\Category;
 use Modules\Category\Transformers\CategoryResource;
 use Modules\Offer\Entities\Offer;
 use Modules\Offer\Transformers\OfferResource;
+use Modules\Order\Entities\Order;
 use Modules\Service\Entities\Service;
 use Modules\Service\Entities\SubService;
 use Modules\Service\Http\Requests\CreateSubServiceRequest;
@@ -46,6 +47,14 @@ class HomeController extends Controller
         return ['statusCode' => 200,
             'status' => true ,
             'data' => $SubService ];
+    }
+
+    public function jobDone($id)
+
+    {
+
+        $job_done =Order::where(["service_id"=>$id,'status'=>'Finished'])->count();
+        return ['statusCode' => 200, 'status' => true, 'job_done' => $job_done ];
     }
 
 }

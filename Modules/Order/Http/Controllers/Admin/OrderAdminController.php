@@ -5,7 +5,6 @@ namespace Modules\Order\Http\Controllers\Admin;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Order\Http\Requests\CreateRequest;
 use Modules\Order\Http\Requests\UpdateRequest;
 use Modules\Order\Repositories\Interfaces\OrderAdminRepositoryInterface;
 
@@ -40,21 +39,6 @@ class OrderAdminController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-
-
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(CreateRequest $request)
-    {
-      return $this->OrderAdminRepository->create($request);
-    }
 
     /**
      * Show the specified resource.
@@ -68,16 +52,16 @@ class OrderAdminController extends Controller
 
     public function OrderCode($id)
     {
-        return $this->OrderAdminRepository->OrderCode($id);
+        return $this->OrderAdminRepository->orderCode($id);
     }
     public function UpdateOeserToAdmin( Request $request,$id)
     {
-        return $this->OrderAdminRepository->UpdateOeserToAdmin($request,$id);
+        return $this->OrderAdminRepository->updateOeserToAdmin($request, $id);
 
     }
     public function ChangeStutes(Request $request, $id)
     {
-        return $this->OrderAdminRepository->ChangeStutes($request->all(),$id);
+        return $this->OrderAdminRepository->changeStutes($request->all(), $id);
 
 
     }
@@ -100,7 +84,7 @@ class OrderAdminController extends Controller
      */
     public function destroy($id)
     {
-        return $this->OrderAdminRepository->delete($id)   ;
+        return $this->OrderAdminRepository->destroy($id);
 
     }
 }

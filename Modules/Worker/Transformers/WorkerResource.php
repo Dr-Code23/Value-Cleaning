@@ -20,7 +20,6 @@ class WorkerResource extends JsonResource
             'id'      =>  $this->id,
             'name'   => $this->name,
             'email' => $this->email,
-            'tasks'=> DB::table('order_worker')->where("worker_id",$this->id)->count(),
             'address' => $this->address,
             'phone' => $this->phone,
             'NIN' => $this->NIN,

@@ -29,6 +29,7 @@ class OrderAdminResource extends JsonResource
             'user' => $this->users,
             'service' => $this->services,
             'workers' => $this->workers,
+            'extraServices'=>$this->sub_services,
             'total_price' => $this->total_price,
             'gallery'  => $this->getFirstMediaUrl('Orders'),
 

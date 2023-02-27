@@ -42,7 +42,7 @@ class Order extends Model implements HasMedia
     {
         return $this->belongsToMany(Worker::class);
     }
-    public function sub_servicess()
+    public function sub_services()
     {
         return $this->belongsToMany(SubService::class);
     }

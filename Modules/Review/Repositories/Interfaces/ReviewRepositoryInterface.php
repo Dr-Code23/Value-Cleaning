@@ -7,14 +7,14 @@ interface ReviewRepositoryInterface
 
     public function index();
 
-    public function reviewstore($data);
+    public function reviewStore($data);
 
-    public function reviewupdate($data,$id);
+    public function reviewUpdate($data,$id);
     public function show($id);
 
 
 
-    public function delete($id);
+    public function destroy($id);
 
 
 }

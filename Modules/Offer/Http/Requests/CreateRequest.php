@@ -14,7 +14,7 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'offer_price' => 'required|max:255',
+            'offer_price' => 'required',
         ];
     }
 

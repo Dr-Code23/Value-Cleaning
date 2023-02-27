@@ -30,7 +30,7 @@ class UserProfileController extends Controller
     {
 
 
-      return $this->UserRepository->UpdateProfile($request);
+      return $this->UserRepository->updateProfile($request);
 
     }
 

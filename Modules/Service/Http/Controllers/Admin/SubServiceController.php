@@ -60,11 +60,6 @@ class SubServiceController extends Controller
             'status' => true ,
             'data' => $SubService ];
     }
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
 
 
     /**

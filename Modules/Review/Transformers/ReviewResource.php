@@ -16,14 +16,12 @@ class ReviewResource extends JsonResource
      */
     public function toArray($request)
     {
-        $user=Review::find($this->id)->users;
-        $users=UserReviewResource::collection($user);
 
        return [
            'id'=> $this->id,
            'comments' => $this->comments,
            'rating' => $this->star_rating,
-           'user' => $users,
+           'user' => $this->users,
            'service_id' => $this->service_id,
 
 

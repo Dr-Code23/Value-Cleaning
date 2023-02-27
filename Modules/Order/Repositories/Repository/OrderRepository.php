@@ -8,7 +8,6 @@ use Modules\Order\Entities\Order;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
 use Modules\Order\Transformers\OrderAdminResource;
 use Modules\Order\Transformers\OrderResource;
-use Modules\Service\Entities\Service;
 
 class OrderRepository implements OrderRepositoryInterface
 {
@@ -25,35 +24,36 @@ class OrderRepository implements OrderRepositoryInterface
 
     }
 
-    public function CansaledOrder()
+    public function cansaledOrder()
     {
         $UserID = Auth::id();
 
-        $Order = Order::where('Status', 'Cansaled')->where('user_id', $UserID)->latest()->get();
+        $Order = Order::where(['Status' => 'Cansaled', 'user_id' => $UserID])->with(['users', 'services', 'workers'])->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'CansaledOrder' => OrderResource::collection($Order)
         ];
     }
 
-    public function FinishedOrder()
+    public function finishedOrder()
     {
         $UserID = Auth::id();
 
-        $Order = Order::where('Status', 'Finished')->where('user_id', $UserID)->latest()->get();
+        $Order = Order::where(['Status' => 'Finished', 'user_id' => $UserID])->with(['users', 'services', 'workers'])->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'FinishedOrder' => OrderResource::collection($Order)
         ];
     }
 
-    public function create($data)
+    public function store($data)
     {
         if (Auth::guard('api')->check()) {
             $userID = auth('api')->user()->getKey();
         }
 
         $data['user_id'] = $userID;
+        $data['order_code']='#' . str_pad($userID + 1, 8, "0", STR_PAD_LEFT);
         $Order = Order::create($data->all());
-        $Order['order_code'] = '#' . str_pad($Order->id + 1, 8, "0", STR_PAD_LEFT);
+        $Order->sub_services()->sync($data->sub_service_id);
 
         $Order->addMultipleMediaFromRequest(['gallery'])->each(function ($fileAdder) {
             $fileAdder->toMediaCollection('Orders');
@@ -61,15 +61,14 @@ class OrderRepository implements OrderRepositoryInterface
 
         $Order->save();
 
-        return ['statusCode' => 200, 'status' => true,
-            'data' => new OrderResource($Order)
+        return ['statusCode' => 200, 'status' => true
         ];
 
 
     }
 
 
-    public function OrderCode($id)
+    public function orderCode($id)
     {
         $Order = Order::where('id', $id)->first('order_code');
         return ['statusCode' => 200, 'status' => true,
@@ -82,9 +81,9 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function show($id)
     {
-        $UserID = Auth::id();
+        $userId = Auth::id();
 
-        $Order = Order::find($id);
+        $Order = Order::where(['id'=>$id,'user_id'=>$userId])->with(['users', 'services', 'workers'])->first();
         return ['statusCode' => 200, 'status' => true,
             'data' => new OrderResource($Order)
         ];
@@ -95,7 +94,9 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function Cansale($id)
     {
-        $Order = Order::find($id);
+        $userId = Auth::id();
+
+        $Order = Order::where(['id'=>$id,'user_id'=>$userId])->first();
         $Order['Status'] = 'Cansaled';
         $Order->update();
         return ['statusCode' => 200, 'status' => true,
@@ -107,10 +108,9 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function Update($data, $id)
     {
+        $userId = Auth::id();
 
-        $UserID = Auth::id();
-
-        $Order = Order::find($id);
+        $Order = Order::where(['id'=>$id,'user_id'=>$userId])->with(['users', 'services', 'workers'])->first();;
         $Order->update($data->all());
         $Order->addMultipleMediaFromRequest(['gallery'])->each(function ($fileAdder) {
             $fileAdder->toMediaCollection('Orders');
@@ -122,20 +122,7 @@ class OrderRepository implements OrderRepositoryInterface
         ];
     }
 
-    public function UpdateOeserToAdmin($data, $id)
-    {
-       $Order = Order::find($id);
-        $Order->workers()->sync($data->all());
-        return ['statusCode' => 200, 'status' => true,
-            'message' => 'Order updated successfully ',
-            'data' => new OrderAdminResource($Order)
-        ];
-
-
-    }
-
-
-    public function delete($id)
+    public function destroy($id)
     {
         $UserID = Auth::id();
 
