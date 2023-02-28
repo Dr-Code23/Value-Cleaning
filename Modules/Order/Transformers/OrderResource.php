@@ -28,7 +28,7 @@ class OrderResource extends JsonResource
             'workers' => $this->workers,
             'total_price' => $this->total_price,
             'order_code' => $this->order_code,
-            'gallery'  => $this->getFirstMediaUrl('Orders'),
+            'gallery'  => $this->getMedia('Orders'),
 
         ];
     }
