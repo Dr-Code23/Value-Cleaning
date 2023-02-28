@@ -3,15 +3,13 @@
 namespace Modules\Auth\Http\Controllers\Api\Auth;
 
 use App\Models\User;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Modules\Auth\Http\Requests\CreateRequest;
 use Modules\Auth\Http\Requests\loginRequest;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 use Modules\Auth\Transformers\UserResource;
-use JWTAuth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -21,10 +19,6 @@ class AuthController extends Controller
     {
         $this->UserRepository = $UserRepository;
     }
-
-
-
-
 
     public function register(CreateRequest $request)
     {

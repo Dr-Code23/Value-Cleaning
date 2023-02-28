@@ -5,7 +5,6 @@ namespace Modules\Auth\Emails;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class EventMail extends Mailable
 {
@@ -29,6 +28,7 @@ class EventMail extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_FROM_ADDRESS'))->view('eventmail');
+
+        return $this->from(env('MAIL_FROM_ADDRESS'))->view('auth::eventMail');
     }
 }

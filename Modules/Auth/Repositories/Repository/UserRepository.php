@@ -2,11 +2,11 @@
 
 namespace Modules\Auth\Repositories\Repository;
 
-use App\Mail\EventMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Modules\Auth\Emails\EventMail;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 use Modules\Auth\Transformers\UserResource;
 use Tymon\JWTAuth\Exceptions\JWTException;

@@ -3,7 +3,6 @@
 namespace Modules\Auth\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
 use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 use Modules\Auth\Repositories\Repository\AdminRepository;

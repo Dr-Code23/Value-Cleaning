@@ -6,17 +6,23 @@ namespace Modules\Order\Repositories\Repository;
 use Illuminate\Support\Facades\Auth;
 use Modules\Order\Entities\Order;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
-use Modules\Order\Transformers\OrderAdminResource;
 use Modules\Order\Transformers\OrderResource;
 
 class OrderRepository implements OrderRepositoryInterface
 {
 
+    private $orderModel;
+
+    public function __construct(Order $order)
+    {
+        $this->orderModel = $order;
+    }
+
 
     public function index()
     {
-        $UserID = Auth::id();
-        $Order = Order::where('user_id', $UserID)->with(['users', 'services', 'workers'])->latest()->get();
+        $userId = Auth::id();
+        $Order = $this->orderModel->where('user_id', $userId)->with(['users', 'services', 'workers'])->latest()->get();
 
         return ['statusCode' => 200, 'status' => true,
             'data' => OrderResource::collection($Order)
@@ -26,9 +32,9 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function cansaledOrder()
     {
-        $UserID = Auth::id();
+        $userId = Auth::id();
 
-        $Order = Order::where(['Status' => 'Cansaled', 'user_id' => $UserID])->with(['users', 'services', 'workers'])->latest()->get();
+        $Order = Order::where(['Status' => 'Cansaled', 'user_id' => $userId])->with(['users', 'services', 'workers'])->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'CansaledOrder' => OrderResource::collection($Order)
         ];
@@ -36,9 +42,9 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function finishedOrder()
     {
-        $UserID = Auth::id();
+        $userId = Auth::id();
 
-        $Order = Order::where(['Status' => 'Finished', 'user_id' => $UserID])->with(['users', 'services', 'workers'])->latest()->get();
+        $Order = Order::where(['Status' => 'Finished', 'user_id' => $userId])->with(['users', 'services', 'workers'])->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'FinishedOrder' => OrderResource::collection($Order)
         ];
@@ -47,11 +53,11 @@ class OrderRepository implements OrderRepositoryInterface
     public function store($data)
     {
         if (Auth::guard('api')->check()) {
-            $userID = auth('api')->user()->getKey();
+            $userId = auth('api')->user()->getKey();
         }
 
-        $data['user_id'] = $userID;
-        $data['order_code']='#' . str_pad($userID + 1, 8, "0", STR_PAD_LEFT);
+        $data['user_id'] = $userId;
+        $data['order_code']='#' . str_pad($userId + 1, 8, "0", STR_PAD_LEFT);
         $Order = Order::create($data->all());
         $Order->sub_services()->sync($data->sub_service_id);
 
@@ -124,10 +130,10 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function destroy($id)
     {
-        $UserID = Auth::id();
+        $userId = Auth::id();
 
 
-        $Order = Order::where(['user_id' => $UserID, 'id' => $id])->first();
+        $Order = Order::where(['user_id' => $userId, 'id' => $id])->first();
         try {
 
             $Order->delete();
