@@ -23,10 +23,6 @@ class ReviewResource extends JsonResource
            'rating' => $this->star_rating,
            'user' => $this->users,
            'service_id' => $this->service_id,
-
-
-
-
        ];
     }
 }

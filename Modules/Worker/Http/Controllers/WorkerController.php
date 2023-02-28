@@ -35,10 +35,6 @@ class WorkerController extends Controller
         return response()->json(['status'=>0,'msg'=>'invalid id']);
     }
 
-
-
-
-
     public function index()
     {
        return $this->WorkerRepository->index();
@@ -66,25 +62,22 @@ class WorkerController extends Controller
         return $this->WorkerRepository->show($id);
     }
 
-
     /**
      * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
      * @return Renderable
      */
+
     public function update(UpdateRequest $request, $id)
     {
 
         $worker = $this->WorkerRepository->Update($request->all(), $id);
-
-
         return $worker;
     }
 
     public function tasks($id)
     {
-
         return $this->WorkerRepository->tasks($id);
     }
 

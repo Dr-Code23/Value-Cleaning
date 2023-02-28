@@ -13,22 +13,20 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserRepository implements UserRepositoryInterface
 {
+    private $userModel;
+
+    public function __construct(User $user)
+    {
+        $this->userModel = $user;
+    }
     public function register($data)
     {
-
-
-
-       // 'email' => 'sometimes|email|unique:users,email,'. $request->user_id
-
-        //Request is valid, create new user
-        $user = User::create([
+        $user = $this->userModel->create([
             'name'=> $data->name,
             'email'=> $data->email,
             'address'=> $data->address,
             'phone'=> $data->phone,
             'password'=> hash::make($data->password),
-
-
 
         ]);
 
@@ -45,7 +43,6 @@ class UserRepository implements UserRepositoryInterface
     public function Login($data)
     {
         $credentials = $data->only('email', 'password');
-
         //Create token
         try {
 
@@ -64,25 +61,19 @@ class UserRepository implements UserRepositoryInterface
         if(!auth()->user()->hasRole('user')){
 
             return response()->json(['error' => 'not allowed'], 400);
-
-
-
         }
-
         $user=  auth()->user();
-
         return ['statusCode' => 200, 'status' => true,
             'message' => 'User successfully registered ',
             'data' => new UserResource($user),
             'token'=>$token
         ];
 
-
     }
 
     public function forgotPassword($data)
     {
-        $user = User::where('email', $data->email)->first();
+        $user = $this->userModel->where('email', $data->email)->first();
         if ($user) {
             // 1 generate verification code
             $user->reset_verification_code = rand(100000, 999999);
@@ -97,7 +88,7 @@ class UserRepository implements UserRepositoryInterface
     }
     public function checkCode($data)
     {
-        $user = User::where('email', $data->email)->first();
+        $user = $this->userModel->where('email', $data->email)->first();
         if ($user) {
             if ($user->reset_verification_code == $data->code) {
                 return response()->json(['status' => true, 'message' => 'you will be redirected to set new password']);
@@ -110,7 +101,7 @@ class UserRepository implements UserRepositoryInterface
     }
     public function reset($data)
     {
-        $user = User::where('email', $data->email)->first();
+        $user = $this->userModel->where('email', $data->email)->first();
         if ($user) {
             $user->password = Hash::make($data->password);
             $user->save();
@@ -123,14 +114,12 @@ class UserRepository implements UserRepositoryInterface
     public function profile()
     {
         $id =Auth::id();
-        $user = User::find($id);
-
+        $user = $this->userModel->find($id);
 
         return ['statusCode' => 200,'status' => true ,
             'data' => new UserResource($user)
         ];
     }
-
 
     public function updateProfile($data)
     {
@@ -138,7 +127,7 @@ class UserRepository implements UserRepositoryInterface
 
         $id =auth()->id();
 
-        $user = User::find($id);
+        $user = $this->userModel->find($id);
         $user->update($input);
         if ($data->hasFile('photo')) {
             $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
@@ -158,9 +147,7 @@ class UserRepository implements UserRepositoryInterface
             return response()->json(['error', "Current Password is Invalid"]);
         }
 
-
-
-        $user =  User::find($auth->id);
+        $user =  $this->userModel->find($auth->id);
         $user->password =  Hash::make($data->new_password);
         $user->save();
         return  response()->json(['success', "Password Changed Successfully"]);

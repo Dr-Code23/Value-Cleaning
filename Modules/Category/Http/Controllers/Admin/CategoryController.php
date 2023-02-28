@@ -9,13 +9,20 @@ use Modules\Category\Transformers\CategoryResource;
 
 class CategoryController extends Controller
 {
+    private $categoryModel;
+
+    public function __construct(Category $category)
+    {
+        $this->categoryModel = $category;
+    }
+
     /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        $Categories= Category::latest()->get();
+        $Categories = $this->categoryModel->latest()->get();
         return CategoryResource::collection($Categories);
 
     }
@@ -45,25 +52,18 @@ class CategoryController extends Controller
 
         $requestData = $request->all();
 
-         $category=Category::create($requestData);
-
-
-
+        $category = $this->categoryModel->create($requestData);
         $category->addMediaFromRequest('gallery')->toMediaCollection('categories');
         $category->save();
 
-
-
-     //sending the model data to the frontend
-     return [
-         'statusCode' => 200,
-         'status' => true ,
-         'message' => 'Category stored successfully ',
-         'data' => new CategoryResource($category)
-
-     ];
-
-       }
+        //sending the model data to the frontend
+        return [
+            'statusCode' => 200,
+            'status' => true,
+            'message' => 'Category stored successfully ',
+            'data' => new CategoryResource($category)
+        ];
+    }
 
     /**
      * Display the specified resource.
@@ -73,9 +73,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $Category = Category::find($id);
-
-        return new CategoryResource($Category);
+        $category = $this->categoryModel->find($id);
+        return new CategoryResource($category);
     }
 
 
@@ -94,17 +93,17 @@ class CategoryController extends Controller
             'title' => 'required|string|max:255',
             "gallery" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
         ]);
-        $Category = Category::find($id)->first();
-        $Category->title = $request->title;
-        $Category->save();
+        $category = $this->categoryModel->find($id)->first();
+        $category->title = $request->title;
+        $category->save();
 
         if ($request->hasFile('gallery')) {
-            $Category->addMediaFromRequest('gallery')->toMediaCollection('categories');
+            $category->addMediaFromRequest('gallery')->toMediaCollection('categories');
         }
 
-        return ['statusCode' => 200,'status' => true ,
+        return ['statusCode' => 200, 'status' => true,
             'message' => 'Category updated successfully ',
-            'data' => new CategoryResource($Category)
+            'data' => new CategoryResource($category)
         ];
 
     }
@@ -117,11 +116,11 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $Category = Category::find($id);
-        $Category->delete();
+        $category = $this->categoryModel->find($id);
+        $category->delete();
 
-       $message="deleted " ;
-        return response()->json(['statusCode' => 200,'status' => true , 'message' =>  $message ]);
+        $message = "deleted ";
+        return response()->json(['statusCode' => 200, 'status' => true, 'message' => $message]);
 
-     }
+    }
 }

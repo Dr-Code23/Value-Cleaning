@@ -28,7 +28,6 @@ class HomeController extends Controller
         $Service = Service::where('active', 1)->get();
         $categories= Category::latest()->get();
         $offer =Offer::latest()->get();
-
         return response()->json(["offers"=> OfferResource::collection($offer), "Service"=>SubServiceResource::collection($Service) ,"categories" =>CategoryResource::collection($categories) ]);
 
     }

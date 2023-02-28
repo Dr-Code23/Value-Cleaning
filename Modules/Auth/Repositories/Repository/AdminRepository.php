@@ -13,21 +13,21 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AdminRepository implements AdminRepositoryInterface
 {
+    private $userModel;
+
+    public function __construct(User $user)
+    {
+        $this->userModel = $user;
+    }
+
     public function register($data)
     {
-
-
-
-        //Request is valid, create new user
-        $user = User::create([
+        $user = $this->userModel->create([
             'name'=> $data->name,
             'email'=> $data->email,
             'address'=> $data->address,
             'phone'=> $data->phone,
             'password'=> hash::make($data->password),
-
-
-
         ]);
 
         $user->syncRoles(['admin']);
@@ -43,8 +43,6 @@ class AdminRepository implements AdminRepositoryInterface
     public function Login($data)
     {
         $credentials = $data->only('email', 'password');
-
-
         //Create token
         try {
 
@@ -63,9 +61,6 @@ class AdminRepository implements AdminRepositoryInterface
         if(!auth()->user()->hasRole('admin')){
 
             return response()->json(['error' => 'not allowed'], 400);
-
-
-
         }
 
         $user=  auth()->user();
@@ -75,13 +70,11 @@ class AdminRepository implements AdminRepositoryInterface
             'data' => new UserResource($user),
             'token'=>$token
         ];
-
-
     }
 
     public function forgotPassword($data)
     {
-        $user = User::where('email', $data->email)->first();
+        $user = $this->userModel->where('email', $data->email)->first();
         if ($user) {
             // 1 generate verification code
             $user->reset_verification_code = rand(100000, 999999);
@@ -94,9 +87,10 @@ class AdminRepository implements AdminRepositoryInterface
             return response()->json(['status' => false, 'message' => 'email not found, try again']);
         }
     }
+
     public function checkCode($data)
     {
-        $user = User::where('email', $data->email)->first();
+        $user = $this->userModel->where('email', $data->email)->first();
         if ($user) {
             if ($user->reset_verification_code == $data->code) {
                 return response()->json(['status' => true, 'message' => 'you will be redirected to set new password']);
@@ -107,9 +101,10 @@ class AdminRepository implements AdminRepositoryInterface
             return response()->json(['status' => false, 'message' => 'email not found, try again']);
         }
     }
+
     public function reset($data)
     {
-        $user = User::where('email', $data->email)->first();
+        $user = $this->userModel->where('email', $data->email)->first();
         if ($user) {
             $user->password = Hash::make($data->password);
             $user->save();
@@ -122,14 +117,11 @@ class AdminRepository implements AdminRepositoryInterface
     public function profile()
     {
         $id =Auth::id();
-        $user = User::find($id);
-
-
+        $user = $this->userModel->find($id);
         return ['statusCode' => 200,'status' => true ,
             'data' => new UserResource($user)
         ];
     }
-
 
     public function updateProfile($data)
     {
@@ -137,7 +129,7 @@ class AdminRepository implements AdminRepositoryInterface
 
         $id =auth()->id();
 
-        $user = User::find($id);
+        $user = $this->userModel->find($id);
         $user->update($input);
         if ($data->hasFile('photo')) {
             $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
@@ -157,9 +149,7 @@ class AdminRepository implements AdminRepositoryInterface
             return response()->json(['error', "Current Password is Invalid"]);
         }
 
-
-
-        $user =  User::find($auth->id);
+        $user =  $this->userModel->find($auth->id);
         $user->password =  Hash::make($data->new_password);
         $user->save();
         return  response()->json(['success', "Password Changed Successfully"]);

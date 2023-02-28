@@ -12,22 +12,22 @@ use Modules\Service\Transformers\SubServiceResource;
 
 class SubServiceController extends Controller
 {
+    private $subserviceModel;
+
+    public function __construct(SubService $subservice)
+    {
+        $this->subserviceModel = $subservice;
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        $SubServices= SubService::latest()->get();
+        $SubServices= $this->subserviceModel->latest()->get();
         return SubServiceResource::collection($SubServices);
 
     }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-
 
     /**
      * Store a newly created resource in storage.
@@ -36,7 +36,7 @@ class SubServiceController extends Controller
      */
     public function store(CreateSubServiceRequest $request)
     {
-        $SubServices= SubService::create($request->all());
+        $SubServices= $this->subserviceModel->create($request->all());
         return ['statusCode' => 200,'status' => true , 'message'=>'Created successfully','data'=> new SubServiceResource($SubServices)];
 
     }
@@ -48,19 +48,19 @@ class SubServiceController extends Controller
      */
     public function show($id)
     {
-        $SubService=SubService::findOrFail($id);
+        $SubService=$this->subserviceModel->findOrFail($id);
         return ['statusCode' => 200,
             'status' => true ,
             'data' => new SubServiceResource($SubService) ];
     }
+
     public function showWith($id)
     {
-        $SubService=SubService::where('service_id',$id)->get();
+        $SubService=$this->subserviceModel->where('service_id',$id)->get();
         return ['statusCode' => 200,
             'status' => true ,
             'data' => $SubService ];
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -70,7 +70,7 @@ class SubServiceController extends Controller
      */
     public function update(UpdateSubServiceRequest $request, $id)
     {
-        $SubService = SubService::where('id', $id)->first();
+        $SubService = $this->subserviceModel->where('id', $id)->first();
         $SubService->update($request->all());
         return ['statusCode' => 200,
             'status' => true ,
@@ -85,7 +85,7 @@ class SubServiceController extends Controller
      */
     public function destroy($id)
     {
-        $SubService = SubService::find($id);
+        $SubService = $this->subserviceModel->find($id);
         $SubService->delete();
         $msg='Deleted';
         return response()->json(['statusCode' => 200,'status' => true , 'message' =>  $msg ]);

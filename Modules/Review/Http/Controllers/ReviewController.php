@@ -11,8 +11,6 @@ use Modules\Review\Repositories\Interfaces\ReviewRepositoryInterface;
 
 class ReviewController extends Controller
 {
-
-
     private $ReviewRepository;
 
     public function __construct(ReviewRepositoryInterface $ReviewRepository)
@@ -48,8 +46,6 @@ class ReviewController extends Controller
     {
         return $this->ReviewRepository->show($id);
     }
-
-
 
     /**
      * Update the specified resource in storage.
