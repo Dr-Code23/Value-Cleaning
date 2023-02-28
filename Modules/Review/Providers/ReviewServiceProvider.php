@@ -5,7 +5,9 @@ namespace Modules\Review\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Modules\Review\Repositories\Interfaces\ReviewRepositoryInterface;
+use Modules\Review\Repositories\Interfaces\WorkerReviewRepositoryInterface;
 use Modules\Review\Repositories\Repository\ReviewRepository;
+use Modules\Review\Repositories\Repository\WorkerReviewRepository;
 
 class ReviewServiceProvider extends ServiceProvider
 {
@@ -41,6 +43,7 @@ class ReviewServiceProvider extends ServiceProvider
     {
         $this->app->register(RouteServiceProvider::class);
         $this->app->bind(ReviewRepositoryInterface::class, ReviewRepository::class);
+        $this->app->bind(WorkerReviewRepositoryInterface::class, WorkerReviewRepository::class);
 
     }
 

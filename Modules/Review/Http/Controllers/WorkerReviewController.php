@@ -5,15 +5,15 @@ namespace Modules\Review\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Review\Http\Requests\CreateRequest;
-use Modules\Review\Http\Requests\UpdateRequest;
-use Modules\Review\Repositories\Interfaces\ReviewRepositoryInterface;
+use Modules\Review\Http\Requests\CreateReviewRequest;
+use Modules\Review\Http\Requests\UpdateReviewRequest;
+use Modules\Review\Repositories\Interfaces\WorkerReviewRepositoryInterface;
 
-class ReviewController extends Controller
+class WorkerReviewController extends Controller
 {
     private $ReviewRepository;
 
-    public function __construct(ReviewRepositoryInterface $ReviewRepository)
+    public function __construct(WorkerReviewRepositoryInterface $ReviewRepository)
     {
         $this->ReviewRepository = $ReviewRepository;
     }
@@ -32,7 +32,7 @@ class ReviewController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(CreateRequest $request)
+    public function store(CreateReviewRequest $request)
     {
         return $this->ReviewRepository->reviewStore($request);
     }
@@ -53,9 +53,9 @@ class ReviewController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(UpdateRequest $request,$id)
+    public function update(UpdateReviewRequest $request,$id)
     {
-        return $this->ReviewRepository->reviewUpdate($request,$id);
+        return $this->ReviewRepository->reviewupdate($request,$id);
     }
 
     /**

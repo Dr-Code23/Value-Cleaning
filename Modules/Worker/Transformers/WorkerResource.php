@@ -24,6 +24,7 @@ class WorkerResource extends JsonResource
             'phone' => $this->phone,
             'NIN' => $this->NIN,
             'active'=>$this->active,
+            'review'=>$this->revices,
             'photo'  => $this->getFirstMediaUrl('workers'),
         ];    }
 }
