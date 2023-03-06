@@ -21,8 +21,8 @@ class UpdateRequest extends FormRequest
             'repeat' => 'required',
             'service_id' => 'required',
             'total_price' => 'required',
+            'delivery_price'=> 'required',
             'gallery'  =>'required',
-
         ];
     }
 

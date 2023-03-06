@@ -15,7 +15,11 @@ return new class extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
-            $table->integer('offer_price')->nullable();
+            $table->integer('offer_percent');
+            $table->foreignId('service_id')->nullable()
+                ->constrained('services')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->timestamps();
         });
     }

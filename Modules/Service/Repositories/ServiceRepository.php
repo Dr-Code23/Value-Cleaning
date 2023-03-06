@@ -22,11 +22,11 @@ class ServiceRepository implements ServiceRepositoryInterface
 
     public function storeService($data)
     {
-        if (isset($data['offer_id'])) {
-            $myoffer = Offer::when($data['offer_id'])->where("id", $data["offer_id"])->pluck("offer_price")->first();
-        $data["price"] = $data["price"] - ($myoffer['offer_price'] / 100 * $data["price"]);
-
-    }
+//        if (isset($data['offer_id'])) {
+//            $myoffer = Offer::when($data['offer_id'])->where("id", $data["offer_id"])->pluck("offer_price")->first();
+//        $data["price"] = $data["price"] - ($myoffer['offer_price'] / 100 * $data["price"]);
+//
+//    }
         $sevice =$this->serviceModel->create([
             'title' => [
                 'en' => $data['title_en'],
