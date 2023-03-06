@@ -20,9 +20,9 @@ class ReviewRepository implements ReviewRepositoryInterface
     public function index()
     {
 
-        $Review = $this->reviewModel->with(['users', 'services', 'workers'])->latest()->get();
+        $review = $this->reviewModel->with(['users', 'services', 'workers'])->latest()->get();
         return ['statusCode' => 200, 'status' => true,
-            'data' => ReviewResource::collection($Review)
+            'data' => ReviewResource::collection($review)
         ];
     }
 
@@ -30,30 +30,30 @@ class ReviewRepository implements ReviewRepositoryInterface
     {
 
         $data['user_id'] = Auth::user()->id;
-        $Review = $this->reviewModel->create($data->all());
+        $review = $this->reviewModel->create($data->all());
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Review successfully created ',
-            'data' => new ReviewResource($Review)
+            'data' => new ReviewResource($review)
         ];
     }
 
     public function reviewUpdate($data, $id)
     {
         $userId = Auth::user()->id;
-        $Review = $this->reviewModel->where(['user_id'=> $userId,'service_id'=>$id])->with(['users', 'services', 'workers'])->first();
-        $Review->update($data->all());
+        $review = $this->reviewModel->where(['user_id'=> $userId,'service_id'=>$id])->with(['users', 'services', 'workers'])->first();
+        $review->update($data->all());
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Review successfully updated ',
-            'data' => new ReviewResource($Review)
+            'data' => new ReviewResource($review)
         ];
     }
 
     public function show($id)
     {
 
-        $Review = $this->reviewModel->find($id)->with(['users', 'services']);
+        $review = $this->reviewModel->find($id)->with(['users', 'services']);
         return ['statusCode' => 200, 'status' => true,
-            'data' => new ReviewResource($Review)
+            'data' => new ReviewResource($review)
         ];
     }
 

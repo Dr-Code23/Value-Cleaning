@@ -20,7 +20,7 @@ class SubServiceController extends Controller
     }
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
@@ -32,12 +32,19 @@ class SubServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param Request $request
-     * @return Renderable
+     * @return array
      */
     public function store(CreateSubServiceRequest $request)
     {
-        $SubServices= $this->subserviceModel->create($request->all());
-        return ['statusCode' => 200,'status' => true , 'message'=>'Created successfully','data'=> new SubServiceResource($SubServices)];
+        $SubServices = $this->subserviceModel->create([
+            'title'      => [
+                'en'     => $request['title_en'],
+                'sv'     => $request['title_sv'],
+            ],
+            'price'      => $request['price'],
+            'service_id' => $request['service_id']
+        ]);
+        return ['statusCode' => 200, 'status' => true, 'message' => 'Created successfully', 'data' => new SubServiceResource($SubServices)];
 
     }
 
@@ -71,7 +78,14 @@ class SubServiceController extends Controller
     public function update(UpdateSubServiceRequest $request, $id)
     {
         $SubService = $this->subserviceModel->where('id', $id)->first();
-        $SubService->update($request->all());
+        $SubService->update([
+            'title'      => [
+                'en'     => $request['title_en'],
+                'sv'     => $request['title_sv'],
+            ],
+            'price'      => $request['price'],
+            'service_id' => $request['service_id']
+        ]);
         return ['statusCode' => 200,
             'status' => true ,
             'message' => 'Subservice updated successfully ',
@@ -81,7 +95,7 @@ class SubServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Renderable
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {

@@ -61,15 +61,15 @@ class WorkerRepository implements WorkerRepositoryInterface
         ];
     }
 
-    public function Update($data , $id)
+    public function update($data , $id)
     {
 
-        $worker =  $this->workerModel->find($id);
-        $worker->update($data);
-
+        $worker = $this->workerModel->find($id);
+        $worker->update($data->all());
+        if(isset($data['photo'])){
         $worker->addMediaFromRequest('photo')->toMediaCollection('workers');
         $worker->save();
-
+    }
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Worker updated successfully ',
             'data' => new WorkerResource($worker)
@@ -79,10 +79,20 @@ class WorkerRepository implements WorkerRepositoryInterface
 
     public function destory($id)
     {
-        $worker =  $this->workerModel->find($id);
+        try {
+            $worker =  $this->workerModel->find($id);
 
 
-        $worker->delete();
+            $worker->delete();
+        }catch (\Exception $e){
+            return ['statusCode' => 404, 'status' => false,
+                'message' => 'something wrong ',
+
+            ];
+
+
+        }
+
 
         $msg = 'Deleted';
         return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);

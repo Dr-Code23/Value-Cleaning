@@ -12,7 +12,7 @@ interface WorkerRepositoryInterface
     public function tasks($id);
     public function show($id);
 
-    public function Update($data,$id);
+    public function update($data,$id);
 
     public function destory($id);
 

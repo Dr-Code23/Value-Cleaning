@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Modules\Order\Http\Controllers\Admin\OrderAdminController;
 use Modules\Order\Http\Controllers\User\OrderController;
+use Modules\Order\Http\Controllers\User\StripeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +21,7 @@ Route::middleware('auth:api')->get('/order', function (Request $request) {
 });
 
 
-Route::group(['middleware' => 'auth:api'], function () {
+Route::middleware(['user_api','role:user'])->group(function() {
     Route::get('Active/Order/{id}', [OrderController::class, 'activate']);
     Route::get('Order', [OrderController::class, 'index']);
     Route::get('CansaledOrder', [OrderController::class, 'CansaledOrder']);
@@ -32,17 +33,22 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('update/Order/{id}', [OrderController::class, 'update']);
     Route::get('show/Order/{id}', [OrderController::class, 'show']);
     Route::post('delete/Order/{id}', [OrderController::class, 'destroy']);
+    Route::get('/show/order/{id}', [OrderController::class, 'showOrder']);
+    Route::get('/order/pdf/{id}', [OrderController::class, 'createPdf']);
+    Route::post('make-payment',[StripeController::class,'makePayment']);
+
+
 
 
 });
-Route::middleware(['auth','role:admin'])->prefix("admin")->group(function() {
+Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function() {
     Route::post('Worker/update/Order/{id}', [OrderAdminController::class, 'UpdateOeserToAdmin']);
     Route::post('Status/Order/{id}', [OrderAdminController::class, 'ChangeStutes']);
     Route::get('Order', [OrderAdminController::class, 'index']);
     Route::get('CansaledOrder', [OrderAdminController::class, 'CansaledOrder']);
 
     Route::get('FinishedOrder', [OrderAdminController::class, 'FinishedOrder']);
-    Route::post('update/Order/{id}', [OrderAdminController::class, 'update']);
+    Route::put('update/Order/{id}', [OrderAdminController::class, 'update']);
     Route::get('show/Order/{id}', [OrderAdminController::class, 'show']);
-    Route::post('delete/Order/{id}', [OrderAdminController::class, 'destroy']);
+    Route::delete('delete/Order/{id}', [OrderAdminController::class, 'destroy']);
 });

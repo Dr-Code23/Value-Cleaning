@@ -11,6 +11,12 @@
 |
 */
 
+use Modules\Order\Http\Controllers\User\OrderController;
+
 Route::prefix('order')->group(function() {
     Route::get('/', 'OrderController@index');
 });
+
+
+
+Route::get('/show/order', [OrderController::class, 'showEmployees']);

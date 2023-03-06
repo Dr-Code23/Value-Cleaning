@@ -72,8 +72,8 @@ class WorkerController extends Controller
     public function update(UpdateRequest $request, $id)
     {
 
-        $worker = $this->WorkerRepository->Update($request->all(), $id);
-        return $worker;
+        return $this->WorkerRepository->update($request, $id);
+
     }
 
     public function tasks($id)

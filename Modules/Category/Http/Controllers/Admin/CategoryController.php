@@ -46,13 +46,18 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title_en' => 'required|string|max:255',
+            'title_sv' => 'required|string|max:255',
             "gallery" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
         ]);
 
-        $requestData = $request->all();
-
-        $category = $this->categoryModel->create($requestData);
+        $category= $this->categoryModel->create([
+            'title' =>
+                [
+                    'en' => $validated['title_en'],
+                    'sv' => $validated['title_sv']
+                ]
+        ]);
         $category->addMediaFromRequest('gallery')->toMediaCollection('categories');
         $category->save();
 
@@ -87,16 +92,19 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title_en' => 'required|string|max:255',
+            'title_sv' => 'required|string|max:255',
             "gallery" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
         ]);
         $category = $this->categoryModel->find($id)->first();
-        $category->title = $request->title;
-        $category->save();
-
+        $category->update([
+            'title' =>
+                [
+                    'en' => $validated['title_en'],
+                    'sv' => $validated['title_sv']
+                ]
+        ]);
         if ($request->hasFile('gallery')) {
             $category->addMediaFromRequest('gallery')->toMediaCollection('categories');
         }

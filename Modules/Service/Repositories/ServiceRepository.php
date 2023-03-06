@@ -27,7 +27,18 @@ class ServiceRepository implements ServiceRepositoryInterface
         $data["price"] = $data["price"] - ($myoffer['offer_price'] / 100 * $data["price"]);
 
     }
-        $sevice = $this->serviceModel->create($data);
+        $sevice =$this->serviceModel->create([
+            'title' => [
+                'en' => $data['title_en'],
+                'sv' => $data['title_sv']
+            ],
+            'description'=> [
+                'en' => $data['description_en'],
+                'sv' => $data['description_sv']
+            ],
+            "category_id"=> $data['category_id'],
+            'price'=> $data['price'],
+       ]);
 
         $sevice->workers()->sync($data['worker_id']);
         return $sevice;
@@ -55,20 +66,26 @@ class ServiceRepository implements ServiceRepositoryInterface
 
     public function updateService($data, $id)
     {
-        $Service = $this->serviceModel->where('id', $id)->first();
+        $service = $this->serviceModel->where('id', $id)->first();
 
 if(isset($data['offer_id'])){
           //sending the model data to the frontend
-        $Service->title = $data['title'];
-        $Service->description = $data['description'];
-        $Service->price = $data['price'];
-        $Service->category_id = $data['category_id'];
-        $Service->offer_id = $data['offer_id'];
-        $Service->save();
-       return $Service;
+    $service->update([
+        'title' => [
+            'en' => $data['title_en'],
+            'sv' => $data['title_sv']
+        ],
+        'description'=> [
+            'en' => $data['description_en'],
+            'sv' => $data['description_sv']
+        ],
+        "category_id"=> $data['category_id'],
+        'price'=> $data['price'],
+    ]);
+       return $service;
     }
-        $Service->update();
-        return $Service;
+        $service->update();
+        return $service;
     }
 
     public function destroyService($id)

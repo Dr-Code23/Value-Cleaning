@@ -47,10 +47,11 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-
         $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'title_en' => 'required|string|max:255',
+            'description_en' => 'required|string',
+            'title_sv' => 'required|string|max:255',
+            'description_sv' => 'required|string',
             'price' => 'required',
             'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
             "category_id"=> 'required',
@@ -93,18 +94,20 @@ class ServiceController extends Controller
      *
      * @param Request $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return array|\Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'title_en' => 'required|string|max:255',
+            'description_en' => 'required|string',
+            'title_swd' => 'required|string|max:255',
+            'description_swd' => 'required|string',
             'price' => 'required',
             'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
             "category_id"=> 'required',
-
+            "offer_id"=>'max:2048',
+            "worker_id"=>'required',
         ]);
         $service= $this->serviceRepository->updateService($data, $id);
         if ($request->hasFile('gallery')) {
@@ -113,6 +116,7 @@ class ServiceController extends Controller
         return ['statusCode' => 200,
             'status' => true ,
             'message' => 'service updated successfully ',
+            'data' =>$service,
              ];
     }
     /**

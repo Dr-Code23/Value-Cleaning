@@ -5,6 +5,7 @@ use Modules\Auth\Http\Controllers\Api\Admin\AdminChangePasswordAController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminProfileController;
 use Modules\Auth\Http\Controllers\Api\Admin\RoleController;
+use Modules\Auth\Http\Controllers\Api\Admin\SendNotificationController;
 use Modules\Auth\Http\Controllers\Api\Admin\UserController;
 use Modules\Auth\Http\Controllers\Api\Auth\AuthController;
 use Modules\Auth\Http\Controllers\Api\Auth\ChangePasswordController;
@@ -33,9 +34,9 @@ Route::post('change/password',  [RestePasswordController::class, 'forgotPassword
 Route::post('forgot/check-code', [RestePasswordController::class, 'checkCode']);
 Route::post('reset/password', [RestePasswordController::class, 'reset']);
 Route::get('/auth/{provider}', [AuthController::class,'redirectToProvider']);
-Route::get('/auth/{provider}/callback', [AuthController::class,'handleProviderCallback']);
+Route::get('/auth/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 
-Route::group(['middleware' => 'auth:api'], function () {
+Route::middleware(['user_api','role:user'])->group(function(){
 
     Route::get('logout', [UserProfileController::class, 'Logout']);
     Route::get('profile', [UserProfileController::class, 'profile']);
@@ -48,7 +49,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 Route::post('Admin/Register', [AdminController::class, 'AdminRegister']);
 Route::post('Admin/Login', [AdminController::class, 'AdminLogin']);
 
-Route::middleware(['auth','role:admin'])->group(function(){
+Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
     Route::get('Admin/profile', [AdminProfileController::class, 'AdminProfile']);
@@ -56,5 +57,6 @@ Route::middleware(['auth','role:admin'])->group(function(){
     Route::post('update/profile', [AdminProfileController::class, 'AdminUpdateProfile']);
     Route::post('Admin-change-password', [AdminChangePasswordAController::class, 'AdminchangePassword']);
     Route::get('logout', [AdminProfileController::class, 'Logout']);
+    Route::post('send', [SendNotificationController::class, 'sendNotification']);
 
 });

@@ -16,11 +16,11 @@ use Modules\Offer\Http\Controllers\Admin\OfferController;
 
 
 
-Route::middleware(['auth','role:admin'])->prefix("admin")->group(function(){
+Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
 
     Route::get('Offer', [OfferController::class, 'index']);
     Route::post('create/Offer', [OfferController::class, 'store']);
     Route::get('show/Offer/{id}',  [OfferController::class, 'show']);
-    Route::post('update/Offer/{id}',  [OfferController::class, 'update']);
-    Route::post('delete/Offer/{id}', [OfferController::class, 'destroy']);
+    Route::put('update/Offer/{id}',  [OfferController::class, 'update']);
+    Route::delete('delete/Offer/{id}', [OfferController::class, 'destroy']);
 });

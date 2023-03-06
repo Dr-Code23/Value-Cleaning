@@ -2,17 +2,20 @@
 
 namespace Modules\Auth\Repositories\Repository;
 
-use App\Mail\EventMail;
+
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Modules\Auth\Emails\EventMail;
 use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
+use Modules\Auth\Traits\pushNotificationTraite;
 use Modules\Auth\Transformers\UserResource;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AdminRepository implements AdminRepositoryInterface
 {
+    use pushNotificationTraite;
     private $userModel;
 
     public function __construct(User $user)
@@ -125,13 +128,12 @@ class AdminRepository implements AdminRepositoryInterface
 
     public function updateProfile($data)
     {
-        $input = $data;
 
         $id =auth()->id();
-
         $user = $this->userModel->find($id);
-        $user->update($input);
+        $user->update($data->all());
         if ($data->hasFile('photo')) {
+            $user->clearMediaCollection('avatar');
             $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
         }
         return ['statusCode' => 200,'status' => true ,
@@ -144,15 +146,20 @@ class AdminRepository implements AdminRepositoryInterface
         $auth = Auth::user();
 
         // The passwords matches
-        if (!Hash::check($data->get('current_password'), $auth->password))
-        {
+        if (!Hash::check($data->get('current_password'), $auth->password)) {
             return response()->json(['error', "Current Password is Invalid"]);
         }
 
-        $user =  $this->userModel->find($auth->id);
-        $user->password =  Hash::make($data->new_password);
+        $user = $this->userModel->find($auth->id);
+        $user->password = Hash::make($data->new_password);
         $user->save();
-        return  response()->json(['success', "Password Changed Successfully"]);
+        return response()->json(['success', "Password Changed Successfully"]);
     }
+
+    public function pushNotification($data)
+    {
+        return $this->Notification($data);
+    }
+
 
 }

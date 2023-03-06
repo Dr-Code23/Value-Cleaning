@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Translatable\Facades\Translatable;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -15,8 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
-    }
+        Translatable::fallback(
+            fallbackAny: true,
+
+        );    }
 
     /**
      * Bootstrap any application services.
@@ -27,6 +30,6 @@ class AppServiceProvider extends ServiceProvider
     {
 
 
-        
+
         Schema::defaultStringLength(191);    }
 }

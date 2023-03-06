@@ -42,8 +42,9 @@ class UserRepository implements UserRepositoryInterface
     }
     public function Login($data)
     {
-        $credentials = $data->only('email', 'password');
+        $credentials = $data->only('email', 'password',);
         //Create token
+
         try {
 
             if (!$token = Auth::attempt($credentials)) {
@@ -63,6 +64,9 @@ class UserRepository implements UserRepositoryInterface
             return response()->json(['error' => 'not allowed'], 400);
         }
         $user=  auth()->user();
+        $devise_token['devise_token'] = $data->devise_token;
+        $user->update($devise_token);
+
         return ['statusCode' => 200, 'status' => true,
             'message' => 'User successfully registered ',
             'data' => new UserResource($user),
@@ -123,12 +127,9 @@ class UserRepository implements UserRepositoryInterface
 
     public function updateProfile($data)
     {
-        $input = $data;
-
-        $id =auth()->id();
-
+        $id =Auth::id();
         $user = $this->userModel->find($id);
-        $user->update($input);
+        $user->update($data->all());
         if ($data->hasFile('photo')) {
             $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
         }

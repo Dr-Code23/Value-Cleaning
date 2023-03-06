@@ -2,8 +2,7 @@
 
 namespace Modules\Auth\Http\Controllers\Api\Admin;
 
-use App\Models\User;
-use Auth;
+use Illuminate\Http\Client\Request;
 use Modules\Auth\Http\Requests\CreateRequest;
 use Modules\Auth\Http\Requests\loginRequest;
 use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;

@@ -10,19 +10,18 @@ use Modules\Review\Entities\Review;
 use Modules\Worker\Entities\Worker;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Translatable\HasTranslations;
+
 class Service extends Model implements HasMedia
 {
-    use HasFactory;    use InteractsWithMedia;
+    use HasFactory,InteractsWithMedia,HasTranslations;
 
 
-    protected $fillable = [
-    'title',
-    'description',
-    "category_id",
-    "offer_id",
-    'price',
-    'active',
-];
+    public $translatable = [ 'title',
+        'description',
+        ];
+    protected $guarded = [];
+
 
 
     public function category(){
