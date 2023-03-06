@@ -167,10 +167,10 @@ class OrderRepository implements OrderRepositoryInterface
             $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
             $token = $stripe->tokens->create([
                 'card' => [
-                    'number' => $data->number,
+                    'number'    => $data->number,
                     'exp_month' => $data->exp_month,
-                    'exp_year' => $data->exp_year,
-                    'cvc' => $data->cvc,
+                    'exp_year'  => $data->exp_year,
+                    'cvc'       => $data->cvc,
                 ],
             ]);
 
