@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Http\Controllers\User;
 
+use PDF;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -65,11 +66,6 @@ class OrderController extends Controller
         return $this->OrderRepository->orderCode($id);
     }
 
-    public function UpdateOeserToAdmin( Request $request,$id)
-    {
-        return $this->OrderRepository->updateOeserToAdmin($request, $id);
-    }
-
     public function Cansale($id)
     {
         return $this->OrderRepository->Cansale($id);
@@ -96,4 +92,10 @@ class OrderController extends Controller
         return $this->OrderRepository->destroy($id);
 
     }
+
+    public function createPdf($id)
+    {
+       return $this->OrderRepository->downloadPdf($id);
+    }
+
 }

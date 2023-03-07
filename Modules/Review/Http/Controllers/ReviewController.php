@@ -11,8 +11,6 @@ use Modules\Review\Repositories\Interfaces\ReviewRepositoryInterface;
 
 class ReviewController extends Controller
 {
-
-
     private $ReviewRepository;
 
     public function __construct(ReviewRepositoryInterface $ReviewRepository)
@@ -36,7 +34,7 @@ class ReviewController extends Controller
      */
     public function store(CreateRequest $request)
     {
-        return $this->ReviewRepository->reviewstore($request);
+        return $this->ReviewRepository->reviewStore($request);
     }
 
     /**
@@ -49,8 +47,6 @@ class ReviewController extends Controller
         return $this->ReviewRepository->show($id);
     }
 
-
-
     /**
      * Update the specified resource in storage.
      * @param Request $request
@@ -59,7 +55,7 @@ class ReviewController extends Controller
      */
     public function update(UpdateRequest $request,$id)
     {
-        return $this->ReviewRepository->reviewupdate($request,$id);
+        return $this->ReviewRepository->reviewUpdate($request,$id);
     }
 
     /**
@@ -69,6 +65,6 @@ class ReviewController extends Controller
      */
     public function destroy($id)
     {
-        return $this->ReviewRepository->delete($id);
+        return $this->ReviewRepository->destroy($id);
     }
 }

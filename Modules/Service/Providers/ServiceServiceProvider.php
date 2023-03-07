@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Modules\Service\Repositories\Interfaces\ServiceRepositoryInterface;
 use Modules\Service\Repositories\ServiceRepository;
+use Spatie\Translatable\Facades\Translatable;
 
 
 class ServiceServiceProvider extends ServiceProvider
@@ -43,6 +44,11 @@ class ServiceServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
 
         $this->app->bind(ServiceRepositoryInterface::class, ServiceRepository::class);
+
+        Translatable::fallback(
+            fallbackAny: true,
+
+        );
 
     }
 

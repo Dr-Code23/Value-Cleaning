@@ -17,13 +17,13 @@ use Modules\Worker\Http\Controllers\WorkerController;
 
 
 
-Route::middleware(['auth','role:admin'])->prefix("admin")->group(function(){
+Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
     Route::get('Active/worker/{id}', [WorkerController::class, 'activate']);
     Route::get('worker', [WorkerController::class, 'index']);
     Route::post('create/worker', [WorkerController::class, 'store']);
     Route::post('update/worker/{id}', [WorkerController::class, 'update']);
     Route::get('show/worker/{id}', [WorkerController::class, 'show']);
-    Route::post('delete/worker/{id}', [WorkerController::class, 'destroy']);
+    Route::delete('delete/worker/{id}', [WorkerController::class, 'destroy']);
     Route::get('tasks/{id}', [WorkerController::class, 'tasks']);
 
 

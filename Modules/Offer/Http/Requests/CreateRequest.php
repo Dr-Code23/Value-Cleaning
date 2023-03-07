@@ -14,7 +14,8 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'offer_price' => 'required',
+            'offer_percent' => 'required',
+            'service_id' =>'',
         ];
     }
 

@@ -3,7 +3,8 @@
 namespace Modules\Auth\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
+use Modules\Auth\Entities\Notification;
+use Modules\Auth\Observers\NotificationObserver;
 use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 use Modules\Auth\Repositories\Repository\AdminRepository;
@@ -32,6 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+
     }
 
     /**

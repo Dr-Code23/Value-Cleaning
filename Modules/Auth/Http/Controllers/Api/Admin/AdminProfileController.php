@@ -2,16 +2,9 @@
 
 namespace Modules\Auth\Http\Controllers\Api\Admin;
 
-use App\Http\Controllers\Api\Resources\UserResource;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Auth;
-use Modules\Auth\Http\Requests\UpdateRequest;
+use Illuminate\Support\Facades\Auth;
 use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 
 class AdminProfileController extends Controller
@@ -26,12 +19,10 @@ class AdminProfileController extends Controller
     public function AdminProfile()
     {
         return $this->AdminRepository->profile();
-
-
     }
 
 
-    public function AdminUpdateProfile(UpdateRequest $request)
+    public function AdminUpdateProfile(Request $request)
     {
 
 

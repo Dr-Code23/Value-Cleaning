@@ -3,8 +3,8 @@
 namespace Modules\Order\Entities;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Service\Entities\Service;
 use Modules\Service\Entities\SubService;
 use Modules\Worker\Entities\Worker;
@@ -17,16 +17,17 @@ class Order extends Model implements HasMedia
 
     protected $fillable = [
 
-'worke_aera',
-'date',
-'time',
-'address',
-'repeat',
-'status',
-'user_id',
-'service_id',
-'total_price',
-'order_code',];
+        'worke_aera',
+        'date',
+        'time',
+        'address',
+        'repeat',
+        'status',
+        'user_id',
+        'service_id',
+        'total_price',
+        'delivery_price',
+        'order_code',];
 
     public function services()
     {

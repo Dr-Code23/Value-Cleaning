@@ -14,8 +14,9 @@ class loginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6|max:50'
+            'email'        => 'required|email',
+            'password'     => 'required|string|min:6|max:50',
+            'devise_token' => ''
         ];
     }
 

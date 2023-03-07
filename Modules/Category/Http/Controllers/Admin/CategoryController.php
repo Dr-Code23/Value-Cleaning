@@ -9,13 +9,20 @@ use Modules\Category\Transformers\CategoryResource;
 
 class CategoryController extends Controller
 {
+    private $categoryModel;
+
+    public function __construct(Category $category)
+    {
+        $this->categoryModel = $category;
+    }
+
     /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        $Categories= Category::latest()->get();
+        $Categories = $this->categoryModel->latest()->get();
         return CategoryResource::collection($Categories);
 
     }
@@ -39,31 +46,29 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title_en' => 'required|string|max:255',
+            'title_sv' => 'required|string|max:255',
             "gallery" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
         ]);
 
-        $requestData = $request->all();
-
-         $category=Category::create($requestData);
-
-
-
+        $category= $this->categoryModel->create([
+            'title' =>
+                [
+                    'en' => $validated['title_en'],
+                    'sv' => $validated['title_sv']
+                ]
+        ]);
         $category->addMediaFromRequest('gallery')->toMediaCollection('categories');
         $category->save();
 
-
-
-     //sending the model data to the frontend
-     return [
-         'statusCode' => 200,
-         'status' => true ,
-         'message' => 'Category stored successfully ',
-         'data' => new CategoryResource($category)
-
-     ];
-
-       }
+        //sending the model data to the frontend
+        return [
+            'statusCode' => 200,
+            'status' => true,
+            'message' => 'Category stored successfully ',
+            'data' => new CategoryResource($category)
+        ];
+    }
 
     /**
      * Display the specified resource.
@@ -73,9 +78,8 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $Category = Category::find($id);
-
-        return new CategoryResource($Category);
+        $category = $this->categoryModel->find($id);
+        return new CategoryResource($category);
     }
 
 
@@ -88,23 +92,26 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title_en' => 'required|string|max:255',
+            'title_sv' => 'required|string|max:255',
             "gallery" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
         ]);
-        $Category = Category::find($id)->first();
-        $Category->title = $request->title;
-        $Category->save();
-
+        $category = $this->categoryModel->find($id)->first();
+        $category->update([
+            'title' =>
+                [
+                    'en' => $validated['title_en'],
+                    'sv' => $validated['title_sv']
+                ]
+        ]);
         if ($request->hasFile('gallery')) {
-            $Category->addMediaFromRequest('gallery')->toMediaCollection('categories');
+            $category->addMediaFromRequest('gallery')->toMediaCollection('categories');
         }
 
-        return ['statusCode' => 200,'status' => true ,
+        return ['statusCode' => 200, 'status' => true,
             'message' => 'Category updated successfully ',
-            'data' => new CategoryResource($Category)
+            'data' => new CategoryResource($category)
         ];
 
     }
@@ -117,11 +124,11 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $Category = Category::find($id);
-        $Category->delete();
+        $category = $this->categoryModel->find($id);
+        $category->delete();
 
-       $message="deleted " ;
-        return response()->json(['statusCode' => 200,'status' => true , 'message' =>  $message ]);
+        $message = "deleted ";
+        return response()->json(['statusCode' => 200, 'status' => true, 'message' => $message]);
 
-     }
+    }
 }

@@ -10,27 +10,34 @@ use Modules\Order\Transformers\OrderAdminResource;
 
 class OrderAdminRepository implements OrderAdminRepositoryInterface
 {
+
+    private $orderModel;
+
+    public function __construct(Order $order)
+    {
+        $this->orderModel = $order;
+    }
+
     public function changeStutes($data, $id)
     {
 
-        $Order = Order::find($id);
-        $Order->update([
+        $order = $this->orderModel->find($id);
+        $order->update([
             'status' => $data['Status'],
-
 
         ]);
         return ['statusCode' => 200, 'status' => true,
-            'Order_Status' => $Order->status
+            'Order_Status' => $order->status
         ];
 
     }
 
     public function index()
     {
-        $Order = Order::latest()->get();
+        $order = $this->orderModel->latest()->get();
 
         return ['statusCode' => 200, 'status' => true,
-            'data' => OrderAdminIndexResource::collection($Order)
+            'data' => OrderAdminIndexResource::collection($order)
         ];
 
     }
@@ -38,28 +45,28 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     public function cansaledOrder()
     {
 
-        $Order = Order::where('status', 'Cansaled')->latest()->get();
+        $order = $this->orderModel->where('status', 'Cansaled')->latest()->get();
         return ['statusCode' => 200, 'status' => true,
-            'CansaledOrder' => OrderAdminIndexResource::collection($Order)
+            'CansaledOrder' => OrderAdminIndexResource::collection($order)
         ];
     }
 
     public function finishedOrder()
     {
 
-        $Order = Order::where('Status', 'Finished')->latest()->get();
+        $order = $this->orderModel->where('Status', 'Finished')->latest()->get();
         return ['statusCode' => 200, 'status' => true,
-            'FinishedOrder' => OrderAdminIndexResource::collection($Order)
+            'FinishedOrder' => OrderAdminIndexResource::collection($order)
         ];
     }
 
     public function show($id)
     {
 
-        $Order = Order::find($id);
+        $order = $this->orderModel->find($id);
 
         return ['statusCode' => 200,'status' => true ,
-            'data' => new OrderAdminResource($Order)
+            'data' => new OrderAdminResource($order)
         ];
 
     }
@@ -67,13 +74,13 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     public function updateOrderToAdmin($data, $id)
     {
 
-        $Order = Order::find($id);
+        $order = $this->orderModel->find($id);
 
-        $Order->workers()->sync($data->all());
+        $order->workers()->sync($data->all());
 
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Order updated successfully ',
-            'data' => new OrderAdminResource($Order)
+            'data' => new OrderAdminResource($order)
         ];
 
     }
@@ -81,11 +88,8 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     public function destroy($id)
     {
 
-        $Order = Order::find($id);
-
-
-        $Order->delete();
-
+        $order = $this->orderModel->find($id);
+        $order->delete();
         $msg = 'Deleted';
         return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
     }

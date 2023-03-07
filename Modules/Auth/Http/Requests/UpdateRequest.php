@@ -15,7 +15,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
+            'email' => 'required|string|email|max:100|',
             'address' => 'required',
             'phone' => 'required',
             "photo" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"        ];

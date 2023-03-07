@@ -39,7 +39,6 @@ class FavoriteController extends Controller
         return$this->FavoriteRepository->show($id);
     }
 
-
     /**
      * Remove the specified resource from storage.
      * @param int $id

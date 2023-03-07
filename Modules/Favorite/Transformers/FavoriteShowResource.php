@@ -20,10 +20,7 @@ class FavoriteShowResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => Auth::id(),
-            'service' => Favorite::find($this->id)->services,
-
-
+            'service' => $this->services,
         ];
     }
 }

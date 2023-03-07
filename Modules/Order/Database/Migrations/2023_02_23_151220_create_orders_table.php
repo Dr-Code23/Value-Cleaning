@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->double('worke_aera');
-            $table->text('date');
+            $table->date('date');
             $table->time('time');
             $table->string('address');
             $table->enum('repeat', ['once', 'weekly', 'monthly']);
@@ -29,9 +29,9 @@ return new class extends Migration
                 ->constrained('services')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+            $table->float('delivery_price');
             $table->double('total_price');
             $table->string('order_code');
-
             $table->timestamps();
         });
     }

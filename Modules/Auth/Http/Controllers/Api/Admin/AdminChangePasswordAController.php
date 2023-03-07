@@ -2,12 +2,7 @@
 
 namespace Modules\Auth\Http\Controllers\Api\Admin;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Models\User;
-use Auth;
-use Illuminate\Support\Facades\Hash;
 use Modules\Auth\Http\Requests\ChangePasswordRequest;
 use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 

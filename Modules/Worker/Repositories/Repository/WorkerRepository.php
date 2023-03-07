@@ -10,13 +10,18 @@ use Modules\Worker\Transformers\WorkerResource;
 
 class WorkerRepository implements WorkerRepositoryInterface
 {
+    private $workerModel;
 
+    public function __construct(Worker $worker)
+    {
+        $this->workerModel = $worker;
+    }
 
     public function index(){
 
-        $Worker=  Worker::latest()->get();
+        $worker=   $this->workerModel->latest()->get();
         return ['statusCode' => 200, 'status' => true,
-            'data' =>  WorkerResource::collection($Worker)
+            'data' =>  WorkerResource::collection($worker)
         ];
 
     }
@@ -25,14 +30,14 @@ class WorkerRepository implements WorkerRepositoryInterface
     {
 
         //Request is valid, create new user
-        $Worker = Worker::create($data);
-        $Worker->addMediaFromRequest('photo')->toMediaCollection('workers');
+        $worker =  $this->workerModel->create($data);
+        $worker->addMediaFromRequest('photo')->toMediaCollection('workers');
 
 
-        $Worker->save();
+        $worker->save();
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Worker successfully created ',
-            'data' => new WorkerResource($Worker)
+            'data' => new WorkerResource($worker)
         ];
 
     }
@@ -46,40 +51,48 @@ class WorkerRepository implements WorkerRepositoryInterface
         ];
     }
 
-
     public function show($id)
     {
 
-        $Worker = Worker::find($id);
+        $worker =  $this->workerModel->find($id);
 
         return ['statusCode' => 200, 'status' => true,
-            'data' => new WorkerResource($Worker)
+            'data' => new WorkerResource($worker)
         ];
     }
 
-
-    public function Update($data , $id)
+    public function update($data , $id)
     {
 
-        $Worker = Worker::find($id);
-        $Worker->update($data);
-
-        $Worker->addMediaFromRequest('photo')->toMediaCollection('workers');
-        $Worker->save();
-
+        $worker = $this->workerModel->find($id);
+        $worker->update($data->all());
+        if(isset($data['photo'])){
+        $worker->addMediaFromRequest('photo')->toMediaCollection('workers');
+        $worker->save();
+    }
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Worker updated successfully ',
-            'data' => new WorkerResource($Worker)
+            'data' => new WorkerResource($worker)
         ];
     }
 
 
     public function destory($id)
     {
-        $Worker = Worker::find($id);
+        try {
+            $worker =  $this->workerModel->find($id);
 
 
-        $Worker->delete();
+            $worker->delete();
+        }catch (\Exception $e){
+            return ['statusCode' => 404, 'status' => false,
+                'message' => 'something wrong ',
+
+            ];
+
+
+        }
+
 
         $msg = 'Deleted';
         return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);

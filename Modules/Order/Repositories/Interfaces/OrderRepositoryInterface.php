@@ -16,6 +16,7 @@ interface OrderRepositoryInterface
 
     public function store($data);
 
+    public function makePayment($data);
 
     public function show($id);
 
@@ -24,6 +25,10 @@ interface OrderRepositoryInterface
     public function Update($data,$id);
 
     public function destroy($id);
+
+    public  function downloadPdf($id);
+
+
 
 
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Modules\Review\Http\Controllers\ReviewController;
+use Modules\Review\Http\Controllers\WorkerReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +15,18 @@ use Modules\Review\Http\Controllers\ReviewController;
 |
 */
 
-Route::group(['middleware' => 'auth:api'], function () {
+Route::middleware(['user_api','role:user'])->group(function(){
     Route::get('Review', [ReviewController::class, 'index']);
     Route::post('create/Review', [ReviewController::class, 'store']);
-    Route::post('update/Review/{id}', [ReviewController::class, 'update']);
+    Route::put('update/Review/{id}', [ReviewController::class, 'update']);
     Route::get('show/Review/{id}', [ReviewController::class, 'show']);
-    Route::get('delete/Review/{id}', [ReviewController::class, 'destroy']);
+    Route::delete('delete/Review/{id}', [ReviewController::class, 'destroy']);
+
+    Route::get('Worker/Review', [WorkerReviewController::class, 'index']);
+    Route::post('create/Worker/Review', [WorkerReviewController::class, 'store']);
+    Route::put('update/Worker/Review/{id}', [WorkerReviewController::class, 'update']);
+    Route::get('show/Worker/Review/{id}', [WorkerReviewController::class, 'show']);
+    Route::delete('delete/Worker/Review/{id}', [WorkerReviewController::class, 'destroy']);
 
 
 });

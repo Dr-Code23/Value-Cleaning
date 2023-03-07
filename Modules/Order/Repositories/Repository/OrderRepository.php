@@ -3,20 +3,29 @@
 namespace Modules\Order\Repositories\Repository;
 
 
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Modules\Order\Entities\Order;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
-use Modules\Order\Transformers\OrderAdminResource;
 use Modules\Order\Transformers\OrderResource;
+use PDF;
+use Stripe\StripeClient;
+use Stripe;
 
 class OrderRepository implements OrderRepositoryInterface
 {
 
+    private $orderModel;
+
+    public function __construct(Order $order)
+    {
+        $this->orderModel = $order;
+    }
 
     public function index()
     {
-        $UserID = Auth::id();
-        $Order = Order::where('user_id', $UserID)->with(['users', 'services', 'workers'])->latest()->get();
+        $userId = Auth::id();
+        $Order = $this->orderModel->where('user_id', $userId)->with(['users', 'services', 'workers'])->latest()->get();
 
         return ['statusCode' => 200, 'status' => true,
             'data' => OrderResource::collection($Order)
@@ -26,9 +35,9 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function cansaledOrder()
     {
-        $UserID = Auth::id();
+        $userId = Auth::id();
 
-        $Order = Order::where(['Status' => 'Cansaled', 'user_id' => $UserID])->with(['users', 'services', 'workers'])->latest()->get();
+        $Order = $this->orderModel->where(['Status' => 'Cansaled', 'user_id' => $userId])->with(['users', 'services', 'workers'])->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'CansaledOrder' => OrderResource::collection($Order)
         ];
@@ -36,9 +45,9 @@ class OrderRepository implements OrderRepositoryInterface
 
     public function finishedOrder()
     {
-        $UserID = Auth::id();
+        $userId = Auth::id();
 
-        $Order = Order::where(['Status' => 'Finished', 'user_id' => $UserID])->with(['users', 'services', 'workers'])->latest()->get();
+        $Order = $this->orderModel->where(['Status' => 'Finished', 'user_id' => $userId])->with(['users', 'services', 'workers'])->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'FinishedOrder' => OrderResource::collection($Order)
         ];
@@ -47,12 +56,12 @@ class OrderRepository implements OrderRepositoryInterface
     public function store($data)
     {
         if (Auth::guard('api')->check()) {
-            $userID = auth('api')->user()->getKey();
+            $userId = auth('api')->user()->getKey();
         }
 
-        $data['user_id'] = $userID;
-        $data['order_code']='#' . str_pad($userID + 1, 8, "0", STR_PAD_LEFT);
-        $Order = Order::create($data->all());
+        $data['user_id'] = $userId;
+        $data['order_code']='#' . str_pad($userId + 1, 8, "0", STR_PAD_LEFT);
+        $Order = $this->orderModel->create($data->all());
         $Order->sub_services()->sync($data->sub_service_id);
 
         $Order->addMultipleMediaFromRequest(['gallery'])->each(function ($fileAdder) {
@@ -67,25 +76,23 @@ class OrderRepository implements OrderRepositoryInterface
 
     }
 
-
     public function orderCode($id)
     {
-        $Order = Order::where('id', $id)->first('order_code');
+        $order = $this->orderModel->where('id', $id)->first('order_code');
         return ['statusCode' => 200, 'status' => true,
-            'Order Code ' => $Order
+            'Order Code ' => $order
 
         ];
 
     }
 
-
     public function show($id)
     {
         $userId = Auth::id();
 
-        $Order = Order::where(['id'=>$id,'user_id'=>$userId])->with(['users', 'services', 'workers'])->first();
+        $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->with(['users', 'services', 'workers'])->first();
         return ['statusCode' => 200, 'status' => true,
-            'data' => new OrderResource($Order)
+            'data' => new OrderResource($order)
         ];
 
 
@@ -96,9 +103,9 @@ class OrderRepository implements OrderRepositoryInterface
     {
         $userId = Auth::id();
 
-        $Order = Order::where(['id'=>$id,'user_id'=>$userId])->first();
-        $Order['Status'] = 'Cansaled';
-        $Order->update();
+        $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->first();
+        $order['Status'] = 'Cansaled';
+        $order->update();
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Order Cansaled successfully ',
 
@@ -110,27 +117,27 @@ class OrderRepository implements OrderRepositoryInterface
     {
         $userId = Auth::id();
 
-        $Order = Order::where(['id'=>$id,'user_id'=>$userId])->with(['users', 'services', 'workers'])->first();;
-        $Order->update($data->all());
-        $Order->addMultipleMediaFromRequest(['gallery'])->each(function ($fileAdder) {
+        $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->with(['users', 'services', 'workers'])->first();;
+        $order->update($data->all());
+        $order->addMultipleMediaFromRequest(['gallery'])->each(function ($fileAdder) {
             $fileAdder->toMediaCollection('Orders');
         });
-        $Order->save();
+        $order->save();
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Order updated successfully ',
-            'data' => new OrderResource($Order)
+            'data' => new OrderResource($order)
         ];
     }
 
     public function destroy($id)
     {
-        $UserID = Auth::id();
+        $userId = Auth::id();
 
 
-        $Order = Order::where(['user_id' => $UserID, 'id' => $id])->first();
+        $order = $this->orderModel->where(['user_id' => $userId, 'id' => $id])->first();
         try {
 
-            $Order->delete();
+            $order->delete();
             $msg = 'Deleted';
             return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
         } catch (\Exception $e) {
@@ -140,5 +147,53 @@ class OrderRepository implements OrderRepositoryInterface
 
     }
 
+    public function downloadPdf($id)
+    {
+
+        $order = $this->orderModel->where(['user_id' => Auth::id(), 'id' => $id])->first();
+        $data = [
+            'date' => date('m/d/Y'),
+            'order' => $order
+        ];
+        $pdf = PDF::loadView('order::index', $data);
+        // download PDF file with download method
+        return $pdf->download('pdf_file.pdf');
+    }
+
+    public function makePayment($data)
+
+    {
+        try {
+            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+            $token = $stripe->tokens->create([
+                'card' => [
+                    'number'    => $data->number,
+                    'exp_month' => $data->exp_month,
+                    'exp_year'  => $data->exp_year,
+                    'cvc'       => $data->cvc,
+                ],
+            ]);
+
+            $charge = $stripe->charges->create([
+                'card'         => $token['id'],
+                'currency'     => 'USD',
+                'amount'       => ($data->amount * 100),
+                'description'  => "New Payment Received from mobile app",
+                'metadata'     => [
+                    "order_id" => $data->order_id,
+                ]
+
+            ]);
+
+            if ($charge->status == 'succeeded') {
+                $data = ['transaction_id' => $charge->id];
+                return ['success' => 1, 'message' => 'Transaction Success', 'data' => $data];
+            } else {
+                return ['success' => 0, 'message' => 'Card not charge, Please try again later', 'data' => []];
+            }
+        } catch (Exception $e) {
+            return ['success' => 400, 'message' => "Error Processing Transaction", 'data' =>[]];
+        }
+    }
 
 }

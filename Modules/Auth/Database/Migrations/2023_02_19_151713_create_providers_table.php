@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('provider');
             $table->string('provider_id');
-            $table->bigInteger('user_id')->unsigned();
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->string('avatar')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -18,29 +18,26 @@ use Modules\Service\Http\Controllers\User\HomeController;
 
 
 
-Route::middleware(['auth','role:admin'])->prefix("admin")->group(function(){
-
+Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
 Route::get('service', [ServiceController::class, 'index']);
 Route::post('create/service', [ServiceController::class, 'store']);
 Route::get('show/service/{id}',  [ServiceController::class, 'show']);
 Route::post('update/service/{id}',  [ServiceController::class, 'update']);
-Route::post('delete/service/{id}', [ServiceController::class, 'destroy']);
+Route::delete('delete/service/{id}', [ServiceController::class, 'destroy']);
 Route::get('Active/service/{id}', [ServiceController::class, 'activate']);
-
 Route::post('find/service/{id}', [ServiceController::class, 'AddServiceWoeker']);
 Route::post('Delete/WoekerFromService/{id}', [ServiceController::class, 'DeleteWoekerFromService']);
-
 
 
 Route::get('SubService', [SubServiceController::class, 'index']);
 Route::post('create/SubService', [SubServiceController::class, 'store']);
 Route::get('show/SubService/{id}',  [SubServiceController::class, 'show']);
-Route::post('update/SubService/{id}',  [SubServiceController::class, 'update']);
-Route::post('delete/SubService/{id}', [SubServiceController::class, 'destroy']);
+Route::put('update/SubService/{id}',  [SubServiceController::class, 'update']);
+Route::delete('delete/SubService/{id}', [SubServiceController::class, 'destroy']);
 Route::get('SubService/with/service/{id}',  [SubServiceController::class, 'showWith']);
 
 });
-Route::middleware(['auth','role:user'])->group(function() {
+Route::middleware(['user_api','role:user'])->group(function() {
 
     Route::get('UserHome', [HomeController::class, 'UserHome']);
     Route::get('All/SubService/{id}', [HomeController::class, 'SubService']);

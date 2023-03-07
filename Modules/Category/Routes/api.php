@@ -17,11 +17,11 @@ use Modules\Category\Http\Controllers\Admin\CategoryController;
 
 
 
-Route::middleware(['auth','role:admin'])->prefix("admin")->group(function() {
+Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function() {
 
     Route::get('Category', [CategoryController::class, 'index']);
     Route::post('create/Category', [CategoryController::class, 'store']);
     Route::get('show/Category/{id}', [CategoryController::class, 'show']);
-    Route::post('update/Category/{id}', [CategoryController::class, 'update']);
-    Route::post('delete/Category/{id}', [CategoryController::class, 'destroy']);
+    Route::put('update/Category/{id}', [CategoryController::class, 'update']);
+    Route::delete('delete/Category/{id}', [CategoryController::class, 'destroy']);
 });

@@ -12,13 +12,19 @@ use Modules\Offer\Transformers\OfferResource;
 
 class OfferController extends Controller
 {
+    private $offerModel;
+
+    public function __construct(Offer $offer)
+    {
+        $this->offerModel = $offer;
+    }
     /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        $offers = Offer::latest()->get();
+        $offers = $this->offerModel->latest()->get();
         return OfferResource::collection($offers);
     }
 
@@ -31,13 +37,10 @@ class OfferController extends Controller
     public function store(CreateRequest $request)
     {
 
-        $offer=Offer::create($request->all());
+        $offer=$this->offerModel->create($request->all());
         $offer->addMediaFromRequest('image')->toMediaCollection('offers');
         $offer->save();
-
         return ['statusCode' => 200,'status' => true ,'message'=>'Created successfully' ,'data' => new OfferResource($offer) ];
-
-
 
     }
 
@@ -48,7 +51,7 @@ class OfferController extends Controller
      */
     public function show($id)
     {
-        $offer=Offer::find($id);
+        $offer=$this->offerModel->find($id);
         return ['statusCode' => 200,'status' => true  ,'data' => new OfferResource($offer) ];
 
     }
@@ -62,11 +65,9 @@ class OfferController extends Controller
      */
     public function update(UpdateRequest $request, $id)
     {
-        $offer = Offer::where('id', $id)->first();
+        $offer = $this->offerModel->where('id', $id)->first();
         $offer->offer_price = $request['offer_price'];
         $offer->update();
-
-
         if ($request->hasFile('image')) {
             $offer->addMediaFromRequest('image')->toMediaCollection('offers');
         }
@@ -83,7 +84,7 @@ class OfferController extends Controller
      */
     public function destroy($id)
     {
-        $offer = Offer::find($id);
+        $offer = $this->offerModel->find($id);
         $offer->delete();
         return ['statusCode' => 200,'status' => true ,'message'=>'Deleted successfully' ];
 

@@ -10,6 +10,9 @@ class SubService extends Model
 {
     use HasFactory;
     protected $table = 'sub-services';
+
+    public $translatable = [ 'title',
+    ];
     protected $fillable = [
         'title',
         'price',
