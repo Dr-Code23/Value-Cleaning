@@ -19,7 +19,8 @@ class AppServiceProvider extends ServiceProvider
         Translatable::fallback(
             fallbackAny: true,
 
-        );    }
+        );
+    }
 
     /**
      * Bootstrap any application services.
