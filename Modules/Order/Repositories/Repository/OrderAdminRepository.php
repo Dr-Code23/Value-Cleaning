@@ -18,7 +18,7 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
         $this->orderModel = $order;
     }
 
-    public function changeStutes($data, $id)
+    public function changeStates($data, $id)
     {
 
         $order = $this->orderModel->find($id);
@@ -42,7 +42,7 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
 
     }
 
-    public function cansaledOrder()
+    public function canceledOrder()
     {
 
         $order = $this->orderModel->where('status', 'Cansaled')->latest()->get();
@@ -64,7 +64,6 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     {
 
         $order = $this->orderModel->find($id);
-
         return ['statusCode' => 200,'status' => true ,
             'data' => new OrderAdminResource($order)
         ];

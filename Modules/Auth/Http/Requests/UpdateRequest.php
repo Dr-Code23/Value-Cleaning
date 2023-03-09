@@ -14,11 +14,11 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|',
-            'address' => 'required',
-            'phone' => 'required',
-            "photo" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"        ];
+            'name' => 'string|between:2,100',
+            'email' => 'string|email|max:100|',
+            'address' => '',
+            'phone' => '',
+            "photo" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"        ];
     }
 
     /**

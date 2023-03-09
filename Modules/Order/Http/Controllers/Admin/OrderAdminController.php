@@ -28,14 +28,14 @@ class OrderAdminController extends Controller
     public function CansaledOrder()
     {
 
-    return $this->OrderAdminRepository->CansaledOrder();
+    return $this->OrderAdminRepository->CanceledOrder();
 
     }
-    public function FinishedOrder()
+    public function finishedOrder()
 
     {
 
-    return $this->OrderAdminRepository->FinishedOrder();
+    return $this->OrderAdminRepository->finishedOrder();
 
     }
 
@@ -50,31 +50,16 @@ class OrderAdminController extends Controller
         return $this->OrderAdminRepository->show($id);
     }
 
-    public function OrderCode($id)
-    {
-        return $this->OrderAdminRepository->orderCode($id);
-    }
     public function UpdateOeserToAdmin( Request $request,$id)
     {
-        return $this->OrderAdminRepository->updateOeserToAdmin($request, $id);
+        return $this->OrderAdminRepository->updateOrderToAdmin($request, $id);
 
     }
     public function ChangeStutes(Request $request, $id)
     {
-        return $this->OrderAdminRepository->changeStutes($request->all(), $id);
+        return $this->OrderAdminRepository->changeStates($request->all(), $id);
 
 
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(UpdateRequest $request, $id)
-    {
-      return $this->OrderAdminRepository->Update($request, $id)   ;
     }
 
     /**

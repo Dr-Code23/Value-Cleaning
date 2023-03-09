@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Modules\Order\Http\Controllers\Admin\OrderAdminController;
 use Modules\Order\Http\Controllers\User\OrderController;
 use Modules\Order\Http\Controllers\User\StripeController;
@@ -22,13 +23,12 @@ Route::middleware('auth:api')->get('/order', function (Request $request) {
 
 
 Route::middleware(['user_api','role:user'])->group(function() {
-    Route::get('Active/Order/{id}', [OrderController::class, 'activate']);
+    Route::get('active/Order/{id}', [OrderController::class, 'activate']);
     Route::get('Order', [OrderController::class, 'index']);
-    Route::get('CansaledOrder', [OrderController::class, 'CansaledOrder']);
-    Route::get('Cansal/{id}', [OrderController::class, 'Cansale']);
-    Route::get('Order_Code/{id}', [OrderController::class, 'OrderCode']);
-
-    Route::get('FinishedOrder', [OrderController::class, 'FinishedOrder']);
+    Route::get('canceledOrder', [OrderController::class, 'canceledOrder']);
+    Route::get('cancel/{id}', [OrderController::class, 'cancel']);
+    Route::get('order_Code/{id}', [OrderController::class, 'orderCode']);
+    Route::get('finishedOrder', [OrderController::class, 'finishedOrder']);
     Route::post('create/Order', [OrderController::class, 'store']);
     Route::post('update/Order/{id}', [OrderController::class, 'update']);
     Route::get('show/Order/{id}', [OrderController::class, 'show']);
@@ -36,19 +36,17 @@ Route::middleware(['user_api','role:user'])->group(function() {
     Route::get('/show/order/{id}', [OrderController::class, 'showOrder']);
     Route::get('/order/pdf/{id}', [OrderController::class, 'createPdf']);
     Route::post('make-payment',[StripeController::class,'makePayment']);
-
-
-
-
+    Route::get('all-payment',[StripeController::class,'allPayment']);
+    Route::post('checkout-payment',[StripeController::class,'checkoutPayment']);
+    Route::post('delete-payment',[StripeController::class,'deletePayment']);
 });
-Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function() {
-    Route::post('Worker/update/Order/{id}', [OrderAdminController::class, 'UpdateOeserToAdmin']);
-    Route::post('Status/Order/{id}', [OrderAdminController::class, 'ChangeStutes']);
-    Route::get('Order', [OrderAdminController::class, 'index']);
-    Route::get('CansaledOrder', [OrderAdminController::class, 'CansaledOrder']);
 
-    Route::get('FinishedOrder', [OrderAdminController::class, 'FinishedOrder']);
-    Route::put('update/Order/{id}', [OrderAdminController::class, 'update']);
+Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function() {
+    Route::post('worker/update/Order/{id}', [OrderAdminController::class, 'updateOrderToAdmin']);
+    Route::post('states/Order/{id}', [OrderAdminController::class, 'changeStates']);
+    Route::get('order', [OrderAdminController::class, 'index']);
+    Route::get('canceledOrder', [OrderAdminController::class, 'canceledOrder']);
+    Route::get('finishedOrder', [OrderAdminController::class, 'finishedOrder']);
     Route::get('show/Order/{id}', [OrderAdminController::class, 'show']);
     Route::delete('delete/Order/{id}', [OrderAdminController::class, 'destroy']);
 });

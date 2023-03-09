@@ -12,6 +12,7 @@ use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 use Modules\Auth\Traits\pushNotificationTraite;
 use Modules\Auth\Transformers\UserResource;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AdminRepository implements AdminRepositoryInterface
 {
@@ -49,7 +50,7 @@ class AdminRepository implements AdminRepositoryInterface
         //Create token
         try {
 
-            if (!$token = Auth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Login credentials are invalid.',
@@ -133,7 +134,7 @@ class AdminRepository implements AdminRepositoryInterface
         $user = $this->userModel->find($id);
         $user->update($data->all());
         if ($data->hasFile('photo')) {
-            $user->clearMediaCollection('avatar');
+            $user->media()->delete();
             $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
         }
         return ['statusCode' => 200,'status' => true ,

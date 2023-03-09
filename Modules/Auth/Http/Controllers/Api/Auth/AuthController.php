@@ -63,7 +63,7 @@ class AuthController extends Controller
      * Obtain the user information from Provider.
      *
      * @param $provider
-     * @return JsonResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function handleProviderCallback($provider)
     {
@@ -97,7 +97,6 @@ class AuthController extends Controller
             ]
         );
         $userCreated->assignRole('user');
-
 
         $token = jwtAuth::fromUser($userCreated);
         return response()->json(['statusCode' => 200,'status' => true ,

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminChangePasswordAController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminProfileController;
@@ -23,9 +24,7 @@ use Modules\Auth\Http\Controllers\Api\Auth\UserProfileController;
 |
 */
 
-Route::middleware('auth:api')->get('/auth', function (Request $request) {
-    return $request->user();
-});
+
 
 
 Route::post('login', [AuthController::class, 'Login']);
@@ -38,10 +37,11 @@ Route::get('/auth/{provider}/callback', [AuthController::class, 'handleProviderC
 
 Route::middleware(['user_api','role:user'])->group(function(){
 
-    Route::get('logout', [UserProfileController::class, 'Logout']);
+    Route::get('logout', [UserProfileController::class, 'logout']);
     Route::get('profile', [UserProfileController::class, 'profile']);
-    Route::post('update/profile', [UserProfileController::class, 'UpdateProfile']);
+    Route::post('update/profile', [UserProfileController::class, 'updateProfile']);
     Route::post('change-password', [ChangePasswordController::class, 'changePassword']);
+    Route::delete('delete-account', [UserProfileController::class, 'deleteAccount']);
 
 
 });
@@ -50,10 +50,9 @@ Route::post('Admin/Register', [AdminController::class, 'AdminRegister']);
 Route::post('Admin/Login', [AdminController::class, 'AdminLogin']);
 
 Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
-    Route::resource('roles', RoleController::class);
-    Route::resource('users', UserController::class);
+    Route::apiresource('roles', RoleController::class);
+    Route::get('all-users', [UserController::class,'index']);
     Route::get('Admin/profile', [AdminProfileController::class, 'AdminProfile']);
-
     Route::post('update/profile', [AdminProfileController::class, 'AdminUpdateProfile']);
     Route::post('Admin-change-password', [AdminChangePasswordAController::class, 'AdminchangePassword']);
     Route::get('logout', [AdminProfileController::class, 'Logout']);

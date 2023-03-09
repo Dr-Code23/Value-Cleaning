@@ -9,11 +9,10 @@ use Modules\Order\Entities\Order;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
 use Modules\Order\Transformers\OrderResource;
 use PDF;
-use Stripe\StripeClient;
-use Stripe;
 
 class OrderRepository implements OrderRepositoryInterface
 {
+
 
     private $orderModel;
 
@@ -33,7 +32,7 @@ class OrderRepository implements OrderRepositoryInterface
 
     }
 
-    public function cansaledOrder()
+    public function canceledOrder()
     {
         $userId = Auth::id();
 
@@ -99,13 +98,14 @@ class OrderRepository implements OrderRepositoryInterface
     }
 
 
-    public function Cansale($id)
+    public function cancele($id)
     {
         $userId = Auth::id();
 
-        $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->first();
+        $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->first();
         $order['Status'] = 'Cansaled';
         $order->update();
+
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Order Cansaled successfully ',
 
@@ -113,11 +113,11 @@ class OrderRepository implements OrderRepositoryInterface
         ];
     }
 
-    public function Update($data, $id)
+    public function update($data, $id)
     {
         $userId = Auth::id();
 
-        $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->with(['users', 'services', 'workers'])->first();;
+        $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->with(['users', 'services', 'workers'])->first();
         $order->update($data->all());
         $order->addMultipleMediaFromRequest(['gallery'])->each(function ($fileAdder) {
             $fileAdder->toMediaCollection('Orders');
@@ -140,7 +140,7 @@ class OrderRepository implements OrderRepositoryInterface
             $order->delete();
             $msg = 'Deleted';
             return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(['statusCode' => 400, 'status' => false, 'message' => $msg]);
 
         }
@@ -158,42 +158,6 @@ class OrderRepository implements OrderRepositoryInterface
         $pdf = PDF::loadView('order::index', $data);
         // download PDF file with download method
         return $pdf->download('pdf_file.pdf');
-    }
-
-    public function makePayment($data)
-
-    {
-        try {
-            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
-            $token = $stripe->tokens->create([
-                'card' => [
-                    'number'    => $data->number,
-                    'exp_month' => $data->exp_month,
-                    'exp_year'  => $data->exp_year,
-                    'cvc'       => $data->cvc,
-                ],
-            ]);
-
-            $charge = $stripe->charges->create([
-                'card'         => $token['id'],
-                'currency'     => 'USD',
-                'amount'       => ($data->amount * 100),
-                'description'  => "New Payment Received from mobile app",
-                'metadata'     => [
-                    "order_id" => $data->order_id,
-                ]
-
-            ]);
-
-            if ($charge->status == 'succeeded') {
-                $data = ['transaction_id' => $charge->id];
-                return ['success' => 1, 'message' => 'Transaction Success', 'data' => $data];
-            } else {
-                return ['success' => 0, 'message' => 'Card not charge, Please try again later', 'data' => []];
-            }
-        } catch (Exception $e) {
-            return ['success' => 400, 'message' => "Error Processing Transaction", 'data' =>[]];
-        }
     }
 
 }

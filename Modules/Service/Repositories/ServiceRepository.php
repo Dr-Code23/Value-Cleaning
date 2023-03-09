@@ -3,8 +3,10 @@
 namespace Modules\Service\Repositories;
 
 use Modules\Offer\Entities\Offer;
+use Modules\Review\Entities\Review;
 use Modules\Service\Entities\Service;
 use Modules\Service\Repositories\Interfaces\ServiceRepositoryInterface;
+use Modules\Service\Transformers\ServiceResource;
 
 class ServiceRepository implements ServiceRepositoryInterface
 {
@@ -15,19 +17,26 @@ class ServiceRepository implements ServiceRepositoryInterface
         $this->serviceModel = $service;
     }
 
-    public function allServices()
+    public function allServices($data)
     {
-        return $this->serviceModel->latest()->get();
+        if($data->q) {
+            $services= $this->serviceModel->whereLocale("title",$data->lang)->where("title", "like", "%$data->q%")
+                ->orderBy("id", "DESC")
+                ->get();
+            return ['statusCode' => 200, 'status' => true,
+                'data' =>  ServiceResource::collection($services)
+            ];
+        }else {
+            $services=  $this->serviceModel->latest()->get();
+            return ['statusCode' => 200, 'status' => true,
+                'data' =>  ServiceResource::collection($services)
+            ];
+        }
     }
 
     public function storeService($data)
     {
-//        if (isset($data['offer_id'])) {
-//            $myoffer = Offer::when($data['offer_id'])->where("id", $data["offer_id"])->pluck("offer_price")->first();
-//        $data["price"] = $data["price"] - ($myoffer['offer_price'] / 100 * $data["price"]);
-//
-//    }
-        $sevice =$this->serviceModel->create([
+        $service =$this->serviceModel->create([
             'title' => [
                 'en' => $data['title_en'],
                 'sv' => $data['title_sv']
@@ -39,18 +48,21 @@ class ServiceRepository implements ServiceRepositoryInterface
             "category_id"=> $data['category_id'],
             'price'=> $data['price'],
        ]);
+        $service->addMediaFromRequest('gallery')->toMediaCollection('services');
+        $service->save();
 
-        $sevice->workers()->sync($data['worker_id']);
-        return $sevice;
+        $service->workers()->sync($data['worker_id']);
+
+        return ['statusCode' => 200,'status' => true ,'data'=>$service];;
     }
 
-    public function addServiceWoeker($data, $id)
+    public function addServiceWorker($data, $id)
     {
         $sevice = $this->serviceModel->findOrFail($id);
         $sevice->workers()->sync($data->all());
     }
 
-    public function deleteWoekerFromService($data, $id)
+    public function deleteWorkerFromService($data, $id)
     {
         $sevice = $this->serviceModel->findOrFail($id);
 
@@ -61,14 +73,18 @@ class ServiceRepository implements ServiceRepositoryInterface
 
     public function findService($id)
     {
-        return $this->serviceModel->where('id', $id)->with(['revices', 'workers'])->first();
+        $service= $this->serviceModel->where('id', 2)->with(['revices', 'workers'])->first();
+       $rate= Review::where('service_id',2)->avg('star_rating');
+        return ['statusCode' => 200,
+            'status' => true ,
+            'data' => new ServiceResource($service) ,
+               'rate'=>$rate   ];
     }
 
     public function updateService($data, $id)
     {
         $service = $this->serviceModel->where('id', $id)->first();
 
-if(isset($data['offer_id'])){
           //sending the model data to the frontend
     $service->update([
         'title' => [
@@ -82,15 +98,23 @@ if(isset($data['offer_id'])){
         "category_id"=> $data['category_id'],
         'price'=> $data['price'],
     ]);
-       return $service;
-    }
-        $service->update();
-        return $service;
+        if ($data->hasFile('gallery')) {
+            $service->media()->delete();
+            $service->addMediaFromRequest('gallery')->toMediaCollection('services');
+        }
+
+        return ['statusCode' => 200,
+            'status' => true ,
+            'message' => 'service updated successfully ',
+            'data' =>$service,
+        ];
+
     }
 
     public function destroyService($id)
     {
         $Service = $this->serviceModel->find($id);
-       return $Service->delete();
+        $Service->delete();
+        return response()->json(['statusCode' => 200,'status' => true , 'message' =>  'Deleted' ]);
     }
 }

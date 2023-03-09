@@ -11,9 +11,10 @@ interface UserRepositoryInterface
     public function checkCode($data);
     public function reset($data);
     public function profile();
-
     public function updateProfile($data);
     public function changePassword($data);
+    public function deleteAccount();
+
 
 }
 

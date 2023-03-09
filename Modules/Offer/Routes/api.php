@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Modules\Offer\Http\Controllers\Admin\OfferController;
 
 /*
@@ -17,10 +18,9 @@ use Modules\Offer\Http\Controllers\Admin\OfferController;
 
 
 Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
-
     Route::get('Offer', [OfferController::class, 'index']);
     Route::post('create/Offer', [OfferController::class, 'store']);
     Route::get('show/Offer/{id}',  [OfferController::class, 'show']);
-    Route::put('update/Offer/{id}',  [OfferController::class, 'update']);
+    Route::post('update/Offer/{id}',  [OfferController::class, 'update']);
     Route::delete('delete/Offer/{id}', [OfferController::class, 'destroy']);
 });

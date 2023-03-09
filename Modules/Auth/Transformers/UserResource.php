@@ -21,6 +21,7 @@ class UserResource extends JsonResource
             'address' => $this->address,
             'phone' => $this->phone,
             'photo'  => $this->getFirstMediaUrl('avatar'),
+            'avatar'=>$this->providers,
         ];
     }
 }

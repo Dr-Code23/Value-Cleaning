@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Spatie\Permission\Traits\HasRoles;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Traits\HasRoles;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
 class User extends Authenticatable implements HasMedia ,JWTSubject
@@ -60,9 +60,13 @@ class User extends Authenticatable implements HasMedia ,JWTSubject
         return [];
     }
 
+    public function role()
+    {
+        return $this->belongsToMany(Role::class);
+    }
 
     public function providers()
     {
-        return $this->hasMany(Provider::class,'user_id','id');
+        return $this->hasMany(Provider::class, 'user_id', 'id');
     }
 }

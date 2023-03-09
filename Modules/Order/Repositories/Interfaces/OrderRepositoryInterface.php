@@ -7,7 +7,7 @@ interface OrderRepositoryInterface
 
     public function index();
 
-    public function cansaledOrder();
+    public function canceledOrder();
 
     public function finishedOrder();
 
@@ -16,20 +16,16 @@ interface OrderRepositoryInterface
 
     public function store($data);
 
-    public function makePayment($data);
 
     public function show($id);
 
-    public function Cansale($id);
+    public function cancele($id);
 
-    public function Update($data,$id);
+    public function update($data, $id);
 
     public function destroy($id);
 
-    public  function downloadPdf($id);
-
-
-
+    public function downloadPdf($id);
 
 }
 

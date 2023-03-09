@@ -27,13 +27,13 @@ class OrderController extends Controller
         return $this->OrderRepository->index();
     }
 
-    public function CansaledOrder()
+    public function canceledOrder()
     {
 
-    return $this->OrderRepository->cansaledOrder();
+    return $this->OrderRepository->canceledOrder();
 
     }
-    public function FinishedOrder()
+    public function finishedOrder()
 
     {
 
@@ -61,14 +61,14 @@ class OrderController extends Controller
         return $this->OrderRepository->show($id);
     }
 
-    public function OrderCode($id)
+    public function orderCode($id)
     {
         return $this->OrderRepository->orderCode($id);
     }
 
-    public function Cansale($id)
+    public function cansale($id)
     {
-        return $this->OrderRepository->Cansale($id);
+        return $this->OrderRepository->cancel($id);
     }
 
     /**
@@ -79,7 +79,7 @@ class OrderController extends Controller
      */
     public function update(UpdateRequest $request, $id)
     {
-      return $this->OrderRepository->Update($request, $id)   ;
+      return $this->OrderRepository->update($request, $id)   ;
     }
 
     /**

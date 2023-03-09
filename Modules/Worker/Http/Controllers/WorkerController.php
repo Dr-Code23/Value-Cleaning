@@ -35,9 +35,9 @@ class WorkerController extends Controller
         return response()->json(['status'=>0,'msg'=>'invalid id']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-       return $this->WorkerRepository->index();
+       return $this->WorkerRepository->index($request);
     }
 
     /**

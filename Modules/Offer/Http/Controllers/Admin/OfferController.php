@@ -38,8 +38,7 @@ class OfferController extends Controller
     {
 
         $offer=$this->offerModel->create($request->all());
-        $offer->addMediaFromRequest('image')->toMediaCollection('offers');
-        $offer->save();
+
         return ['statusCode' => 200,'status' => true ,'message'=>'Created successfully' ,'data' => new OfferResource($offer) ];
 
     }
@@ -68,10 +67,7 @@ class OfferController extends Controller
         $offer = $this->offerModel->where('id', $id)->first();
         $offer->offer_price = $request['offer_price'];
         $offer->update();
-        if ($request->hasFile('image')) {
-            $offer->addMediaFromRequest('image')->toMediaCollection('offers');
-        }
-        $offer->update();
+
 
         return ['statusCode' => 200,'status' => true ,'message'=>'Updated successfully' ,'data' => new OfferResource($offer) ];
 

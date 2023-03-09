@@ -5,7 +5,7 @@ namespace Modules\Worker\Repositories\Interfaces;
 interface WorkerRepositoryInterface
 {
 
-    public function index();
+    public function index($data);
 
     public function store($data);
 

@@ -5,6 +5,8 @@ namespace Modules\Service\Http\Controllers\Admin;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Service\Http\Requests\CreateServicesRequest;
+use Modules\Service\Http\Requests\UpdateServicesRequest;
 use Modules\Service\Repositories\Interfaces\ServiceRepositoryInterface;
 use Modules\Service\Transformers\ServiceResource;
 
@@ -33,10 +35,10 @@ class ServiceController extends Controller
         return response()->json(['status' => 0, 'msg' => 'invalid id']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $Services = $this->serviceRepository->allServices();
-        return ServiceResource::collection($Services);
+        return $this->serviceRepository->allServices($request);
+
     }
 
     /**
@@ -45,48 +47,30 @@ class ServiceController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateServicesRequest $request)
     {
-        $data = $request->validate([
-            'title_en' => 'required|string|max:255',
-            'description_en' => 'required|string',
-            'title_sv' => 'required|string|max:255',
-            'description_sv' => 'required|string',
-            'price' => 'required',
-            'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
-            "category_id"=> 'required',
-            "offer_id"=>'max:2048',
-            "worker_id"=>'required',
-        ]);
-        $service= $this->serviceRepository->storeService($data);
-        $service->addMediaFromRequest('gallery')->toMediaCollection('services');
-        $service->save();
-    return ['statusCode' => 200,'status' => true ];
-
+        return $this->serviceRepository->storeService($request);
     }
 
-    public function AddServiceWoeker(Request $request, $id)
+    public function addServiceWorker(Request $request, $id)
     {
         $service = $this->serviceRepository->addServiceWoeker($request, $id);
         return ['statusCode' => 200, 'status' => true, 'data' => $service];
     }
 
-    public function DeleteWoekerFromService(Request $request,$id)
+    public function deleteWorkerFromService(Request $request,$id)
     {
-        return $this->serviceRepository->deleteWoekerFromService($request, $id);
+        return $this->serviceRepository->deleteWorkerFromService($request, $id);
     }
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function show($id)
     {
-        $Service = $this->serviceRepository->findService($id);
-        return ['statusCode' => 200,
-            'status' => true ,
-            'data' => new ServiceResource($Service) ];
+       return $this->serviceRepository->findService($id);
     }
 
     /**
@@ -96,28 +80,9 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return array|\Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateServicesRequest $request, $id)
     {
-        $data = $request->validate([
-            'title_en' => 'required|string|max:255',
-            'description_en' => 'required|string',
-            'title_swd' => 'required|string|max:255',
-            'description_swd' => 'required|string',
-            'price' => 'required',
-            'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
-            "category_id"=> 'required',
-            "offer_id"=>'max:2048',
-            "worker_id"=>'required',
-        ]);
-        $service= $this->serviceRepository->updateService($data, $id);
-        if ($request->hasFile('gallery')) {
-            $service->addMediaFromRequest('gallery')->toMediaCollection('services');
-        }
-        return ['statusCode' => 200,
-            'status' => true ,
-            'message' => 'service updated successfully ',
-            'data' =>$service,
-             ];
+        return $this->serviceRepository->updateService($request, $id);
     }
     /**
      * Remove the specified resource from storage.
@@ -127,8 +92,6 @@ class ServiceController extends Controller
      */
     public function destroy($id)
     {
-        $msg="deleted";
-        $service=   $this->serviceRepository->destroyService($id);
-        return response()->json(['statusCode' => 200,'status' => true , 'message' =>  $msg ]);
+        return $this->serviceRepository->destroyService($id);
     }
 }
