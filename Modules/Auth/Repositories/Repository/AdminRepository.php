@@ -88,6 +88,7 @@ class AdminRepository implements AdminRepositoryInterface
             return response()->json(['status' => true, 'message' => 'check your inbox']);
 
         } else {
+
             return response()->json(['status' => false, 'message' => 'email not found, try again']);
         }
     }
@@ -99,7 +100,7 @@ class AdminRepository implements AdminRepositoryInterface
             if ($user->reset_verification_code == $data->code) {
                 return response()->json(['status' => true, 'message' => 'you will be redirected to set new password']);
             }
-            return response()->json(['status' => false, 'message' => 'code is invalid, try again']);
+            return response()->json(['status' => false, 'message' => 'code is invalid, try again'],400);
 
         } else {
             return response()->json(['status' => false, 'message' => 'email not found, try again']);

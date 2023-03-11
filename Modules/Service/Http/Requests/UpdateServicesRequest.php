@@ -19,7 +19,7 @@ class UpdateServicesRequest extends FormRequest
             'title_sv' => 'string|max:255',
             'description_sv' => 'string',
             'price' => '',
-            'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
+            'gallery.*' =>'' ,
             "category_id"=> '',
             "offer_id"=>'max:2048',
             "worker_id"=>'',
