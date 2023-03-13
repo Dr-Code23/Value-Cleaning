@@ -5,6 +5,7 @@ namespace Modules\Order\Entities;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Modules\Service\Entities\Service;
 use Modules\Service\Entities\SubService;
 use Modules\Worker\Entities\Worker;
@@ -13,7 +14,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Order extends Model implements HasMedia
 {
-    use HasFactory,InteractsWithMedia;
+    use HasFactory,InteractsWithMedia,Notifiable;
 
     protected $fillable = [
 
@@ -23,6 +24,7 @@ class Order extends Model implements HasMedia
         'address',
         'repeat',
         'status',
+        'payment_status',
         'user_id',
         'service_id',
         'total_price',

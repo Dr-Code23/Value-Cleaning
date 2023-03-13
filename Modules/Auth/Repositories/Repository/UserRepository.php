@@ -58,9 +58,12 @@ class UserRepository implements UserRepositoryInterface
                 'message' => 'Could not create token.',
             ], 500);
         }
-        if(!auth()->user()->hasRole('user')){
+        if (Auth::check()) {
+            if (!auth('api')->user()->hasRole('user')) {
 
-            return response()->json(['error' => 'not allowed'], 400);
+                return response()->json(['error' => 'UnAuthorised'], 401);
+            }
+
         }
         $user=  auth()->user();
         $devise_token['devise_token'] = $data->devise_token;
@@ -86,7 +89,7 @@ class UserRepository implements UserRepositoryInterface
             return response()->json(['status' => true, 'message' => 'check your inbox']);
 
         } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again']);
+            return response()->json(['status' => false, 'message' => 'email not found, try again'],400);
         }
     }
     public function checkCode($data)
@@ -96,10 +99,10 @@ class UserRepository implements UserRepositoryInterface
             if ($user->reset_verification_code == $data->code) {
                 return response()->json(['status' => true, 'message' => 'you will be redirected to set new password']);
             }
-            return response()->json(['status' => false, 'message' => 'code is invalid, try again']);
+            return response()->json(['status' => false, 'message' => 'code is invalid, try again'],400);
 
         } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again']);
+            return response()->json(['status' => false, 'message' => 'email not found, try again'],400);
         }
     }
     public function reset($data)
@@ -111,7 +114,7 @@ class UserRepository implements UserRepositoryInterface
             return response()->json([$user->password,'status' => true, 'message' => 'password has been updated']);
 
         } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again']);
+            return response()->json(['status' => false, 'message' => 'email not found, try again'],400);
         }
     }
     public function profile()

@@ -6,10 +6,10 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Notification extends Model
+class SendNotification extends Model
 {
     use HasFactory;
-
+ protected $table='send_notifications';
     protected $guarded = [];
 
 
@@ -17,8 +17,5 @@ class Notification extends Model
     {
         return $this->hasMany(User::class,'id','user_id');
     }
-    protected static function newFactory()
-    {
-        return \Modules\Auth\Database\factories\NotificationFactory::new();
-    }
+
 }

@@ -10,7 +10,6 @@ use Stripe\StripeClient;
 trait payment
 {
 
-
     public function storePayment($token)
     {
         $stripe = new StripeClient(env('STRIPE_SECRET'));

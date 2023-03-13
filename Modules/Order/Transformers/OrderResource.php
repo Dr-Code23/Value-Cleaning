@@ -5,6 +5,8 @@ namespace Modules\Order\Transformers;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Modules\Order\Entities\Order;
+use Modules\Service\Entities\SubService;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class OrderResource extends JsonResource
 {
@@ -24,11 +26,16 @@ class OrderResource extends JsonResource
             'address' => $this->address,
             'repeat' => $this->repeat,
             'status' => $this->status,
+            'payment_status'=>$this->payment_status,
             'service' => $this->services,
             'workers' => $this->workers,
             'total_price' => $this->total_price,
             'order_code' => $this->order_code,
-            'gallery'  => $this->getMedia('Orders'),
+            'subService'=>$this->sub_services,
+            'gallery1'  => $this->getFirstMediaUrl('Orders'),
+//
+
+
 
         ];
     }

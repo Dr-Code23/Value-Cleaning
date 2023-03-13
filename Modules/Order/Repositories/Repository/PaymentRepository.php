@@ -5,6 +5,7 @@ namespace Modules\Order\Repositories\Repository;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Modules\Order\Entities\Order;
 use Modules\Order\Entities\Transaction;
 use Modules\Order\Repositories\Interfaces\PaymentRepositoryInterface;
 use Modules\Order\Traits\payment;
@@ -38,7 +39,7 @@ class PaymentRepository implements PaymentRepositoryInterface
             $stripe = new StripeClient(env('STRIPE_SECRET'));
             $cards = $stripe->customers->allSources(
                 $transaction,
-                ['object' => 'card', 'limit' => 3]
+                ['object' => 'card', 'limit' => 7]
             // you can remove the limit key to get all the cards
             );
             return $cards;
@@ -54,12 +55,13 @@ class PaymentRepository implements PaymentRepositoryInterface
     public function checkoutPayment($data)
     {
         try {
+            $order=Order::where('id',$data->order_id)->first();
             $stripe = new StripeClient(env('STRIPE_SECRET'));
             $charge = $stripe->charges->create([
                 'card' => $data['token'],
                 'customer' => $data['customer_id'],
                 'currency' => 'USD',
-                'amount' => ($data->amount * 100),
+                'amount' => ($order->total_price * 100),
                 'description' => "New Payment Received from mobile app",
                 'metadata' => [
                     "order_id" => $data->order_id,
@@ -67,6 +69,8 @@ class PaymentRepository implements PaymentRepositoryInterface
             ]);
             if ($charge->status == 'succeeded') {
                 $data = ['transaction_id' => $charge->id];
+                $order['payment_status']='paid';
+                $order->update();
                 return ['success' => 1, 'message' => 'Transaction Success', 'data' => $data];
             } else {
                 return ['success' => 0, 'message' => 'Card not charge, Please try again later', 'data' => []];

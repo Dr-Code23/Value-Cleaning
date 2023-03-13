@@ -20,8 +20,8 @@ class CreateRequest extends FormRequest
             'address' => 'required',
             'repeat' => 'required',
             'service_id' => 'required',
-            'total_price' => 'required',
-            'delivery_price'=> 'required',
+            'total_price' => '',
+            'delivery_price'=> '',
             'gallery'  =>'required',
 
 

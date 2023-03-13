@@ -24,16 +24,15 @@ Route::middleware('auth:api')->get('/order', function (Request $request) {
 
 Route::middleware(['user_api','role:user'])->group(function() {
     Route::get('active/Order/{id}', [OrderController::class, 'activate']);
-    Route::get('Order', [OrderController::class, 'index']);
+    Route::get('order', [OrderController::class, 'index']);
     Route::get('canceledOrder', [OrderController::class, 'canceledOrder']);
     Route::get('cancel/{id}', [OrderController::class, 'cancel']);
     Route::get('order_Code/{id}', [OrderController::class, 'orderCode']);
     Route::get('finishedOrder', [OrderController::class, 'finishedOrder']);
     Route::post('create/Order', [OrderController::class, 'store']);
     Route::post('update/Order/{id}', [OrderController::class, 'update']);
-    Route::get('show/Order/{id}', [OrderController::class, 'show']);
+    Route::get('show/order/{id}', [OrderController::class, 'show']);
     Route::post('delete/Order/{id}', [OrderController::class, 'destroy']);
-    Route::get('/show/order/{id}', [OrderController::class, 'showOrder']);
     Route::get('/order/pdf/{id}', [OrderController::class, 'createPdf']);
     Route::post('make-payment',[StripeController::class,'makePayment']);
     Route::get('all-payment',[StripeController::class,'allPayment']);
@@ -49,4 +48,7 @@ Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function() 
     Route::get('finishedOrder', [OrderAdminController::class, 'finishedOrder']);
     Route::get('show/Order/{id}', [OrderAdminController::class, 'show']);
     Route::delete('delete/Order/{id}', [OrderAdminController::class, 'destroy']);
+    Route::get('New-order-notification', [OrderAdminController::class, 'sendNewOrderNotification']);
+
+
 });

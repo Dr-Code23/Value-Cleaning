@@ -3,17 +3,24 @@
 namespace Modules\Order\Repositories\Repository;
 
 
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Modules\Order\Entities\Order;
+use Modules\Order\Notifications\CancelOrderNotification;
+use Modules\Order\Notifications\NewOrderNotification;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
+use Modules\Order\Traits\totalPrice;
 use Modules\Order\Transformers\OrderResource;
+use Modules\Service\Entities\Service;
+use Modules\Service\Transformers\ServiceResource;
 use PDF;
 
 class OrderRepository implements OrderRepositoryInterface
 {
 
-
+use totalPrice;
     private $orderModel;
 
     public function __construct(Order $order)
@@ -24,7 +31,7 @@ class OrderRepository implements OrderRepositoryInterface
     public function index()
     {
         $userId = Auth::id();
-        $Order = $this->orderModel->where('user_id', $userId)->with(['users', 'services', 'workers'])->latest()->get();
+        $Order = $this->orderModel->where('user_id', $userId)->latest()->get();
 
         return ['statusCode' => 200, 'status' => true,
             'data' => OrderResource::collection($Order)
@@ -59,19 +66,27 @@ class OrderRepository implements OrderRepositoryInterface
         }
 
         $data['user_id'] = $userId;
-        $data['order_code']='#' . str_pad($userId + 1, 8, "0", STR_PAD_LEFT);
-        $Order = $this->orderModel->create($data->all());
-        $Order->sub_services()->sync($data->sub_service_id);
+        $data['total_price'] = $this->totalPrice($data);
+        $data['order_code']='#' . str_pad($this->totalPrice($data) + 1, 8, "0", STR_PAD_LEFT);
+        $order = $this->orderModel->create($data->all());
+        $order->sub_services()->sync($data->sub_service_id);
+        if ($data->hasFile('gallery')) {
+            $order->addMediaFromRequest('gallery')->toMediaCollection('Orders');
 
-        $Order->addMultipleMediaFromRequest(['gallery'])->each(function ($fileAdder) {
-            $fileAdder->toMediaCollection('Orders');
-        });
+            $order->save();
+        }
+        $admin = User::whereHas('roles', function ($query) {
 
-        $Order->save();
+            $query->where('name', '=', 'admin');
 
-        return ['statusCode' => 200, 'status' => true
-        ];
+        })->get();
+        Notification::send($admin, new NewOrderNotification($order));
 
+        return [
+            'statusCode' => 200,
+            'status' => true,
+            'data'=> new OrderResource($order),
+               ];
 
     }
 
@@ -79,7 +94,7 @@ class OrderRepository implements OrderRepositoryInterface
     {
         $order = $this->orderModel->where('id', $id)->first('order_code');
         return ['statusCode' => 200, 'status' => true,
-            'Order Code ' => $order
+            'Order Code ' => new OrderResource($order)
 
         ];
 
@@ -103,8 +118,14 @@ class OrderRepository implements OrderRepositoryInterface
         $userId = Auth::id();
 
         $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->first();
-        $order['Status'] = 'Cansaled';
-        $order->update();
+        $order->update(['Status'=>'Cansaled']);
+        $admin = User::whereHas('roles', function ($query) {
+
+            $query->where('name', '=', 'admin');
+
+        })->get();
+
+        Notification::send($admin, new CancelOrderNotification($order));
 
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Order Cansaled successfully ',
@@ -151,9 +172,12 @@ class OrderRepository implements OrderRepositoryInterface
     {
 
         $order = $this->orderModel->where(['user_id' => Auth::id(), 'id' => $id])->first();
+        $service=Service::where('id',$order->service_id)->first();
         $data = [
             'date' => date('m/d/Y'),
-            'order' => $order
+            'order' =>  new OrderResource($order),
+            'user'=>Auth::user(),
+            'service'=> new ServiceResource($service),
         ];
         $pdf = PDF::loadView('order::index', $data);
         // download PDF file with download method

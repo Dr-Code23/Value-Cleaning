@@ -18,13 +18,21 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
         $this->orderModel = $order;
     }
 
+
+    public function sendNewOrderNotification()
+    {
+       return auth()->user()->Notifications()->get("data");
+        return ['statusCode' => 200, 'status' => true,
+            'data' => $notifications
+        ];
+    }
+
     public function changeStates($data, $id)
     {
 
         $order = $this->orderModel->find($id);
         $order->update([
             'status' => $data['Status'],
-
         ]);
         return ['statusCode' => 200, 'status' => true,
             'Order_Status' => $order->status

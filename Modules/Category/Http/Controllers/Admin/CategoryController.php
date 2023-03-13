@@ -64,12 +64,15 @@ class CategoryController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return CategoryResource
+     * @return array
      */
     public function show($id)
     {
         $category = $this->categoryModel->find($id);
-        return new CategoryResource($category);
+        return ['statusCode' => 200, 'status' => true,
+            'message' => 'Category updated successfully ',
+            'data' => $category
+        ];
     }
 
 
@@ -83,9 +86,8 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
 
-
         $category = $this->categoryModel->find($id)->first();
-        if($request['title_en'] &&  $request['title_sv']){
+        if($request['title_en'] || $request['title_sv']){
             $category->update([
                 'title' =>
                     [

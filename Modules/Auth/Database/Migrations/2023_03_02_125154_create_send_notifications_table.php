@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('send_notifications', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->string("body");
