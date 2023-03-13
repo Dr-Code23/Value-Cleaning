@@ -69,7 +69,7 @@ class PaymentRepository implements PaymentRepositoryInterface
             ]);
             if ($charge->status == 'succeeded') {
                 $data = ['transaction_id' => $charge->id];
-                $order['payment_status']='paid';
+                $order['payment_status']='card';
                 $order->update();
                 return ['success' => 1, 'message' => 'Transaction Success', 'data' => $data];
             } else {
