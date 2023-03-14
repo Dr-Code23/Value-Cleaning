@@ -65,9 +65,8 @@ class UserRepository implements UserRepositoryInterface
             }
 
         }
-        $user=  auth()->user();
-        $devise_token['devise_token'] = $data->devise_token;
-        $user->update($devise_token);
+        $user= auth()->user();
+        $user->update(['devise_token'=>$data->devise_token]);
 
         return ['statusCode' => 200, 'status' => true,
             'message' => 'User successfully registered ',

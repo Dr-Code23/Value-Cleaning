@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('address');
             $table->enum('repeat', ['once', 'weekly', 'monthly']);
             $table->enum('status', ['In Process', 'Cansaled', 'Finished'])->default('In Process');;
-            $table->enum('payment_status', ['card', 'cash'])->default('cash');;
+            $table->enum('payment_status', ['Credit', 'Receipt'])->default('Receipt');;
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->cascadeOnUpdate()
