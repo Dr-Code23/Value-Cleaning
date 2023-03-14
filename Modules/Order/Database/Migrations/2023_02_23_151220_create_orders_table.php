@@ -30,7 +30,7 @@ return new class extends Migration
                 ->constrained('services')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->float('delivery_price');
+            $table->float('delivery_price')->nullable();
             $table->double('total_price');
             $table->string('order_code');
             $table->timestamps();
