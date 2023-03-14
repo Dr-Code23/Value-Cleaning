@@ -18,6 +18,9 @@ class SubService extends Model
         'price',
         'service_id'
     ];
+    protected $casts = [
+        'options' => 'array',
+    ];
     public function services()
     {
         return $this->hasMany(Service::class,'service_id','id');

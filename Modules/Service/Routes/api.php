@@ -28,12 +28,11 @@ Route::middleware(['user_api', 'role:admin'])->prefix("admin")->group(function (
 
     Route::middleware('setlocale')->group(function () {
         Route::get('service', [ServiceController::class, 'index']);
-        Route::get('show/service/{id}', [ServiceController::class, 'show']);
         Route::get('SubService', [SubServiceController::class, 'index']);
-        Route::get('show/SubService/{id}', [SubServiceController::class, 'show']);
         Route::get('SubService/with/service/{id}', [SubServiceController::class, 'showWith']);
     });
-
+    Route::get('show/service/{id}', [ServiceController::class, 'show']);
+    Route::get('show/SubService/{id}', [SubServiceController::class, 'show']);
     Route::post('create/SubService', [SubServiceController::class, 'store']);
     Route::post('update/SubService/{id}', [SubServiceController::class, 'update']);
     Route::delete('delete/SubService/{id}', [SubServiceController::class, 'destroy']);

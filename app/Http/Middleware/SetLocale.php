@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\App;
 use URL;
 use Illuminate\Http\Request;
 
@@ -17,12 +18,8 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->lang)
-        {
-            app()->setLocale($request->lang);
-        }
+        App::setLocale(request('langauge_code', $request->lang));
 
-        URL::defaults(['locale' => 'en']);
 
         return $next($request);
     }
