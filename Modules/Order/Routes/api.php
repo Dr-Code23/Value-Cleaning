@@ -49,6 +49,9 @@ Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function() 
     Route::get('show/Order/{id}', [OrderAdminController::class, 'show']);
     Route::delete('delete/Order/{id}', [OrderAdminController::class, 'destroy']);
     Route::get('New-order-notification', [OrderAdminController::class, 'sendNewOrderNotification']);
+    Route::get('home', [OrderAdminController::class, 'home']);
+    Route::get('service-count', [OrderAdminController::class, 'serviceCount']);
+
 
 
 });

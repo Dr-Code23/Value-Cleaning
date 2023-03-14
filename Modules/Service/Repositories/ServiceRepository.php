@@ -77,7 +77,7 @@ class ServiceRepository implements ServiceRepositoryInterface
        $rate= Review::where('service_id',$id)->avg('star_rating');
         return ['statusCode' => 200,
             'status' => true ,
-            'data' => new ServiceResource($service) ,
+            'data' => $service ,
                'rate'=>$rate   ];
     }
 

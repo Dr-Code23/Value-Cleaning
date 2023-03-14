@@ -18,9 +18,11 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next)
     {
-        App::setLocale(request('langauge_code', $request->lang));
+        if($request->lang=='sv') {
+            App::setLocale(request('langauge_code', $request->lang));
+        }else{
+            URL::defaults(['locale' => 'en']);        }
 
-
-        return $next($request);
+      return $next($request);
     }
 }

@@ -33,6 +33,8 @@ class OrderAdminResource extends JsonResource
             'extraServices'=>$this->sub_services,
             'total_price' => $this->total_price,
             'gallery'  => $this->gerMediaUrl('Orders'),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
 
         ];
     }

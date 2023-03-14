@@ -60,5 +60,12 @@ class OrderAdminController extends Controller
     {
         return $this->OrderAdminRepository->sendNewOrderNotification();
     }
-
+    public function home()
+    {
+        return $this->OrderAdminRepository->home();
+    }
+    public function serviceCount($id)
+    {
+        return $this->OrderAdminRepository->serviceCount($id);
+    }
 }

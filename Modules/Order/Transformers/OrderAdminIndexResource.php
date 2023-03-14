@@ -25,6 +25,8 @@ class OrderAdminIndexResource extends JsonResource
             'payment_status'=>$this->payment_status,
             'total_price' => $this->total_price,
             'gallery'  => $this->getFirstMediaUrl('Orders'),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
 
         ];
     }

@@ -11,6 +11,8 @@ use Modules\Auth\Emails\EventMail;
 use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 use Modules\Auth\Traits\pushNotificationTraite;
 use Modules\Auth\Transformers\UserResource;
+use Modules\Order\Entities\Order;
+use Modules\Worker\Entities\Worker;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -122,6 +124,12 @@ class AdminRepository implements AdminRepositoryInterface
     {
         return $this->Notification($data);
     }
+
+     public function all()
+     {
+          $total=Order::where('status','Finished')->sum('total_price');
+         return response()->json(['total_price'=>$total]);
+     }
 
 
 }

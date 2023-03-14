@@ -58,5 +58,6 @@ Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
     Route::post('Admin-change-password', [AdminChangePasswordAController::class, 'AdminchangePassword']);
     Route::get('logout', [AdminProfileController::class, 'Logout']);
     Route::post('send', [SendNotificationController::class, 'sendNotification']);
+    Route::get('all', [AdminController::class, 'all']);
 
 });

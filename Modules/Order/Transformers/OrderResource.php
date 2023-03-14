@@ -33,6 +33,8 @@ class OrderResource extends JsonResource
             'order_code' => $this->order_code,
             'subService'=>$this->sub_services,
             'gallery1'  => $this->getFirstMediaUrl('Orders'),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
 //
 
 
