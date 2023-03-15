@@ -34,7 +34,7 @@ Route::middleware(['user_api','role:user'])->group(function() {
     Route::get('show/order/{id}', [OrderController::class, 'show']);
     Route::post('delete/Order/{id}', [OrderController::class, 'destroy']);
     Route::get('/order/pdf/{id}', [OrderController::class, 'createPdf']);
-    Route::post('make-payment',[StripeController::class,'makePayment']);
+    Route::post('add-payment',[StripeController::class,'makePayment']);
     Route::get('all-payment',[StripeController::class,'allPayment']);
     Route::post('checkout-payment',[StripeController::class,'checkoutPayment']);
     Route::post('delete-payment',[StripeController::class,'deletePayment']);

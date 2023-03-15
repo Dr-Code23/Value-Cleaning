@@ -33,7 +33,7 @@ class Order extends Model implements HasMedia
 
     public function services()
     {
-        return $this->hasMany(Service::class,'id','service_id');
+        return $this->hasMany(Service::class,'id','service_id')->getTranslations();
     }
 
     public function users()

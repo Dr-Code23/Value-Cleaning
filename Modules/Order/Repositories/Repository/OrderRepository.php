@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
+use Modules\Offer\Entities\Offer;
 use Modules\Order\Entities\Order;
 use Modules\Order\Notifications\CancelOrderNotification;
 use Modules\Order\Notifications\NewOrderNotification;
@@ -103,10 +104,11 @@ use totalPrice;
     public function show($id)
     {
         $userId = Auth::id();
-
-        $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->with(['users', 'services', 'workers'])->first();
+        $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->first();
+        $offer =Offer::when('service_id',$order->service_id)->where('service_id',$order->service_id)->first('offer_percent');
         return ['statusCode' => 200, 'status' => true,
-            'data' => new OrderResource($order)
+            'data' => new OrderResource($order),
+            'offer'=>$offer
         ];
 
 
@@ -116,7 +118,6 @@ use totalPrice;
     public function cancele($id)
     {
         $userId = Auth::id();
-
         $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->first();
         $order->update(['Status'=>'Cansaled']);
         $admin = User::whereHas('roles', function ($query) {
@@ -124,7 +125,6 @@ use totalPrice;
             $query->where('name', '=', 'admin');
 
         })->get();
-
         Notification::send($admin, new CancelOrderNotification($order));
 
         return ['statusCode' => 200, 'status' => true,
@@ -137,7 +137,6 @@ use totalPrice;
     public function update($data, $id)
     {
         $userId = Auth::id();
-
         $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->with(['users', 'services', 'workers'])->first();
         $order->update($data->all());
         $order->addMultipleMediaFromRequest(['gallery'])->each(function ($fileAdder) {
@@ -153,8 +152,6 @@ use totalPrice;
     public function destroy($id)
     {
         $userId = Auth::id();
-
-
         $order = $this->orderModel->where(['user_id' => $userId, 'id' => $id])->first();
         try {
 
@@ -170,7 +167,6 @@ use totalPrice;
 
     public function downloadPdf($id)
     {
-
         $order = $this->orderModel->where(['user_id' => Auth::id(), 'id' => $id])->first();
         $service=Service::where('id',$order->service_id)->first();
         $data = [
