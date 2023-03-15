@@ -72,12 +72,15 @@ class PaymentRepository implements PaymentRepositoryInterface
                 $order['payment_status']='Credit';
                 $order['status']= 'Finished';
                 $order->update();
-                return ['success' => 1, 'message' => 'Transaction Success', 'data' => $data];
+                return ['statusCode' => 200,
+                    'status' => true, 'message' => 'Transaction Success', 'data' => $data];
             } else {
-                return ['success' => 0, 'message' => 'Card not charge, Please try again later', 'data' => []];
+                return ['statusCode' => 400,
+                    'status' => false,'message' => 'Card not charge, Please try again later', 'data' => []];
             }
         } catch (Exception $e) {
-            return ['success' => 0, 'message' => "Error Processing Transaction", 'data' => []];
+            return ['statusCode' => 400,
+                'status' => false, 'message' => "Error Processing Transaction", 'data' => []];
         }
     }
 
