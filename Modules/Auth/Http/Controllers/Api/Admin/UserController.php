@@ -134,5 +134,6 @@ class UserController extends Controller
             'user' => $user
         ], 201);
 
+
     }
 }
