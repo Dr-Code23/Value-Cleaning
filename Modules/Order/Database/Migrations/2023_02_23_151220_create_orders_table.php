@@ -20,7 +20,8 @@ return new class extends Migration
             $table->time('time');
             $table->string('address');
             $table->enum('repeat', ['once', 'weekly', 'monthly']);
-            $table->enum('status', ['Processing', 'Cansaled', 'Finished'])->default('Processing');;
+            $table->enum('status', ['Processing', 'Cansaled', 'Finished'])->default('Processing');
+            $table->enum('payment_status', ['Credit', 'Receipt'])->default('Receipt');;
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->cascadeOnUpdate()
