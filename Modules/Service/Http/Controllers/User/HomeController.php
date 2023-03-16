@@ -50,7 +50,17 @@ class HomeController extends Controller
             'status' => true ,
             'data' => $SubService ];
     }
+public function topServices()
+{
+    $skus = Order::selectRaw('COUNT(*)')
+        ->whereColumn('service_id','services.id')
+        ->getQuery();
+    $services = Service::select('*')
+        ->selectSub($skus, 'skus_count')
+        ->orderBy('skus_count', 'DESC')->get() ;
+    return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services) ];
 
+}
     public function jobDone($id)
     {
         $job_done =Order::where(["service_id"=>$id,'status'=>'Finished'])->count();
