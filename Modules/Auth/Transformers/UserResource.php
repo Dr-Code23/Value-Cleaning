@@ -2,6 +2,7 @@
 
 namespace Modules\Auth\Transformers;
 
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -22,6 +23,8 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'photo'  => $this->getFirstMediaUrl('avatar'),
             'avatar'=>$this->providers,
+            'count' => User::count(),
+
         ];
     }
 }

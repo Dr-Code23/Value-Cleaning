@@ -4,6 +4,7 @@ namespace Modules\Auth\Traits;
 
 
 use App\Models\User;
+use Modules\Auth\Entities\SendNotification;
 
 
 trait pushNotificationTraite
@@ -11,11 +12,12 @@ trait pushNotificationTraite
 
     public function Notification($req)
     {
+        SendNotification::create($req);
 
         $url = 'https://fcm.googleapis.com/fcm/send';
 
         if($req['to_user_id']){
-            $FcmToken =[User::whereNotNull('device_token')->where('id',2)->pluck('device_token')->first()];
+            $FcmToken =[User::whereNotNull('device_token')->where('id',$req['to_user_id'])->pluck('device_token')->first()];
         }else{
             $FcmToken = User::whereNotNull('device_token')->pluck('device_token')->get();
         }

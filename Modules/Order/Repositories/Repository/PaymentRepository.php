@@ -9,6 +9,8 @@ use Modules\Order\Entities\Transaction;
 use Modules\Order\Repositories\Interfaces\PaymentRepositoryInterface;
 use Modules\Order\Traits\payment;
 use Stripe\StripeClient;
+use Modules\Order\Entities\Order;
+
 
 class PaymentRepository implements PaymentRepositoryInterface
 {
@@ -38,7 +40,7 @@ class PaymentRepository implements PaymentRepositoryInterface
             $stripe = new StripeClient(env('STRIPE_SECRET'));
             $cards = $stripe->customers->allSources(
                 $transaction,
-                ['object' => 'card', 'limit' => 3]
+                ['object' => 'card', 'limit' => 7]
             // you can remove the limit key to get all the cards
             );
             return $cards;
@@ -54,12 +56,13 @@ class PaymentRepository implements PaymentRepositoryInterface
     public function checkoutPayment($data)
     {
         try {
+            $order=Order::where('id',$data->order_id)->first();
             $stripe = new StripeClient(env('STRIPE_SECRET'));
             $charge = $stripe->charges->create([
                 'card' => $data['token'],
                 'customer' => $data['customer_id'],
                 'currency' => 'USD',
-                'amount' => ($data->amount * 100),
+                'amount' => ($order->total_price * 100),
                 'description' => "New Payment Received from mobile app",
                 'metadata' => [
                     "order_id" => $data->order_id,
@@ -67,12 +70,18 @@ class PaymentRepository implements PaymentRepositoryInterface
             ]);
             if ($charge->status == 'succeeded') {
                 $data = ['transaction_id' => $charge->id];
-                return ['success' => 1, 'message' => 'Transaction Success', 'data' => $data];
+                $order['payment_status']='Credit';
+                $order['status']= 'Finished';
+                $order->update();
+                return ['statusCode' => 200,
+                    'status' => true, 'message' => 'Transaction Success', 'data' => $data];
             } else {
-                return ['success' => 0, 'message' => 'Card not charge, Please try again later', 'data' => []];
+                return ['statusCode' => 400,
+                    'status' => false, 'message' => "Error Processing Transaction", 'data' => []];
             }
         } catch (Exception $e) {
-            return ['success' => 0, 'message' => "Error Processing Transaction", 'data' => []];
+            return ['statusCode' => 400,
+                'status' => false, 'message' => "Error Processing Transaction", 'data' => []];
         }
     }
 

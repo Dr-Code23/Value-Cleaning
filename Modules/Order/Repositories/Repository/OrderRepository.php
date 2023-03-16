@@ -106,7 +106,7 @@ use totalPrice;
     {
         $userId = Auth::id();
         $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->first();
-        $offer =Offer::when('service_id')->where('service_id',$order->service_id)->first('offer_percent');
+        $offer =Offer::when('service_id',$order->service_id)->where('service_id',$order->service_id)->first('offer_percent');
         return ['statusCode' => 200, 'status' => true,
             'data' => new OrderResource($order),
             'offer'=>$offer

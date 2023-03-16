@@ -5,6 +5,7 @@ namespace Modules\Worker\Transformers;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 use Modules\Order\Entities\Order;
+use Modules\Worker\Entities\Worker;
 
 class WorkerResource extends JsonResource
 {
@@ -25,6 +26,7 @@ class WorkerResource extends JsonResource
             'NIN' => $this->NIN,
             'active'=>$this->active,
             'review'=>$this->revices,
+            'count'  => Worker::count(),
             'photo'  => $this->getFirstMediaUrl('workers'),
         ];    }
 }

@@ -30,4 +30,11 @@ class AdminController extends Controller
         return  $this->AdminRepository->login($request);
 
     }
+
+
+    public function all()
+    {
+        return $this->AdminRepository->all();
+
+    }
 }

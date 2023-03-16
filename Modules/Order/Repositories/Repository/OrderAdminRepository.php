@@ -3,6 +3,7 @@
 namespace Modules\Order\Repositories\Repository;
 
 
+use Carbon\Carbon;
 use Modules\Order\Entities\Order;
 use Modules\Order\Repositories\Interfaces\OrderAdminRepositoryInterface;
 use Modules\Order\Transformers\OrderAdminIndexResource;
@@ -16,6 +17,14 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     public function __construct(Order $order)
     {
         $this->orderModel = $order;
+    }
+
+    public function sendNewOrderNotification()
+    {
+        $notifications= auth()->user()->Notifications()->get("data");
+        return ['statusCode' => 200, 'status' => true,
+            'data' => $notifications
+        ];
     }
 
     public function changeStates($data, $id)
@@ -92,5 +101,23 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
         $msg = 'Deleted';
         return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
     }
+    public function home()
+    {
 
+        $toDay=Order::whereDate('created_at', Carbon::today())->count();
+        $finished=Order::where('status','Finished')->count();
+        $cancel=Order::where('status','Cansaled')->count();
+        $process=Order::where('status','In Process')->count();
+        return response()->json(['toDay'=> $toDay ,'finished'=>$finished,'cancel'=>$cancel,'process'=>$process]);
+    }
+
+    public function serviceCount($id)
+    {
+        $Receipt = $this->orderModel->where(['id'=>$id,'payment_status'=>'Receipt'])->count();
+        $Credit = $this->orderModel->where(['id'=>$id,'payment_status'=>'Credit'])->count();
+        return ['statusCode' => 200,'status' => true ,
+            'Credit' => $Credit,
+            'Receipt'=>$Receipt
+        ];
+    }
 }
