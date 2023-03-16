@@ -17,6 +17,19 @@ class AnnouncementController extends Controller
     {
         $this->announcement = $announcement;
     }
+
+
+
+    public function activate($id){
+        //sleep(3);
+        $item =  $this->announcement->find($id);
+        if($item){
+            $item->active = !$item->active;
+            $item->save();
+            return response()->json(['status' => $item->active, 'msg' => 'updated successfully']);
+        }
+        return response()->json(['status' => 0, 'msg' => 'invalid id']);
+    }
     /**
      * Display a listing of the resource.
      * @return array
@@ -25,7 +38,7 @@ class AnnouncementController extends Controller
     {
         $announcement=  $this->announcement->latest()->get();
         return ['statusCode' => 200,'status' => true ,
-            'data' => new AnnouncementResource($announcement)
+            'data' => AnnouncementResource::collection($announcement)
         ];
     }
 

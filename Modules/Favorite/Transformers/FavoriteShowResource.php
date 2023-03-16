@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Favorite\Entities\Favorite;
 use Modules\Order\Entities\Order;
 use Modules\Service\Entities\Service;
-use Modules\Service\Transformers\ServiceResource;
 
 class FavoriteShowResource extends JsonResource
 {
@@ -21,7 +20,7 @@ class FavoriteShowResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'service' => ServiceResource::collection($this->services),
+            'service' => $this->services,
         ];
     }
 }

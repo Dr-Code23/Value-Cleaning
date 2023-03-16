@@ -65,9 +65,9 @@ class FavoriteRepository implements FavoriteRepositoryInterface
     public function show($id)
     {
 
-        $favorite = $this->favoriteModel->where('id', $id)->with('services');
+        $favorite = $this->favoriteModel->find($id);
         return ['statusCode' => 200, 'status' => true,
-            'data' => new FavoriteResource($favorite)
+            'data' =>  new FavoriteResource($favorite)
         ];
     }
 

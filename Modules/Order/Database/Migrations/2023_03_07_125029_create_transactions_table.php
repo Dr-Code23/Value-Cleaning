@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('customer_id');
-            $table->string('transaction_id')->nullable();
+            $table->string('transaction_id');
             $table->string('token_id');
             $table->foreignId('user_id')
                 ->constrained('users')

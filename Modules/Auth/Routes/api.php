@@ -51,13 +51,11 @@ Route::post('Admin/Login', [AdminController::class, 'AdminLogin']);
 
 Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
     Route::apiresource('roles', RoleController::class);
-    Route::get('show-user/{id}', [UserController::class,'show']);
     Route::get('all-users', [UserController::class,'index']);
     Route::get('Admin/profile', [AdminProfileController::class, 'AdminProfile']);
     Route::post('update/profile', [AdminProfileController::class, 'AdminUpdateProfile']);
     Route::post('Admin-change-password', [AdminChangePasswordAController::class, 'AdminchangePassword']);
     Route::get('logout', [AdminProfileController::class, 'Logout']);
     Route::post('send', [SendNotificationController::class, 'sendNotification']);
-    Route::get('all', [AdminController::class, 'all']);
 
 });

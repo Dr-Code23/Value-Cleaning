@@ -22,11 +22,8 @@ class OrderAdminIndexResource extends JsonResource
             'time' => $this->time,
             'address' => $this->address,
             'status' => $this->status,
-            'payment_status'=>$this->payment_status,
             'total_price' => $this->total_price,
             'gallery'  => $this->getFirstMediaUrl('Orders'),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
 
         ];
     }

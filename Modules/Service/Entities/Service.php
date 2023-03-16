@@ -23,9 +23,7 @@ class Service extends Model implements HasMedia
     protected $guarded = [];
 
 
-    protected $casts = [
-        'options' => 'array',
-    ];
+
     public function category(){
         return $this->belongsTo(Category::class);
     }

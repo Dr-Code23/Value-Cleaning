@@ -37,9 +37,6 @@ class OrderResource extends JsonResource
             'gallery1'  => $this->getFirstMediaUrl('Orders'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-//
-
-
 
         ];
     }

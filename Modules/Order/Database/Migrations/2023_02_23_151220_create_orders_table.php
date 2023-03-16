@@ -16,12 +16,11 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->double('worke_aera');
-            $table->string('date');
+            $table->date('date');
             $table->time('time');
             $table->string('address');
             $table->enum('repeat', ['once', 'weekly', 'monthly']);
-            $table->enum('status', ['In Process', 'Cansaled', 'Finished'])->default('In Process');;
-            $table->enum('payment_status', ['Credit', 'Receipt'])->default('Receipt');;
+            $table->enum('status', ['Processing', 'Cansaled', 'Finished'])->default('Processing');;
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->cascadeOnUpdate()

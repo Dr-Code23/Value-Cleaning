@@ -16,13 +16,16 @@ class OrderAdminController extends Controller
     {
         $this->OrderAdminRepository = $OrderAdminRepository;
     }
-
+    /**
+     * Display a listing of the resource.
+     * @return Renderable
+     */
     public function index()
     {
         return $this->OrderAdminRepository->index();
     }
 
-    public function canceledOrder()
+    public function CansaledOrder()
     {
 
     return $this->OrderAdminRepository->CanceledOrder();
@@ -36,36 +39,37 @@ class OrderAdminController extends Controller
 
     }
 
+
+    /**
+     * Show the specified resource.
+     * @param int $id
+     * @return Renderable
+     */
     public function show($id)
     {
         return $this->OrderAdminRepository->show($id);
     }
 
-    public function updateOrderToAdmin( Request $request,$id)
+    public function UpdateOeserToAdmin( Request $request,$id)
     {
         return $this->OrderAdminRepository->updateOrderToAdmin($request, $id);
+
     }
-    public function changeStates(Request $request, $id)
+    public function ChangeStutes(Request $request, $id)
     {
         return $this->OrderAdminRepository->changeStates($request->all(), $id);
+
+
     }
 
+    /**
+     * Remove the specified resource from storage.
+     * @param int $id
+     * @return Renderable
+     */
     public function destroy($id)
     {
         return $this->OrderAdminRepository->destroy($id);
 
-    }
-
-    public function sendNewOrderNotification()
-    {
-        return $this->OrderAdminRepository->sendNewOrderNotification();
-    }
-    public function home()
-    {
-        return $this->OrderAdminRepository->home();
-    }
-    public function serviceCount($id)
-    {
-        return $this->OrderAdminRepository->serviceCount($id);
     }
 }

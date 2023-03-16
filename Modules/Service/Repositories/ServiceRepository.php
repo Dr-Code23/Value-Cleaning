@@ -73,11 +73,11 @@ class ServiceRepository implements ServiceRepositoryInterface
 
     public function findService($id)
     {
-        $service= $this->serviceModel->where('id', $id)->getTranslations()->with(['revices', 'workers'])->first();
-       $rate= Review::where('service_id',$id)->avg('star_rating');
+        $service= $this->serviceModel->where('id', 2)->with(['revices', 'workers'])->first();
+       $rate= Review::where('service_id',2)->avg('star_rating');
         return ['statusCode' => 200,
             'status' => true ,
-            'data' => $service ,
+            'data' => new ServiceResource($service) ,
                'rate'=>$rate   ];
     }
 
@@ -86,7 +86,6 @@ class ServiceRepository implements ServiceRepositoryInterface
         $service = $this->serviceModel->where('id', $id)->first();
 
           //sending the model data to the frontend
-
     $service->update([
         'title' => [
             'en' => $data['title_en'],
@@ -99,8 +98,6 @@ class ServiceRepository implements ServiceRepositoryInterface
         "category_id"=> $data['category_id'],
         'price'=> $data['price'],
     ]);
-    $service->workers()->sync($data->worker_id);
-
         if ($data->hasFile('gallery')) {
             $service->media()->delete();
             $service->addMediaFromRequest('gallery')->toMediaCollection('services');

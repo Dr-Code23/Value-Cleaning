@@ -32,10 +32,10 @@ use totalPrice;
     public function index()
     {
         $userId = Auth::id();
-        $Order = $this->orderModel->where('user_id', $userId)->latest()->get();
+        $order = $this->orderModel->where('user_id', $userId)->latest()->get();
 
         return ['statusCode' => 200, 'status' => true,
-            'data' => OrderResource::collection($Order)
+            'data' => OrderResource::collection($order)
         ];
 
     }
@@ -69,6 +69,7 @@ use totalPrice;
         $data['user_id'] = $userId;
         $data['total_price'] = $this->totalPrice($data);
         $data['order_code']='#' . str_pad($this->totalPrice($data) + 1, 8, "0", STR_PAD_LEFT);
+        $data['date']=date('Y-m-d H:i:s', strtotime($data['date']));
         $order = $this->orderModel->create($data->all());
         $order->sub_services()->sync($data->sub_service_id);
         if ($data->hasFile('gallery')) {
@@ -95,7 +96,7 @@ use totalPrice;
     {
         $order = $this->orderModel->where('id', $id)->first('order_code');
         return ['statusCode' => 200, 'status' => true,
-            'Order Code ' => new OrderResource($order)
+            'Order Code ' => $order
 
         ];
 
@@ -105,7 +106,7 @@ use totalPrice;
     {
         $userId = Auth::id();
         $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->first();
-        $offer =Offer::when('service_id',$order->service_id)->where('service_id',$order->service_id)->first('offer_percent');
+        $offer =Offer::when('service_id')->where('service_id',$order->service_id)->first('offer_percent');
         return ['statusCode' => 200, 'status' => true,
             'data' => new OrderResource($order),
             'offer'=>$offer
@@ -169,11 +170,13 @@ use totalPrice;
     {
         $order = $this->orderModel->where(['user_id' => Auth::id(), 'id' => $id])->first();
         $service=Service::where('id',$order->service_id)->first();
+        $offer=Offer::where('service_id',$order->service_id)->first();
         $data = [
             'date' => date('m/d/Y'),
             'order' =>  new OrderResource($order),
             'user'=>Auth::user(),
             'service'=> new ServiceResource($service),
+            'offer' => $offer,
         ];
         $pdf = PDF::loadView('order::index', $data);
         // download PDF file with download method

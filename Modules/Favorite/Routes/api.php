@@ -14,11 +14,11 @@ use Modules\Favorite\Http\Controllers\FavoriteController;
 |
 */
 
-Route::middleware(['user_api','role:user'])->group(function(){
+Route::middleware(['user_api','role:user','setlocale'])->group(function(){
     Route::get('Favorite', [FavoriteController::class, 'index']);
     Route::post('create/Favorite', [FavoriteController::class, 'store']);
     Route::get('show/Favorite/{id}', [FavoriteController::class, 'show']);
-    Route::post('delete/Favorite/{id}', [FavoriteController::class, 'destroy']);
+    Route::delete('delete/Favorite/{id}', [FavoriteController::class, 'destroy']);
 
 
 });

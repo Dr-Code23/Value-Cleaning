@@ -5,6 +5,7 @@ namespace Modules\Favorite\Transformers;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Service\Transformers\ServiceResource;
 
+
 class FavoriteResource extends JsonResource
 {
     /**
@@ -18,8 +19,6 @@ class FavoriteResource extends JsonResource
         return [
             'id' => $this->id,
             'service' => ServiceResource::collection($this->services),
-
-
         ];
     }
 }

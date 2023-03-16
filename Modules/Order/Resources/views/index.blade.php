@@ -5,6 +5,20 @@
     <title>Example 1</title>
     <link rel="stylesheet" href="style.css" media="all" />
     <style>
+        @import 'https://fonts.googleapis.com/css?family=Montserrat';
+
+      @font-face {
+  font-family: 'Pacifico';
+  src: url('https://example.com/fonts/PacificoNormal.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Pacifico';
+  src: url('https://example.com/fonts/PacificoBold.ttf');
+  font-weight: bold;
+  font-style: normal;
+}
 *{
     margin: 0;
     padding: 5px;
@@ -24,10 +38,9 @@
 
             color: #001028;
             background: #FFFFFF;
-            font-family: Arial, sans-serif;
+            font-family: "Pacifico", "Noto Sans", "Noto CJK", sans-serif;
             font-size: 12px;
-            font-family: Arial, sans-serif;
-        }
+       }
 
         header {
             padding: 10px 0;
@@ -76,6 +89,8 @@
         #project div,
         #company div {
             white-space: nowrap;
+            font-size: 14px;
+
         }
 
         table {
@@ -142,6 +157,11 @@
             padding: 8px 0;
             text-align: center;
         }
+        .h1
+        {
+            color:white;
+            background:green;
+        }
     </style>
 </head>
 <body>
@@ -149,7 +169,7 @@
     <div id="logo">
         <img src="logo.png">
     </div>
-    <h1>INVOICE {{$order->order_code}}</h1>
+    <h1 class='h1'>INVOICE {{$order->order_code}}</h1>
     <div id="company" class="clearfix">
         <div>Value Cleaning</div>
     </div>
@@ -176,7 +196,7 @@
         <tr>
             <td class="service"> Repeat: {{$order->repeat}}</td>
             <td class="desc"> Date {{$order->date}} , Time {{$order->time}}</td>
-            <td class="unit">delivery_price: {{$order->delivery_price}} $</td>
+{{--            <td class="unit">delivery_price: {{$order->delivery_price ?? ''}} $</td>--}}
 
         </tr>
         <tr>
@@ -198,7 +218,7 @@
         </tr>
         <tr>
             <td colspan="4">offer</td>
-            <td class="total">...</td>
+            <td class="total">{{$offer->offer_percent ?? ''}}%</td>
         </tr>
         <tr>
             <td colspan="4" class="grand total">GRAND TOTAL</td>
@@ -210,7 +230,7 @@
         </div>
     </table>
 </main>
-<footer>
+<footer class='h1'>
     Invoice was created on a computer and is valid without the signature and seal.
 </footer>
 </body>

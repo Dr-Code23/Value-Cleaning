@@ -14,7 +14,7 @@ trait totalPrice
 
       $subservicesPrices=SubService::whereIn('id',$data['sub_service_id'])->sum('price');
       $servicesPrice=Service::where('id',$data['service_id'])->pluck('price')->first();
-      $offer=Offer::when($data['service_id'])->where('service_id',$data['service_id'])->pluck('offer_percent')->first();
+      $offer=Offer::where('service_id',$data['service_id'])->pluck('offer_percent')->first();
       If($offer){
        $servicePrice=$servicesPrice-($servicesPrice*$offer/100);
           $totalPrice=$servicePrice+$subservicesPrices;

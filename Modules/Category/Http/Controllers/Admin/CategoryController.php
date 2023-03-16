@@ -38,7 +38,7 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'title_en' => 'required|string|max:255',
             'title_sv' => 'required|string|max:255',
-            "gallery" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
+            "gallery" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"
         ]);
 
         $category= $this->categoryModel->create([
@@ -48,9 +48,10 @@ class CategoryController extends Controller
                     'sv' => $validated['title_sv']
                 ]
         ]);
+        if($request->gallery){
         $category->addMediaFromRequest('gallery')->toMediaCollection('categories');
         $category->save();
-
+        }
         //sending the model data to the frontend
         return [
             'statusCode' => 200,

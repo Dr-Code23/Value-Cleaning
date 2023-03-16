@@ -3,9 +3,11 @@
 namespace Modules\Order\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
+use Modules\Order\Entities\Order;
+use Modules\Service\Entities\Service;
 use Modules\Service\Transformers\ServiceResource;
 use Modules\Service\Transformers\SubServiceResource;
-
 class OrderAdminResource extends JsonResource
 {
     /**
@@ -31,10 +33,9 @@ class OrderAdminResource extends JsonResource
             'workers' => $this->workers,
             'extraServices'=>SubServiceResource::collection($this->sub_services),
             'total_price' => $this->total_price,
-            'gallery'  => $this->gerMediaUrl('Orders'),
+            'gallery'  => $this->getMedia('Orders'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-
         ];
     }
 }

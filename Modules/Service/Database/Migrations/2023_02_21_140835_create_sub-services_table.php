@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->double('price');
+
             $table->foreignId('service_id')
                 ->constrained('services')
                 ->cascadeOnUpdate()

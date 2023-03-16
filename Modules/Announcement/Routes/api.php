@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Modules\Announcement\Http\Controllers\AnnouncementController;
 
 /*
@@ -20,4 +21,6 @@ Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
     Route::post('update/announcement/{id}', [AnnouncementController::class, 'update']);
     Route::get('show/announcement/{id}', [AnnouncementController::class, 'show']);
     Route::delete('delete/announcement/{id}', [AnnouncementController::class, 'destroy']);
+    Route::get('active/announcement/{id}', [AnnouncementController::class, 'activate']);
+
 });
