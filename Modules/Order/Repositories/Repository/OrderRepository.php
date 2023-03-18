@@ -56,7 +56,7 @@ class OrderRepository implements OrderRepositoryInterface
         }
 
         $data['user_id'] = $userId;
-        $data['order_code']='#' . str_pad($userId + 1, 8, "0", STR_PAD_LEFT);
+        $data['order_code'] = '#' . str_pad($userId + 1, 8, "0", STR_PAD_LEFT);
         $Order = $this->orderModel->create($data->all());
         $Order->sub_services()->sync($data->sub_service_id);
 
@@ -65,7 +65,6 @@ class OrderRepository implements OrderRepositoryInterface
         });
 
         $Order->save();
-
         return ['statusCode' => 200, 'status' => true
         ];
 
@@ -86,7 +85,7 @@ class OrderRepository implements OrderRepositoryInterface
     {
         $userId = Auth::id();
 
-        $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->with(['users', 'services', 'workers'])->first();
+        $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->with(['users', 'services', 'workers'])->first();
         return ['statusCode' => 200, 'status' => true,
             'data' => new OrderResource($order)
         ];
@@ -99,7 +98,7 @@ class OrderRepository implements OrderRepositoryInterface
     {
         $userId = Auth::id();
 
-        $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->first();
+        $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->first();
         $order['Status'] = 'Cansaled';
         $order->update();
         return ['statusCode' => 200, 'status' => true,
@@ -112,8 +111,7 @@ class OrderRepository implements OrderRepositoryInterface
     public function Update($data, $id)
     {
         $userId = Auth::id();
-
-        $order = $this->orderModel->where(['id'=>$id,'user_id'=>$userId])->with(['users', 'services', 'workers'])->first();;
+        $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->with(['users', 'services', 'workers'])->first();;
         $order->update($data->all());
         $order->addMultipleMediaFromRequest(['gallery'])->each(function ($fileAdder) {
             $fileAdder->toMediaCollection('Orders');
@@ -128,11 +126,8 @@ class OrderRepository implements OrderRepositoryInterface
     public function destroy($id)
     {
         $userId = Auth::id();
-
-
         $order = $this->orderModel->where(['user_id' => $userId, 'id' => $id])->first();
         try {
-
             $order->delete();
             $msg = 'Deleted';
             return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
