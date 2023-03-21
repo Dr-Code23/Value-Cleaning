@@ -9,21 +9,34 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Modules\Order\Entities\Order;
 
 class OrderCanceled implements ShouldBroadcast
 {
-    public $order;
+    /**
+     * @var Order
+     */
+    public Order $order;
 
+    /**
+     * @param Order $order
+     */
     public function __construct(Order $order)
     {
         $this->order = $order;
     }
 
-    public function broadcastOn()
+    /**
+     * @return string[]
+     */
+    public function broadcastOn(): array
     {
         return ['orders'];
     }
 
+    /**
+     * @return string[]
+     */
     public function broadcastWith()
     {
         return [

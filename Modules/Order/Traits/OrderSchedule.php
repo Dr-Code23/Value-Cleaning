@@ -5,7 +5,7 @@ namespace Modules\Order\Traits;
 use Carbon\Carbon;
 use Modules\Order\Entities\Order;
 use Modules\Order\Entities\Schedule;
-trait orderSchedule
+trait OrderSchedule
 {
 
 

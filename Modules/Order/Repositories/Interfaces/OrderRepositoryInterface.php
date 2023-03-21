@@ -17,7 +17,7 @@ interface OrderRepositoryInterface
 
     public function show($id);
 
-    public function cancele($id);
+    public function cancel($id);
 
     public function update($data, $id);
 

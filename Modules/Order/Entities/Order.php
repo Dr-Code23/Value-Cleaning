@@ -12,6 +12,9 @@ use Modules\Worker\Entities\Worker;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @method create($all)
+ */
 class Order extends Model implements HasMedia
 {
     use HasFactory,InteractsWithMedia,Notifiable;

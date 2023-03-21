@@ -68,7 +68,7 @@ class OrderController extends Controller
 
     public function cancel($id)
     {
-        return $this->OrderRepository->cancele($id);
+        return $this->OrderRepository->cancel($id);
     }
 
     /**

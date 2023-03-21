@@ -5,6 +5,7 @@ namespace Modules\Order\Console;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Modules\Order\Entities\Schedule;
 use Modules\Order\Notifications\TaskReminderNotification;
@@ -20,49 +21,77 @@ class CreateOrderCommand extends Command
      */
     protected $signature = 'orders:create';
 
-
+    /**
+     * @var string
+     */
     protected $description = 'Create orders that weekly';
+
+    /**
+     * @var Order
+     */
+    protected Order $orderModel;
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Order $order)
     {
+        $this->orderModel = $order;
         parent::__construct();
     }
 
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        $schedules = Schedule::where([
-            'repeat' => 'weekly',
-            'status' => 'Processing'
-        ])->get();
+        $tomorrow =  Carbon::now()->addDay()->dayOfWeek;
 
-        foreach ($schedules as $schedule) {
+        $schedules = $this->orderModel->query()
+            ->where([
+                'repeat' => 'weekly',
+                'status' => 'processing'
+            ])
+            ->whereNot('date','<>', Carbon::now())
+            ->where('day', $tomorrow)
+            ->take(20)
+            ->get();
 
-            $dayOfWeek = Carbon::parse($schedule->date)->dayOfWeek;
+        if($schedules){
+            foreach ($schedules as $schedule) {
 
-            $newschedule = Schedule::create([
-                'order_id' => $schedule->order_id,
-                'date' => $schedule->date,
-                'time' => $schedule->time,
-                'day' => $dayOfWeek,
-                'repeat' => $schedule->repeat,
-                'user_id' => $schedule->user_id,
-            ]);
+              $dayOfWeek = Carbon::parse($schedule->date)->dayOfWeek;
 
-            Notification::send(Auth::user(), new TaskReminderNotification($newschedule));
+                try {
+                    DB::beginTransaction();
 
-            return true;
+                    Schedule::create([
+                        'order_id' => $schedule->order_id,
+                        'date' => Carbon::now(),
+                        'time' => $schedule->time,
+                        'day' => $dayOfWeek,
+                        'repeat' => $schedule->repeat,
+                        'user_id' => $schedule->user_id,
+                    ]);
+
+                     // update => updated_at at order
+
+                    DB::commit();
+
+                }catch (\Exception){
+                    DB::rollBack();
+                }
+
+               //
+
+                  // review with eng.mohamed
+           //     Notification::send(Auth::user(), new TaskReminderNotification($newSchedule));
+            }
         }
-
     }
 
     /**
@@ -70,7 +99,7 @@ class CreateOrderCommand extends Command
      *
      * @return array
      */
-    protected function getArguments()
+    protected function getArguments(): array
     {
         return [
             ['example', InputArgument::REQUIRED, 'An example argument.'],
@@ -82,7 +111,7 @@ class CreateOrderCommand extends Command
      *
      * @return array
      */
-    protected function getOptions()
+    protected function getOptions(): array
     {
         return [
             ['example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null],

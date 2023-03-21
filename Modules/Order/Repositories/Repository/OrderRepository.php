@@ -3,69 +3,109 @@
 namespace Modules\Order\Repositories\Repository;
 
 
-use App\Models\User;
-use Exception;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Modules\Offer\Entities\Offer;
 use Modules\Order\Entities\Order;
 use Modules\Order\Events\OrderCanceled;
 use Modules\Order\Events\OrderCreated;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
-use Modules\Order\Traits\orderSchedule;
-use Modules\Order\Traits\totalPrice;
+use Modules\Order\Traits\OrderSchedule;
+use Modules\Order\Traits\TotalPrice;
 use Modules\Order\Transformers\OrderResource;
 use Modules\Service\Entities\Service;
 use Modules\Service\Transformers\ServiceResource;
-use PDF;
-
+use Exception;
 
 class OrderRepository implements OrderRepositoryInterface
 {
 
-    use totalPrice, orderSchedule;
+    use TotalPrice, OrderSchedule;
 
-    private $orderModel;
+    /**
+     * @var Order
+     */
+    private Order $orderModel;
 
-    public function __construct(Order $order)
+    /**
+     * @var Offer
+     */
+    private Offer $offerModel;
+
+    /**
+     * @var Service
+     */
+    private Service $serviceModel;
+
+    /**
+     * @param Order $order
+     * @param Offer $offer
+     * @param Service $service
+     */
+    public function __construct(Order $order, Offer $offer, Service $service)
     {
         $this->orderModel = $order;
+        $this->offerModel = $offer;
+        $this->serviceModel = $service;
     }
 
-    public function index()
+    /**
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
     {
-
-        $orders = $this->orderModel->whereHas('Schedules', function ($query) {
+        $orders = $this->orderModel->query()->whereHas('Schedules', function ($query) {
 
             $query->where('user_id', Auth::id());
 
         })->latest()->get();
-        return response()->json - (['statusCode' => 200, 'status' => true,
-                'data' => OrderResource::collection($orders)
-            ]);
 
-    }
-
-    public function canceledOrder()
-    {
-        $userId = Auth::id();
-
-        $Order = $this->orderModel->where(['Status' => 'Cansaled', 'user_id' => $userId])->latest()->get();
         return response()->json(['statusCode' => 200, 'status' => true,
-            'CansaledOrder' => OrderResource::collection($Order)
+            'data' => OrderResource::collection($orders)
         ]);
     }
 
-    public function finishedOrder()
+    /**
+     * @return JsonResponse
+     */
+    public function canceledOrder(): JsonResponse
     {
         $userId = Auth::id();
 
-        $Order = $this->orderModel->where(['Status' => 'Finished', 'user_id' => $userId])->latest()->get();
+        $Order = $this->orderModel->query()
+            ->where(['status' => 'canceled', 'user_id' => $userId])
+            ->latest()
+            ->get();
+
         return response()->json(['statusCode' => 200, 'status' => true,
-            'FinishedOrder' => OrderResource::collection($Order)
+            'canceledOrder' => OrderResource::collection($Order)
         ]);
     }
 
-    public function store($data)
+    /**
+     * @return JsonResponse
+     */
+    public function finishedOrder(): JsonResponse
+    {
+        $userId = Auth::id();
+
+        $order = $this->orderModel->query()
+            ->where(['Status' => 'Finished', 'user_id' => $userId])
+            ->latest()
+            ->get();
+
+        return response()->json(['statusCode' => 200, 'status' => true,
+            'finishedOrder' => OrderResource::collection($order)
+        ]);
+    }
+
+    /**
+     * @param $data
+     * @return JsonResponse
+     */
+    public function store($data): JsonResponse
     {
         $data['user_id'] = auth()->id();
         $data['total_price'] = $this->totalPrice($data);
@@ -73,6 +113,7 @@ class OrderRepository implements OrderRepositoryInterface
         $data['date'] = date('Y-m-d', strtotime($data['date']));
 
         $order = $this->orderModel->create($data->all());
+
         $schedule = $this->schedule($order);
 
         if ($data['sub_service_id']) {
@@ -93,86 +134,120 @@ class OrderRepository implements OrderRepositoryInterface
             'status' => true,
             'data' => new OrderResource($order),
             'schedule' => $schedule
-        ], 200);
-
+        ]);
     }
 
-    public function orderCode($id)
+    /**
+     * @param $id
+     * @return array
+     */
+    public function orderCode($id): array
     {
-        $order = $this->orderModel->where('id', $id)->first('order_code');
+        $order = $this->orderModel->query()->where('id', $id)->first('order_code');
         return ['statusCode' => 200, 'status' => true,
             'Order Code ' => $order
-
         ];
-
     }
 
-    public function show($id)
+    /**
+     * @param $id
+     * @return array
+     */
+    public function show($id): array
     {
         $userId = Auth::id();
-        $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->first();
-        $offer = Offer::when('service_id', $order->service_id)->where('service_id', $order->service_id)->first('offer_percent');
+
+        $order = $this->orderModel->query()->where(['id' => $id, 'user_id' => $userId])->first();
+
+        $offer = $this->offerModel->query()
+            ->when('service_id', $order->service_id)
+            ->where('service_id', $order->service_id)
+            ->first('offer_percent');
+
         return ['statusCode' => 200, 'status' => true,
             'data' => new OrderResource($order),
             'offer' => $offer
         ];
-
-
     }
 
-
-    public function cancele($id)
+    /**
+     * @param $id
+     * @return array
+     */
+    public function cancel($id): array
     {
         $userId = Auth::id();
-        $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->first();
-        $order->update(['Status' => 'Cansaled']);
-        $admin = User::whereHas('roles', function ($query) {
+        $order = $this->orderModel->query()->where(['id' => $id, 'user_id' => $userId])->first();
 
-            $query->where('name', '=', 'admin');
+        $order->update(['status' => 'canceled']);
 
-        })->get();
         event(new OrderCanceled($id));
+
         return ['statusCode' => 200, 'status' => true,
-            'message' => 'Order Cansaled successfully ',
-
-
+            'message' => 'Order Canceled successfully ',
         ];
     }
 
-    public function update($data, $id)
+    /**
+     * @param $data
+     * @param $id
+     * @return array
+     */
+    public function update($data, $id): array
     {
         $userId = Auth::id();
-        $order = $this->orderModel->where(['id' => $id, 'user_id' => $userId])->first();
+
+        $order = $this->orderModel->query()
+            ->where(['id' => $id, 'user_id' => $userId])
+            ->first();
+
         $data['date'] = date('Y-m-d', strtotime($data->date));
+
         $order->update($data->all());
+
         $this->updateSchedule($order);
+
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Order updated successfully ',
             'data' => new OrderResource($order)
         ];
     }
 
-    public function destroy($id)
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function destroy($id): JsonResponse
     {
         $userId = Auth::id();
-        $order = $this->orderModel->where(['user_id' => $userId, 'id' => $id])->first();
+
+        $order = $this->orderModel->query()->where(['user_id' => $userId, 'id' => $id])->first();
+
         try {
-
             $order->delete();
-            $msg = 'Deleted';
-            return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
-        } catch (Exception $e) {
-            return response()->json(['statusCode' => 400, 'status' => false, 'message' => $msg]);
 
+            $message = 'Deleted';
+
+            return response()->json(['statusCode' => 200, 'status' => true, 'message' => $message]);
+
+        } catch (Exception) {
+            $message = 'Deleted';
+            return response()->json(['statusCode' => 400, 'status' => false, 'message' => $message]);
         }
-
     }
 
-    public function downloadPdf($id)
+    /**
+     * @param $id
+     * @return Response
+     */
+    public function downloadPdf($id): Response
     {
-        $order = $this->orderModel->where(['user_id' => Auth::id(), 'id' => $id])->first();
-        $service = Service::where('id', $order->service_id)->first();
-        $offer = Offer::where('service_id', $order->service_id)->first();
+        $order = $this->orderModel->query()->where(['user_id' => Auth::id(), 'id' => $id])->first();
+
+        $service = $this->serviceModel->query()->where('id', $order->service_id)->first();
+
+        $offer = $this->offerModel->query()->where('service_id', $order->service_id)->first();
+
         $data = [
             'date' => date('m/d/Y'),
             'order' => new OrderResource($order),
@@ -180,6 +255,7 @@ class OrderRepository implements OrderRepositoryInterface
             'service' => new ServiceResource($service),
             'offer' => $offer,
         ];
+
         $pdf = PDF::loadView('order::index', $data);
         // download PDF file with download method
         return $pdf->download('pdf_file.pdf');

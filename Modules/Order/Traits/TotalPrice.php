@@ -6,7 +6,7 @@ use Modules\Offer\Entities\Offer;
 use Modules\Service\Entities\Service;
 use Modules\Service\Entities\SubService;
 
-trait totalPrice
+trait TotalPrice
 {
 
     public function totalPrice($data)
