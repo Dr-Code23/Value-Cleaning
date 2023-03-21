@@ -8,6 +8,8 @@ use Modules\Order\Entities\Order;
 use Modules\Service\Entities\Service;
 use Modules\Service\Transformers\ServiceResource;
 use Modules\Service\Transformers\SubServiceResource;
+use Modules\Auth\Transformers\UserResource;
+
 class OrderAdminResource extends JsonResource
 {
     /**
@@ -28,7 +30,7 @@ class OrderAdminResource extends JsonResource
             'repeat' => $this->repeat,
             'status' => $this->status,
             'payment_status'=>$this->payment_status,
-            'user' => $this->users,
+            'user' => UserResource::collection($this->users),
             'service' =>  ServiceResource::collection($this->services),
             'workers' => $this->workers,
             'extraServices'=>SubServiceResource::collection($this->sub_services),

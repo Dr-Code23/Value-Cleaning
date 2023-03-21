@@ -3,8 +3,7 @@
 namespace Modules\Worker\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\DB;
-use Modules\Order\Entities\Order;
+use Modules\Review\Transformers\ReviewWorkerResource;
 use Modules\Worker\Entities\Worker;
 
 class WorkerResource extends JsonResource
@@ -25,7 +24,7 @@ class WorkerResource extends JsonResource
             'phone' => $this->phone,
             'NIN' => $this->NIN,
             'active'=>$this->active,
-            'review'=>$this->revices,
+            'review'=> ReviewWorkerResource::collection($this->revices) ,
             'count'  => Worker::count(),
             'photo'  => $this->getFirstMediaUrl('workers'),
         ];    }

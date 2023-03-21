@@ -29,7 +29,7 @@ class ServiceResource extends JsonResource
             'active' =>$this->active,
             'workers' => $this->workers,
             'images'  => $this->getFirstMediaUrl('services'),
-            'Review' => $this->revices,
+            'Review' => ReviewResource::collection($this->revices),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

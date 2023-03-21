@@ -49,8 +49,9 @@ class Order extends Model implements HasMedia
     {
         return $this->belongsToMany(SubService::class);
     }
-    protected static function newFactory()
+    public function schedules()
     {
-        return \Modules\Order\Database\factories\OrderFactory::new();
+        return $this->hasMany(Schedule::class);
     }
+
 }

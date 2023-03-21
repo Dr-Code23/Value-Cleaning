@@ -34,7 +34,7 @@ class OrderResource extends JsonResource
             'total_price' => $this->total_price,
             'order_code' => $this->order_code,
             'subService'=> SubServiceResource::collection($this->sub_services),
-            'gallery1'  => $this->getFirstMediaUrl('Orders'),
+            'gallery1'  => $this->getMedia('Orders'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 

@@ -166,5 +166,9 @@ class AdminRepository implements AdminRepositoryInterface
         return $this->Notification($data);
     }
 
+    public function all()
+    {
+
+    }
 
 }
