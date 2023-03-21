@@ -10,17 +10,17 @@ interface MessageInterface
     //Delete message
     public function destroy($request);
 
-    // get room messages
-    public function room($request);
+    // get all Rooms
+    public function getRooms();
+
+    // check Room
+    public function checkRoom($request);
 
     // read Message
     public function readMessage($id);
 
-    // create Room
-    public function createRoom($request);
-
-     // get Room
-     public function getRoom($request);
+    // get Room
+    public function room($request);
 
 }
 

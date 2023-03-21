@@ -7,18 +7,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Message extends Model implements HasMedia
+class Message extends Model
 {
-    use HasFactory,InteractsWithMedia;
+    use HasFactory;
 
-    protected $fillable = ['message', 'sender_id','room_id','seen_at'];
+    protected $fillable = ['message', 'sender_id','room_id'];
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
     public function room()
     {
-        return $this->belongsTo(Room::class);
+        return $this->hasMany(Room::class);
+    }
+
+    protected static function newFactory()
+    {
+        return \Modules\Chat\Database\factories\MessageFactory::new();
+
+
     }
 }

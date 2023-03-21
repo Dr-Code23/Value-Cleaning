@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Modules\Order\Entities\Schedule;
+use Modules\Chat\Entities\Message;
+use Modules\Chat\Entities\Room;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Spatie\Permission\Traits\HasRoles;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Traits\HasRoles;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-
 
 class User extends Authenticatable implements HasMedia ,JWTSubject
 
@@ -31,7 +31,6 @@ class User extends Authenticatable implements HasMedia ,JWTSubject
         'password',
         'address',
         'phone',
-        'device_token',
     ];
 
     /**
@@ -61,18 +60,19 @@ class User extends Authenticatable implements HasMedia ,JWTSubject
         return [];
     }
 
-    public function role()
-    {
-        return $this->belongsToMany(Role::class);
-    }
 
     public function providers()
     {
-        return $this->hasMany(Provider::class, 'user_id', 'id');
+        return $this->hasMany(Provider::class,'user_id','id');
     }
 
-    public function schedules()
+    public function messages()
     {
-        return $this->hasMany(Schedule::class);
+        return $this->hasMany(Message::class);
     }
+    public function room(){
+        return $this->hasMany(Room::class)->with('user');
+    }
+
+
 }

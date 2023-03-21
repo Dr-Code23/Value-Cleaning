@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Broadcast;
 */
 
 Broadcast::channel('private-orders', function ($user) {
-    return $user->hasRole('admin'));
+    return $user->hasRole('admin');
 });
