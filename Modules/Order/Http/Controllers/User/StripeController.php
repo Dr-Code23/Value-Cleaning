@@ -7,20 +7,37 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
+use Modules\Order\Repositories\Interfaces\PaymentRepositoryInterface;
 
 class StripeController extends Controller
 {
-    private $OrderRepository;
+    private $PaymentRepository;
 
-    public function __construct(OrderRepositoryInterface $OrderRepository)
+    public function __construct(PaymentRepositoryInterface $PaymentRepository)
     {
-        $this->OrderRepository = $OrderRepository;
+        $this->PaymentRepository = $PaymentRepository;
     }
     public function makePayment(Request $request)
 
     {
-        return $this->OrderRepository->makePayment($request);
+        return $this->PaymentRepository->makePayment($request);
     }
 
+    public function allPayment()
 
+    {
+        return $this->PaymentRepository->allPayment();
+    }
+
+    public function checkoutPayment(Request $request)
+    {
+    return $this->PaymentRepository->checkoutPayment($request);
+
+    }
+
+    public function deletePaymament(Request $request)
+
+    {
+        return $this->PaymentRepository->deletePayment($request);
+    }
 }

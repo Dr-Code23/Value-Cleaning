@@ -14,12 +14,12 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100',
-            'address' => 'required',
-            'phone' => 'required',
-            'NIN'   => 'required',
-            'photo' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
+            'name' => 'string|between:2,100',
+            'email' => 'string|email|max:100',
+            'address' => '',
+            'phone' => '',
+            'NIN'   => '',
+            'photo' => '',
 
 
         ];

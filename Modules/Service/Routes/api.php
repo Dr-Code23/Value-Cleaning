@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use Modules\Service\Http\Controllers\Admin\ServiceController;
 use Modules\Service\Http\Controllers\Admin\SubServiceController;
 use Modules\Service\Http\Controllers\User\HomeController;
@@ -17,33 +18,33 @@ use Modules\Service\Http\Controllers\User\HomeController;
 */
 
 
+Route::middleware(['user_api', 'role:admin'])->prefix("admin")->group(function () {
+    Route::post('create/service', [ServiceController::class, 'store']);
+    Route::post('update/service/{id}', [ServiceController::class, 'update']);
+    Route::delete('delete/service/{id}', [ServiceController::class, 'destroy']);
+    Route::get('Active/service/{id}', [ServiceController::class, 'activate']);
+    Route::post('find/service/{id}', [ServiceController::class, 'addServiceWorker']);
+    Route::post('Delete/WorkerFromService/{id}', [ServiceController::class, 'deleteWorkerFromService']);
 
-Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
-Route::get('service', [ServiceController::class, 'index']);
-Route::post('create/service', [ServiceController::class, 'store']);
-Route::get('show/service/{id}',  [ServiceController::class, 'show']);
-Route::post('update/service/{id}',  [ServiceController::class, 'update']);
-Route::delete('delete/service/{id}', [ServiceController::class, 'destroy']);
-Route::get('Active/service/{id}', [ServiceController::class, 'activate']);
-Route::post('find/service/{id}', [ServiceController::class, 'AddServiceWoeker']);
-Route::post('Delete/WoekerFromService/{id}', [ServiceController::class, 'DeleteWoekerFromService']);
+    Route::middleware('setlocale')->group(function () {
+        Route::get('service', [ServiceController::class, 'index']);
+        Route::get('show/service/{id}', [ServiceController::class, 'show']);
+        Route::get('SubService', [SubServiceController::class, 'index']);
+        Route::get('show/SubService/{id}', [SubServiceController::class, 'show']);
+        Route::get('SubService/with/service/{id}', [SubServiceController::class, 'showWith']);
+    });
 
+    Route::post('create/SubService', [SubServiceController::class, 'store']);
+    Route::post('update/SubService/{id}', [SubServiceController::class, 'update']);
+    Route::delete('delete/SubService/{id}', [SubServiceController::class, 'destroy']);
 
-Route::get('SubService', [SubServiceController::class, 'index']);
-Route::post('create/SubService', [SubServiceController::class, 'store']);
-Route::get('show/SubService/{id}',  [SubServiceController::class, 'show']);
-Route::put('update/SubService/{id}',  [SubServiceController::class, 'update']);
-Route::delete('delete/SubService/{id}', [SubServiceController::class, 'destroy']);
-Route::get('SubService/with/service/{id}',  [SubServiceController::class, 'showWith']);
 
 });
-Route::middleware(['user_api','role:user'])->group(function() {
-
-    Route::get('UserHome', [HomeController::class, 'UserHome']);
-    Route::get('All/SubService/{id}', [HomeController::class, 'SubService']);
-    Route::get('Service/{id}', [HomeController::class, 'ServiceDetalis']);
-    Route::get('Service/{id}', [HomeController::class, 'ServiceDetalis']);
-    Route::get('jobDone/{id}', [HomeController::class, 'jobDone']);
-
+Route::middleware(['user_api','role:user','setlocale'])->group(function() {
+        Route::get('userHome', [HomeController::class, 'userHome']);
+        Route::get('all/SubService/{id}', [HomeController::class, 'subService']);
+        Route::get('service/{id}', [HomeController::class, 'serviceDetails']);
+        Route::get('jobDone/{id}', [HomeController::class, 'jobDone']);
+        Route::get('top-services',[HomeController::class,'topServices']);
 
 });

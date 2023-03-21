@@ -16,8 +16,8 @@ class OfferResource extends JsonResource
     {
         return [
             'id'      =>  $this->id,
-            'offer_price'   => $this->offer_price,
-            'image'  => $this->getFirstMediaUrl('offers'),
+            'offer_percent'   => $this->offer_percent,
+            'service_id'  => $this->service_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

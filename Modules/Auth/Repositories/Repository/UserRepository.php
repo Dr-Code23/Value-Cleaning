@@ -3,6 +3,7 @@
 namespace Modules\Auth\Repositories\Repository;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -29,9 +30,7 @@ class UserRepository implements UserRepositoryInterface
             'password'=> hash::make($data->password),
 
         ]);
-
         $user->assignRole('user');
-
         Auth::login($user);
 
         return ['statusCode' => 200, 'status' => true,
@@ -59,14 +58,14 @@ class UserRepository implements UserRepositoryInterface
                 'message' => 'Could not create token.',
             ], 500);
         }
-        if(!auth()->user()->hasRole('user')){
+        if (Auth::check()) {
+            if (!auth('api')->user()->hasRole('user')) {
 
-            return response()->json(['error' => 'not allowed'], 400);
+                return response()->json(['error' => 'UnAuthorised'], 401);
+            }
         }
         $user=  auth()->user();
-        $devise_token['devise_token'] = $data->devise_token;
-        $user->update($devise_token);
-
+        $user->update(['devise_token'=>$data->devise_token]);
         return ['statusCode' => 200, 'status' => true,
             'message' => 'User successfully registered ',
             'data' => new UserResource($user),
@@ -87,7 +86,7 @@ class UserRepository implements UserRepositoryInterface
             return response()->json(['status' => true, 'message' => 'check your inbox']);
 
         } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again']);
+            return response()->json(['status' => false, 'message' => 'email not found, try again'],400);
         }
     }
     public function checkCode($data)
@@ -97,10 +96,10 @@ class UserRepository implements UserRepositoryInterface
             if ($user->reset_verification_code == $data->code) {
                 return response()->json(['status' => true, 'message' => 'you will be redirected to set new password']);
             }
-            return response()->json(['status' => false, 'message' => 'code is invalid, try again']);
+            return response()->json(['status' => false, 'message' => 'code is invalid, try again'],400);
 
         } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again']);
+            return response()->json(['status' => false, 'message' => 'email not found, try again'],400);
         }
     }
     public function reset($data)
@@ -112,7 +111,7 @@ class UserRepository implements UserRepositoryInterface
             return response()->json([$user->password,'status' => true, 'message' => 'password has been updated']);
 
         } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again']);
+            return response()->json(['status' => false, 'message' => 'email not found, try again'],400);
         }
     }
     public function profile()
@@ -131,6 +130,7 @@ class UserRepository implements UserRepositoryInterface
         $user = $this->userModel->find($id);
         $user->update($data->all());
         if ($data->hasFile('photo')) {
+            $user->media()->delete();
             $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
         }
         return ['statusCode' => 200,'status' => true ,
@@ -153,5 +153,17 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
         return  response()->json(['success', "Password Changed Successfully"]);
     }
+    public function deleteAccount()
+    {
 
+        $userID =Auth::id();
+        try{
+            $user = User::find($userID);
+            $user->delete();
+            return response()->json(["messages" => "deleted succefully" , "status" => 200]);
+        }catch(Exception $ex){
+            return response()->json(["messages" =>$ex->getError()->message , "status" => 500]);
+        }
+
+    }
 }

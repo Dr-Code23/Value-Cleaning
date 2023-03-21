@@ -28,16 +28,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
-      }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -48,7 +38,7 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'title_en' => 'required|string|max:255',
             'title_sv' => 'required|string|max:255',
-            "gallery" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
+            "gallery" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"
         ]);
 
         $category= $this->categoryModel->create([
@@ -58,9 +48,10 @@ class CategoryController extends Controller
                     'sv' => $validated['title_sv']
                 ]
         ]);
+        if($request->gallery){
         $category->addMediaFromRequest('gallery')->toMediaCollection('categories');
         $category->save();
-
+        }
         //sending the model data to the frontend
         return [
             'statusCode' => 200,
@@ -74,12 +65,15 @@ class CategoryController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return CategoryResource
+     * @return array
      */
     public function show($id)
     {
         $category = $this->categoryModel->find($id);
-        return new CategoryResource($category);
+        return ['statusCode' => 200, 'status' => true,
+            'message' => 'Category updated successfully ',
+            'data' => $category
+        ];
     }
 
 
@@ -92,21 +86,20 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'title_en' => 'required|string|max:255',
-            'title_sv' => 'required|string|max:255',
-            "gallery" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
-        ]);
+
         $category = $this->categoryModel->find($id)->first();
-        $category->update([
-            'title' =>
-                [
-                    'en' => $validated['title_en'],
-                    'sv' => $validated['title_sv']
-                ]
-        ]);
+        if($request['title_en'] || $request['title_sv']){
+            $category->update([
+                'title' =>
+                    [
+                        'en' => $request['title_en'],
+                        'sv' => $request['title_sv']
+                    ]
+            ]);}
         if ($request->hasFile('gallery')) {
+            $category->media()->delete();
             $category->addMediaFromRequest('gallery')->toMediaCollection('categories');
+            $category->save();
         }
 
         return ['statusCode' => 200, 'status' => true,

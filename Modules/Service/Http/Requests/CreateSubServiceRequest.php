@@ -14,7 +14,8 @@ class CreateSubServiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:255',
+            'title_en' => 'required|string|max:255',
+            'title_sv' => 'required|string|max:255',
             "service_id"=> 'required'
         ];
     }

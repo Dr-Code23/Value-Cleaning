@@ -6,8 +6,10 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 use Modules\Order\Repositories\Interfaces\OrderAdminRepositoryInterface;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
+use Modules\Order\Repositories\Interfaces\PaymentRepositoryInterface;
 use Modules\Order\Repositories\Repository\OrderAdminRepository;
 use Modules\Order\Repositories\Repository\OrderRepository;
+use Modules\Order\Repositories\Repository\PaymentRepository;
 
 class OrderServiceProvider extends ServiceProvider
 {
@@ -44,6 +46,7 @@ class OrderServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
         $this->app->bind(OrderRepositoryInterface::class, OrderRepository::class);
         $this->app->bind(OrderAdminRepositoryInterface::class, OrderAdminRepository::class);
+        $this->app->bind(PaymentRepositoryInterface::class,PaymentRepository::class);
 
     }
 

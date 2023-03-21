@@ -21,6 +21,8 @@ interface AdminRepositoryInterface
     public function changePassword($data);
 
     public function pushNotification($data);
+    public function all();
+
 
 }
 

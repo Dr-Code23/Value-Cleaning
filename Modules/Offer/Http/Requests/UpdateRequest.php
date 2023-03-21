@@ -14,7 +14,7 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'offer_percent' => 'required',
+            'offer_percent' => '',
             'service_id' =>'',
         ];
     }

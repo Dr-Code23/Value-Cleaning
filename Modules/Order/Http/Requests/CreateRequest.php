@@ -18,11 +18,12 @@ class CreateRequest extends FormRequest
             'date' => 'required',
             'time' => 'required',
             'address' => 'required',
-            'repeat' => 'required',
+            'repeat' => 'nullable',
             'service_id' => 'required',
-            'total_price' => 'required',
-            'delivery_price'=> 'required',
-            'gallery'  =>'required',
+            'sub_service_id' => 'nullable',
+            'total_price' => 'nullable',
+            'delivery_price'=> 'nullable',
+            'gallery'  =>'nullable',
 
 
         ];

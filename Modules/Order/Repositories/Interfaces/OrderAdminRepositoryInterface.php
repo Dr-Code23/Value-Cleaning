@@ -6,16 +6,14 @@ interface OrderAdminRepositoryInterface
 {
 
     public function index();
-    public function CansaledOrder();
+
+    public function canceledOrder();
 
     public function finishedOrder();
 
-
     public function updateOrderToAdmin($data, $id);
 
-
-    public function changeStutes($data, $id);
-
+    public function changeStates($data, $id);
 
     public function show($id);
 

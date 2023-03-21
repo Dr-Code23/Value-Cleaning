@@ -17,6 +17,7 @@ class Category extends Model implements HasMedia
         [
         'title',
         ];
+    protected $guarded = [];
 
     protected static function newFactory()
     {

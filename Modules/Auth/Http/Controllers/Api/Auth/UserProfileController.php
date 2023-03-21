@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Auth;
 use Modules\Auth\Http\Requests\UpdateRequest;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
+use function Symfony\Component\Translation\t;
 
 class UserProfileController extends Controller
 {
@@ -26,7 +27,7 @@ class UserProfileController extends Controller
     }
 
 
-    public function UpdateProfile(UpdateRequest $request)
+    public function updateProfile(UpdateRequest $request)
     {
 
 
@@ -42,5 +43,12 @@ class UserProfileController extends Controller
             'status' => 'success',
             'message' => 'Successfully logged out',
         ]);
+    }
+
+
+
+    public function deleteAccount()
+    {
+        return $this->UserRepository->deleteAccount();
     }
 }

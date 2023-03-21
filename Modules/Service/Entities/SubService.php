@@ -5,10 +5,11 @@ namespace Modules\Service\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Order\Entities\Order;
+use Spatie\Translatable\HasTranslations;
 
 class SubService extends Model
 {
-    use HasFactory;
+    use HasFactory,HasTranslations;
     protected $table = 'sub-services';
 
     public $translatable = [ 'title',
@@ -18,6 +19,7 @@ class SubService extends Model
         'price',
         'service_id'
     ];
+
     public function services()
     {
         return $this->hasMany(Service::class,'service_id','id');

@@ -17,13 +17,22 @@ class WorkerRepository implements WorkerRepositoryInterface
         $this->workerModel = $worker;
     }
 
-    public function index(){
+    public function index($data){
 
+        if($data->q) {
+            $worker= $this->workerModel->where("email", "like", "%$data->q%")
+                ->orwhere("name", "like", "%$data->q%")
+                ->orderBy("id", "DESC")
+                ->get();
+            return ['statusCode' => 200, 'status' => true,
+                'data' =>  WorkerResource::collection($worker)
+            ];
+        }else{
         $worker=   $this->workerModel->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'data' =>  WorkerResource::collection($worker)
         ];
-
+    }
     }
 
     public function store($data)
@@ -32,8 +41,6 @@ class WorkerRepository implements WorkerRepositoryInterface
         //Request is valid, create new user
         $worker =  $this->workerModel->create($data);
         $worker->addMediaFromRequest('photo')->toMediaCollection('workers');
-
-
         $worker->save();
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Worker successfully created ',
@@ -55,21 +62,21 @@ class WorkerRepository implements WorkerRepositoryInterface
     {
 
         $worker =  $this->workerModel->find($id);
-
         return ['statusCode' => 200, 'status' => true,
             'data' => new WorkerResource($worker)
         ];
     }
 
-    public function update($data , $id)
+    public function Update($data , $id)
     {
 
-        $worker = $this->workerModel->find($id);
+        $worker =  $this->workerModel->find($id);
         $worker->update($data->all());
-        if(isset($data['photo'])){
-        $worker->addMediaFromRequest('photo')->toMediaCollection('workers');
-        $worker->save();
-    }
+        if ($data->hasFile('photo')) {
+            $worker->media()->delete();
+            $worker->addMediaFromRequest('photo')->toMediaCollection('workers');
+            $worker->save();
+        }
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Worker updated successfully ',
             'data' => new WorkerResource($worker)

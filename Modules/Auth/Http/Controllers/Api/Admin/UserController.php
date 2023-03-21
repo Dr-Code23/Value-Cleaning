@@ -3,15 +3,13 @@
 namespace Modules\Auth\Http\Controllers\Api\Admin;
 
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Validator;
 use Modules\Auth\Http\Requests\CreateRequest;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Exceptions\JWTException;
+use Modules\Auth\Transformers\UserResource;
 
 class UserController extends Controller
 {
@@ -19,11 +17,20 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $data = User::orderBy('id','DESC')->paginate(5);
+        if($request->q) {
+            $data = User::where("email", "like", "%$request->q%")
+                ->orwhere("name", "like", "%$request->q%")->orderBy('id', 'DESC')->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'User successfully registered',
+                'user' => UserResource::collection($data)
+            ], 201);
+        }
+        $data = User::orderBy('id', 'DESC')->get();;
         return response()->json([
             'success' => true,
             'message' => 'User successfully registered',
-            'user' => $data
+            'user' => UserResource::collection($data)
         ], 201);
     }
 
@@ -126,6 +133,7 @@ class UserController extends Controller
             'message' => 'success','User deleted successfully',
             'user' => $user
         ], 201);
+
 
     }
 }

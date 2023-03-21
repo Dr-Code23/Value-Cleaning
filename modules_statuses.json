@@ -6,5 +6,7 @@
     "Worker": true,
     "Favorite": true,
     "Order": true,
-    "Review": true
+    "Review": true,
+    "Announcement": true,
+    "Chat": true
 }

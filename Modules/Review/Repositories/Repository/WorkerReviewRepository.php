@@ -20,7 +20,7 @@ class WorkerReviewRepository implements WorkerReviewRepositoryInterface
     public function index()
     {
 
-        $review = $this->reviewModel->with(['users','workers'])->latest()->get();
+        $review = $this->reviewModel->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'data' => ReviewWorkerResource::collection($review)
         ];
@@ -40,7 +40,7 @@ class WorkerReviewRepository implements WorkerReviewRepositoryInterface
     public function reviewUpdate($data, $id)
     {
         $userId = Auth::user()->id;
-        $review = $this->reviewModel->where(['user_id'=> $userId,'worker_id'=>$id])->with(['users','workers'])->first();
+        $review = $this->reviewModel->where(['user_id'=> $userId,'worker_id'=>$id])->first();
         $review->update($data->all());
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Review successfully updated ',
@@ -50,8 +50,9 @@ class WorkerReviewRepository implements WorkerReviewRepositoryInterface
 
     public function show($id)
     {
+        $userId = Auth::user()->id;
 
-        $review = $this->reviewModel->find($id)->with(['users', 'services']);
+        $review = $this->reviewModel->where(['user_id'=> $userId,'worker_id'=>$id])->first();
         return ['statusCode' => 200, 'status' => true,
             'data' => new ReviewWorkerResource($review)
         ];
@@ -62,10 +63,10 @@ class WorkerReviewRepository implements WorkerReviewRepositoryInterface
         $Userid = Auth::user()->id;
         try {
 
-        $this->reviewModel->where(['user_id'=> $Userid,'worker_id'=>$id])->delete();
+            $this->reviewModel->where(['user_id'=> $Userid,'worker_id'=>$id])->delete();
 
-        $msg = 'Deleted';
-        return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
+            $msg = 'Deleted';
+            return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
 
         } catch (\Exception $e) {
 

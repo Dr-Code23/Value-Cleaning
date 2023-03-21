@@ -55,7 +55,7 @@ class FavoriteRepository implements FavoriteRepositoryInterface
             $Favorite = $this->favoriteModel->create(['user_id' => $userID, 'service_id' => $serviceID])->with('services');
             return ['statusCode' => 200, 'status' => true,
                 'message' => 'Favorite successfully created ',
-                'data' => new FavoriteResource($Favorite)
+                'data' => $Favorite
             ];
 
         }
@@ -65,9 +65,9 @@ class FavoriteRepository implements FavoriteRepositoryInterface
     public function show($id)
     {
 
-        $favorite = $this->favoriteModel->where('id', $id)->with('services');
+        $favorite = $this->favoriteModel->find($id);
         return ['statusCode' => 200, 'status' => true,
-            'data' => new FavoriteShowResource($favorite)
+            'data' =>  new FavoriteResource($favorite)
         ];
     }
 

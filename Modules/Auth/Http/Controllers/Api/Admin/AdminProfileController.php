@@ -5,6 +5,7 @@ namespace Modules\Auth\Http\Controllers\Api\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Modules\Auth\Http\Requests\UpdateRequest;
 use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 
 class AdminProfileController extends Controller
@@ -22,7 +23,7 @@ class AdminProfileController extends Controller
     }
 
 
-    public function AdminUpdateProfile(Request $request)
+    public function AdminUpdateProfile(UpdateRequest $request)
     {
 
 

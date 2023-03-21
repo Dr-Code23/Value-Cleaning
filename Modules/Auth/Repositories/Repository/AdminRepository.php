@@ -12,6 +12,7 @@ use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 use Modules\Auth\Traits\pushNotificationTraite;
 use Modules\Auth\Transformers\UserResource;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AdminRepository implements AdminRepositoryInterface
 {
@@ -49,7 +50,7 @@ class AdminRepository implements AdminRepositoryInterface
         //Create token
         try {
 
-            if (!$token = Auth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Login credentials are invalid.',
@@ -61,9 +62,12 @@ class AdminRepository implements AdminRepositoryInterface
                 'message' => 'Could not create token.',
             ], 500);
         }
-        if(!auth()->user()->hasRole('admin')){
+        if (Auth::check()) {
+            if (!auth('api')->user()->hasRole('admin')) {
 
-            return response()->json(['error' => 'not allowed'], 400);
+                return response()->json(['error' => 'UnAuthorised'], 401);
+            }
+
         }
 
         $user=  auth()->user();
@@ -87,6 +91,7 @@ class AdminRepository implements AdminRepositoryInterface
             return response()->json(['status' => true, 'message' => 'check your inbox']);
 
         } else {
+
             return response()->json(['status' => false, 'message' => 'email not found, try again']);
         }
     }
@@ -98,7 +103,7 @@ class AdminRepository implements AdminRepositoryInterface
             if ($user->reset_verification_code == $data->code) {
                 return response()->json(['status' => true, 'message' => 'you will be redirected to set new password']);
             }
-            return response()->json(['status' => false, 'message' => 'code is invalid, try again']);
+            return response()->json(['status' => false, 'message' => 'code is invalid, try again'],400);
 
         } else {
             return response()->json(['status' => false, 'message' => 'email not found, try again']);
@@ -133,7 +138,7 @@ class AdminRepository implements AdminRepositoryInterface
         $user = $this->userModel->find($id);
         $user->update($data->all());
         if ($data->hasFile('photo')) {
-            $user->clearMediaCollection('avatar');
+            $user->media()->delete();
             $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
         }
         return ['statusCode' => 200,'status' => true ,
@@ -161,5 +166,9 @@ class AdminRepository implements AdminRepositoryInterface
         return $this->Notification($data);
     }
 
+    public function all()
+    {
+
+    }
 
 }
