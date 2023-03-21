@@ -161,7 +161,6 @@ class OrderRepository implements OrderRepositoryInterface
     }
 
     public function makePayment($data)
-
     {
         try {
             $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
