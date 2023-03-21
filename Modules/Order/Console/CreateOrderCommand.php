@@ -2,12 +2,10 @@
 
 namespace Modules\Order\Console;
 
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
-use Modules\Order\Entities\Order;
 use Modules\Order\Entities\Schedule;
 use Modules\Order\Notifications\TaskReminderNotification;
 use Symfony\Component\Console\Input\InputArgument;

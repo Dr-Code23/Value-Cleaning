@@ -84,9 +84,6 @@ class OrderRepository implements OrderRepositoryInterface
                 $order->addMedia($gallery)->toMediaCollection('Orders');
             }
         }
-        $admin = User::whereHas('roles', function ($query) {
-            $query->where('name', '=', 'admin');
-        })->get();
 
         event(new OrderCreated($order));
 //        broadcast(new OrderCreated($order))->toOthers();
