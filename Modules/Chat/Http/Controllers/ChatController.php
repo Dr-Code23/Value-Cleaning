@@ -29,35 +29,40 @@ class ChatController extends Controller
     }
 
     // get All Rooms
-    public function all()
+    public function all(Request $request)
     {
-        return  $message = $this->message->getRooms();
+//        return  $message = $this->message->getRoom($request);
     }
-    // get room with message
+   // get room with message
     public function room(Request $request)
     {
-        return $message = $this->message->room($request);
+            return $message = $this->message->getRoom($request);
     }
 
     // check Room
     public function check(Request $request)
     {
-        return $message = $this->message->checkRoom($request);
+      return  $message = $this->message->getRoom($request);
+        if ($message != true) {
+           return $room = $this->message->createRoom($request);  // failure
+        }
     }
-
 
     // read Message
     public function read($id)
     {
         return $message = $this->message->readMessage($id);
     }
-
-    //  send Message
-    public function store(MessageRequest $request)
+    // read Message
+    public function message(Request $request)
     {
-         return $message = $this->message->sendMessage($request);
+        return $message = $this->message->room($request);
     }
 
+    public function store(MessageRequest $request)
+    {
+        return $message = $this->message->sendMessage($request);
+    }
 
     // delete message
     public function destroy($id)

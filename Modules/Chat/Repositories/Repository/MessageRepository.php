@@ -1,9 +1,7 @@
 <?php
 
 namespace Modules\Chat\Repositories\Repository;
-use http\Env\Request;
 use Illuminate\Support\Facades\DB;
-use Modules\Chat\Entities\Image;
 use Modules\Chat\Entities\Message;
 use Modules\Chat\Entities\Room;
 use Illuminate\Support\Facades\Storage;
@@ -12,31 +10,39 @@ use Modules\Chat\Events\NewRoom;
 use Modules\Chat\Http\Controllers\MessageResponseTrait;
 use Modules\Chat\Repositories\Interfaces\MessageInterface;
 use Modules\Chat\Transformers\MessageResource;
+use Spatie\Permission\Models\Role;
+
 
 class MessageRepository implements MessageInterface
 {
     use MessageResponseTrait;
 
-    // get All Rooms
-    public function getRooms()
-    {
-        $user = auth()->id();
-        $room = Room::where('user_1', $user)->get();
-        $rooms = Room::where('user_2', $user)->get();
-        if ($room == true) {
-            return $room;
-        } else {
-            return $rooms;
+       // get room messages
+    public function room($request){
+     $roomId =  explode(',',$request->input('id'));
+     $rooms = Message::whereHas('room',function($q) use ($roomId) {
+         $q->where('id',$roomId );
+     })->with('media')->get();
+        if ($rooms) {
+            return $this->messageResponse(($rooms), 'The message found', 201);
         }
-    }
-    // get Room
-    public function room($request)
+        return $this->messageResponse(null, 'The message Not found', 400);
+     }
+
+       // get Room
+    public function getRoom($request)
     {
-        $room = Room::with(['message'])->where('id', $request->id)->get();
-        if ($room) {
-            return $this->messageResponse(($room), 'success', 201);
+        $user_1 = auth()->id();
+        $user_ids = [$user_1, $request->user_2];
+        $message = Room::has('users', '=', count($user_ids))
+            ->whereHas('users', function ($query) use ($user_ids) {
+                $query->whereIn('user_id', $user_ids);
+            }, '=', count($user_ids))->get('id');
+        if ($message) {
+            return $this->messageResponse(($message), 'The room found', 201);
         }
-        return $this->messageResponse(null, 'success', 400);
+        return $this->messageResponse(null, 'The room Not found', 400);
+
     }
 
     //  send Message
@@ -46,14 +52,11 @@ class MessageRepository implements MessageInterface
         $message->sender_id = auth()->id();
         $message->room_id = $request->room_id;
         $message->message = $request->message;
-        if ($request->image != '') {
-            $file = $request->file('image');
-            $name = 'messages/'.uniqid() . '.' . $file->getClientOriginalExtension();
-            $request->file('image')->move("messages", $name);
-            $message->image = $name;
-        }
+        $message->addMultipleMediaFromRequest(['gallery'])->each(function ($fileAdder) {
+            $fileAdder->toMediaCollection('messages');
+        });
         $message->save();
-        event(new NewMessage($message));
+         event(new NewMessage($message));
         if ($message) {
             return $this->messageResponse(($message), 'The message Save', 201);
         }
@@ -65,9 +68,6 @@ class MessageRepository implements MessageInterface
     {
         $message = Message::find($id);
         $message->delete();
-        if($message->image !== null) {
-            unlink("$message->image");
-        }
         if (!$message) {
             return $this->messageResponse(null, 'The Message Not Found', 404);
         }
@@ -76,31 +76,31 @@ class MessageRepository implements MessageInterface
             return $this->messageResponse(null, 'The Message deleted', 200);
         }
     }
-    function checkRoom($request)
-    {
-        $room = Room::where('id', $request->room_id)->first();
-        if ($room != null) {
-            return $room;
-        } else {
-        $rooms = new Room();
-        $rooms->user_1 = auth()->id();
-        $rooms->user_2 = $request->user_2;
-        $rooms->save();
-        event(new NewRoom($rooms));
-        if ($rooms) {
-         return $this->messageResponse(($rooms), 'The Room Save', 201);
+
+     // Create Room
+    public  function createRoom ($request){
+         $room = new Room();
+         $room->save();
+         $user_1 = auth()->id();
+         $user_ids = [$user_1, $request->user_2];
+         $room->users()->sync($user_ids);
+            event(new NewRoom($room));
+            if ($room) {
+                return $this->messageResponse(($room), 'The Room Save', 201);
+            }
+            return $this->messageResponse(null, 'The Room Not Save', 400);
         }
-        return $this->messageResponse(null, 'The Room Not Save', 400);
-        }
-    }
-    function readMessage($id)
+
+    // read Message
+    public function readMessage($id)
     {
         $message = Message::find($id);
-        $message->read_at = true;
+        $message->seen_at = true;
         $message->save();
         if ($message) {
-            return $this->messageResponse(($message), 'The Message Read', 201);
+            return $this->messageResponse(($message), 'The Message Seen', 201);
         }
-        return $this->messageResponse(null, 'The Message Not Read', 400);
+        return $this->messageResponse(null, 'The Message Not Seen', 400);
     }
 }
+
