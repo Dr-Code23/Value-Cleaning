@@ -19,9 +19,8 @@ interface MessageInterface
     // create Room
     public function createRoom($request);
 
-     // get Room
-     public function getRoom($request);
-
+    // get Room
+    public function getRoom($request);
 }
 
 
