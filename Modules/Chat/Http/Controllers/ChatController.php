@@ -9,6 +9,7 @@ use Modules\Chat\Repositories\Interfaces\MessageInterface;
 
 class ChatController extends Controller
 {
+    use MessageResponseTrait;
     protected $message;
 
     public function __construct(MessageInterface $message)
@@ -30,13 +31,10 @@ class ChatController extends Controller
     public function check(Request $request)
     {
         $message = $this->message->getRoom($request);
-        if (count($message) == 0) {
+        if (count($message) == null) {
             $message = $this->message->createRoom($request);  // failure
         }
-        if ($message) {
             return $this->messageResponse(($message), 'Success', 201);
-        }
-        return $this->messageResponse(null, 'No data', 400);
     }
 
     // read Message
