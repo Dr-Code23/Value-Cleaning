@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Room extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $fillable = [];
-//    protected $dates = ['deleted_at'];
+    protected $fillable = ['delete_by'];
+    protected $dates = ['deleted_at'];
 
     function users(){
         return $this->belongsToMany(User::class, 'room_users');
@@ -20,9 +20,5 @@ class Room extends Model
     public function message()
     {
         return $this->hasMany(Message::class);
-    }
-    protected static function newFactory()
-    {
-        return \Modules\Chat\Database\factories\RoomFactory::new();
     }
 }

@@ -47,14 +47,25 @@ class ChatController extends Controller
         return $this->messageResponse(null, 'The Room Not Save', 400);
     }
 
+    // delete room
+    public function delete(Request $request)
+    {
+        $message = $this->message->deleteRoom($request);
+        if ($message) {
+            return $this->messageResponse(($message), 'The room delete', 201);
+        }
+        return $this->messageResponse(null, 'The Room Not delete', 400);
+    }
+
+
     // read Message
     public function message(Request $request)
     {
         $message = $this->message->room($request);
         if ($message) {
-            return $this->messageResponse(($message), 'The Message Seen', 201);
+            return $this->messageResponse(($message), 'The room message', 201);
         }
-        return $this->messageResponse(null, 'The Room Not Seen', 400);
+        return $this->messageResponse(null, 'The Room Not found', 400);
     }
 
     public function store(MessageRequest $request)

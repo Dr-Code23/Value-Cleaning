@@ -21,6 +21,9 @@ interface MessageInterface
 
     // get Room
     public function getRoom($request);
+
+    // delete room
+    public function deleteRoom($request);
 }
 
 

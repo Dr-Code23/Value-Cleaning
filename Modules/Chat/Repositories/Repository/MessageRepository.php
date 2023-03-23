@@ -2,6 +2,7 @@
 
 namespace Modules\Chat\Repositories\Repository;
 
+use Carbon\Carbon;
 use Modules\Chat\Entities\Message;
 use Modules\Chat\Entities\Room;
 use Modules\Chat\Events\NewMessage;
@@ -21,10 +22,7 @@ class MessageRepository implements MessageInterface
         $rooms = Message::whereHas('room', function ($q) use ($roomId) {
             $q->where('id', $roomId);
         })->with('media')->get();
-        if ($rooms) {
-            return $this->messageResponse(($rooms), 'The message found', 201);
-        }
-        return $this->messageResponse(null, 'The message Not found', 400);
+       return $rooms;
     }
 
     // get Room
@@ -51,6 +49,7 @@ class MessageRepository implements MessageInterface
         });
         $message->save();
         event(new NewMessage($message));
+        return $message;
     }
 
     // delete message
@@ -58,6 +57,7 @@ class MessageRepository implements MessageInterface
     {
         $message = Message::find($id);
         $message->delete();
+        return $message;
     }
 
     // Create Room
@@ -76,8 +76,18 @@ class MessageRepository implements MessageInterface
     public function readMessage($id)
     {
         $message = Message::find($id);
-        $message->seen_at = true;
+        $message->seen_at = Carbon::now();
         $message->save();
+        return $message;
+    }
+    public function deleteRoom($request)
+    {
+        $user_1 = auth()->id();
+        $message = Room::where('id', $request->id)->first();
+        $message->delete();
+        $message->delete_by = auth()->id();
+        $message->save();
+        return $message;
     }
 }
 
