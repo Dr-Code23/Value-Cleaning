@@ -4,6 +4,7 @@ namespace Modules\Order\Repositories\Repository;
 
 
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -92,7 +93,7 @@ class OrderRepository implements OrderRepositoryInterface
         $userId = Auth::id();
 
         $order = $this->orderModel->query()
-            ->where(['Status' => 'Finished', 'user_id' => $userId])
+            ->where(['status' => 'finished', 'user_id' => $userId])
             ->latest()
             ->get();
 
@@ -110,8 +111,8 @@ class OrderRepository implements OrderRepositoryInterface
         $data['user_id'] = auth()->id();
         $data['total_price'] = $this->totalPrice($data);
         $data['order_code'] = '#' . str_pad($this->totalPrice($data) + 1, 8, "0", STR_PAD_LEFT);
-        $data['date'] = date('Y-m-d', strtotime($data['date']));
-
+        $data['date'] = Carbon::parse(date('Y-m-d', strtotime($data['date'])));
+        $data['day'] = Carbon::parse($data['date'])->dayOfWeek;
         $order = $this->orderModel->create($data->all());
 
         $schedule = $this->schedule($order);
@@ -120,7 +121,7 @@ class OrderRepository implements OrderRepositoryInterface
             $order->sub_services()->sync($data['sub_service_id']);
         }
 
-        if ($data->hasFile('gallery')) {
+        if ($data->gallery) {
             foreach ($data->gallery as $gallery) {
                 $order->addMedia($gallery)->toMediaCollection('Orders');
             }
@@ -202,6 +203,7 @@ class OrderRepository implements OrderRepositoryInterface
             ->first();
 
         $data['date'] = date('Y-m-d', strtotime($data->date));
+        $data['day'] = Carbon::parse($data['date'])->dayOfWeek;
 
         $order->update($data->all());
 

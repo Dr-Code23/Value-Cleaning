@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Modules\Auth\Emails\EventMail;
+use Modules\Auth\Entities\Notification;
 use Modules\Auth\Repositories\Interfaces\AdminRepositoryInterface;
 use Modules\Auth\Traits\pushNotificationTraite;
 use Modules\Auth\Transformers\UserResource;
@@ -17,21 +18,24 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AdminRepository implements AdminRepositoryInterface
 {
     use pushNotificationTraite;
-    private $userModel;
 
-    public function __construct(User $user)
+    private $userModel;
+    private $notificationModel;
+
+    public function __construct(User $user, Notification $notification)
     {
         $this->userModel = $user;
+        $this->notificationModel = $notification;
     }
 
     public function register($data)
     {
         $user = $this->userModel->create([
-            'name'=> $data->name,
-            'email'=> $data->email,
-            'address'=> $data->address,
-            'phone'=> $data->phone,
-            'password'=> hash::make($data->password),
+            'name' => $data->name,
+            'email' => $data->email,
+            'address' => $data->address,
+            'phone' => $data->phone,
+            'password' => hash::make($data->password),
         ]);
 
         $user->syncRoles(['admin']);
@@ -44,6 +48,7 @@ class AdminRepository implements AdminRepositoryInterface
         ];
 
     }
+
     public function Login($data)
     {
         $credentials = $data->only('email', 'password');
@@ -70,12 +75,12 @@ class AdminRepository implements AdminRepositoryInterface
 
         }
 
-        $user=  auth()->user();
+        $user = auth()->user();
 
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Admin successfully registered ',
             'data' => new UserResource($user),
-            'token'=>$token
+            'token' => $token
         ];
     }
 
@@ -103,7 +108,7 @@ class AdminRepository implements AdminRepositoryInterface
             if ($user->reset_verification_code == $data->code) {
                 return response()->json(['status' => true, 'message' => 'you will be redirected to set new password']);
             }
-            return response()->json(['status' => false, 'message' => 'code is invalid, try again'],400);
+            return response()->json(['status' => false, 'message' => 'code is invalid, try again'], 400);
 
         } else {
             return response()->json(['status' => false, 'message' => 'email not found, try again']);
@@ -116,17 +121,18 @@ class AdminRepository implements AdminRepositoryInterface
         if ($user) {
             $user->password = Hash::make($data->password);
             $user->save();
-            return response()->json([$user->password,'status' => true, 'message' => 'password has been updated']);
+            return response()->json([$user->password, 'status' => true, 'message' => 'password has been updated']);
 
         } else {
             return response()->json(['status' => false, 'message' => 'email not found, try again']);
         }
     }
+
     public function profile()
     {
-        $id =Auth::id();
+        $id = Auth::id();
         $user = $this->userModel->find($id);
-        return ['statusCode' => 200,'status' => true ,
+        return ['statusCode' => 200, 'status' => true,
             'data' => new UserResource($user)
         ];
     }
@@ -134,18 +140,19 @@ class AdminRepository implements AdminRepositoryInterface
     public function updateProfile($data)
     {
 
-        $id =auth()->id();
+        $id = auth()->id();
         $user = $this->userModel->find($id);
         $user->update($data->all());
         if ($data->hasFile('photo')) {
             $user->media()->delete();
             $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
         }
-        return ['statusCode' => 200,'status' => true ,
+        return ['statusCode' => 200, 'status' => true,
             'message' => 'Admin updated successfully ',
             'data' => new UserResource($user)
         ];
     }
+
     public function changePassword($data)
     {
         $auth = Auth::user();
@@ -165,6 +172,7 @@ class AdminRepository implements AdminRepositoryInterface
     {
         return $this->Notification($data);
     }
+
 
     public function all()
     {

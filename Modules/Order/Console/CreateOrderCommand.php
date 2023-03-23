@@ -2,11 +2,14 @@
 
 namespace Modules\Order\Console;
 
+use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use Modules\Order\Entities\Order;
 use Modules\Order\Entities\Schedule;
 use Modules\Order\Notifications\TaskReminderNotification;
 use Symfony\Component\Console\Input\InputArgument;
@@ -49,47 +52,52 @@ class CreateOrderCommand extends Command
      */
     public function handle(): void
     {
-        $tomorrow =  Carbon::now()->addDay()->dayOfWeek;
+        $tomorrow = Carbon::now()->addDay()->dayOfWeek;
 
-        $schedules = $this->orderModel->query()
+        $orders = $this->orderModel->query()
             ->where([
                 'repeat' => 'weekly',
                 'status' => 'processing'
             ])
-            ->whereNot('date','<>', Carbon::now())
+            ->whereNot('date', '<>', Carbon::now())
             ->where('day', $tomorrow)
-            ->take(20)
+            ->take(50)
             ->get();
 
-        if($schedules){
-            foreach ($schedules as $schedule) {
+        if ($orders) {
+            foreach ($orders as $order) {
 
-              $dayOfWeek = Carbon::parse($schedule->date)->dayOfWeek;
+                $dayOfWeek = Carbon::parse($order->date)->dayOfWeek;
 
                 try {
                     DB::beginTransaction();
 
                     Schedule::create([
-                        'order_id' => $schedule->order_id,
+                        'order_id' => $order->id,
                         'date' => Carbon::now(),
-                        'time' => $schedule->time,
+                        'time' => $order->time,
                         'day' => $dayOfWeek,
-                        'repeat' => $schedule->repeat,
-                        'user_id' => $schedule->user_id,
+                        'repeat' => $order->repeat,
+                        'user_id' => $order->user_id,
                     ]);
 
-                     // update => updated_at at order
+                    // update => date at order
+                    $order = $this->orderModel
+                        ->query()
+                        ->where('id', $order->id)->first();
+
+
+                    $order->update(['date' => Carbon::now()->addDay()]);
 
                     DB::commit();
 
-                }catch (\Exception){
+                } catch (Exception) {
                     DB::rollBack();
                 }
 
-               //
-
-                  // review with eng.mohamed
-           //     Notification::send(Auth::user(), new TaskReminderNotification($newSchedule));
+                $user = User::where('id', $order->user_id)->first();
+//                 review with eng.mohamed
+                $user->notify(new TaskReminderNotification($order));
             }
         }
     }

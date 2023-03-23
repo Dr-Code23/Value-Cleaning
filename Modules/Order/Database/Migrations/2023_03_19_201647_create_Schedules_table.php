@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -22,9 +21,8 @@ return new class extends Migration
             $table->date('date');
             $table->integer('day');
             $table->time('time');
-            $table->enum('repeat', ['once', 'weekly', 'monthly']);
-            $table->enum('status', ['Processing', 'Canceled', 'Finished'])->default('Processing');
-            $table->enum('payment_status', ['Credit', 'Receipt'])->default('Receipt');;
+            $table->enum('status', ['processing', 'canceled', 'finished'])->default('processing');
+            $table->enum('payment_status', ['credit', 'receipt'])->default('receipt');
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->cascadeOnUpdate()

@@ -63,6 +63,10 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         return [];
     }
 
+    public function routeNotificationForMail()
+    {
+        return $this->email;
+    }
 
     public function providers()
     {

@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Transformers;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Modules\Order\Entities\Order;
@@ -15,26 +16,27 @@ class OrderResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request
+     * @param Request
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'id' => $this->id,
-            'worke_aera'=> $this->worke_aera,
+            'work_area' => $this->worke_aera,
             'date' => $this->date,
             'time' => $this->time,
+            'day' => $this->day,
             'address' => $this->address,
             'repeat' => $this->repeat,
             'status' => $this->status,
-            'payment_status'=>  $this->payment_status,
-            'service' =>  ServiceResource::collection($this->services),
+            'payment_status' => $this->payment_status,
+            'service' => ServiceResource::collection($this->services),
             'workers' => $this->workers,
             'total_price' => $this->total_price,
             'order_code' => $this->order_code,
-            'subService'=> SubServiceResource::collection($this->sub_services),
-            'gallery1'  => $this->getMedia('Orders'),
+            'subService' => SubServiceResource::collection($this->sub_services),
+            'gallery1' => $this->getMedia('Orders'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 
