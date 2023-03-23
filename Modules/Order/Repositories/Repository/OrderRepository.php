@@ -74,12 +74,10 @@ class OrderRepository implements OrderRepositoryInterface
     public function canceledOrder(): JsonResponse
     {
         $userId = Auth::id();
-
         $Order = $this->orderModel->query()
             ->where(['status' => 'canceled', 'user_id' => $userId])
             ->latest()
             ->get();
-
         return response()->json(['statusCode' => 200, 'status' => true,
             'canceledOrder' => OrderResource::collection($Order)
         ]);

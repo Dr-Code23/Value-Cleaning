@@ -12,10 +12,10 @@ class MessageResource extends JsonResource
     {
         return [
             'id' =>  $this->id,
-            'message'   => $this->message,
+            'messages'   => $this->messages,
             'sender_id' => auth()->id(),
             "room_id"=> $this->room_id,
-            'gallery'  => $this->getFirstMediaUrl('messages'),
+            'gallery'  => $this->getFirstMediaUrl('attachments'),
         ];
     }
 }

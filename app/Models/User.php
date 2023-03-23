@@ -85,7 +85,7 @@ class User extends Authenticatable implements HasMedia, JWTSubject
 
     public function room()
     {
-        return $this->hasMany(Room::class)->with('user');
+        return $this->belongsToMany(Room::class,'room_users');
     }
 
 
