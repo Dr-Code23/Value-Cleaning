@@ -70,12 +70,13 @@ class CreateOrderCommand extends Command
                 'repeat' => 'once',
                 'status' => 'canceled'
             ])
-            ->whereNot('date', Carbon::now())
+            ->whereNot('scheduled_at', Carbon::now())
             ->where('day', $tomorrow)
             ->take(200)
-            ->get();
+            ->get()
+            ->toArray();
 
-        if ($data) {
+        if (count($data) > 0) {
             foreach (array_chunk($data, 50) as $orders){
                 foreach ($orders as $order) {
                     $dayOfWeek = Carbon::parse($order->date)->dayOfWeek;
@@ -84,7 +85,7 @@ class CreateOrderCommand extends Command
 
                         $this->scheduleModel->create([
                             'order_id' => $order->id,
-                            'date' => Carbon::now(),
+                            'date' => Carbon::now()->addDay(),
                             'time' => $order->time,
                             'day' => $dayOfWeek,
                             'repeat' => $order->repeat,
@@ -96,7 +97,7 @@ class CreateOrderCommand extends Command
 //                            ->query()
 //                            ->where('id', $order->id)->first();
 
-                        $order->update(['date' => Carbon::now()]); // data => last create order
+                        $order->update(['scheduled_at' => Carbon::now()]); // data => last create order
 
                         DB::commit();
 
