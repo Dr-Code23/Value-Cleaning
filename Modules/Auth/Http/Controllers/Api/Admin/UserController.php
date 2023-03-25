@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Modules\Auth\Http\Requests\CreateRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Modules\Auth\Http\Requests\UpdateRequest;
 use Modules\Auth\Transformers\UserResource;
 
 class UserController extends Controller

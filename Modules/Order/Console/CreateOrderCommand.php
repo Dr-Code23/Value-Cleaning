@@ -55,13 +55,12 @@ class CreateOrderCommand extends Command
         $tomorrow = Carbon::now()->addDay()->dayOfWeek;
 
         $orders = $this->orderModel->query()
-            ->where([
-                'repeat' => 'weekly',
-                'status' => 'processing'
+            ->whereNot([
+                'repeat' => 'once',
+                'status' => 'canceled'
             ])
-            ->whereNot('date', '<>', Carbon::now())
+            ->where('date', '=', Carbon::now()->addDay())
             ->where('day', $tomorrow)
-            ->take(50)
             ->get();
 
         if ($orders) {
@@ -87,7 +86,7 @@ class CreateOrderCommand extends Command
                         ->where('id', $order->id)->first();
 
 
-                    $order->update(['date' => Carbon::now()->addDay()]);
+                    $order->update(['date' => Carbon::now()]);
 
                     DB::commit();
 

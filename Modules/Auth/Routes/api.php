@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminChangePasswordAController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminProfileController;
+use Modules\Auth\Http\Controllers\Api\Admin\PermissionController;
 use Modules\Auth\Http\Controllers\Api\Admin\RoleController;
 use Modules\Auth\Http\Controllers\Api\Admin\SendNotificationController;
 use Modules\Auth\Http\Controllers\Api\Admin\UserController;
@@ -80,6 +81,7 @@ Route::middleware(['user_api', 'role:admin'])->prefix("admin")->group(function (
     Route::get('showCompany/{id}', [CompanyController::class, 'showCompany']);
     Route::get('show-user/{id}', [UserController::class, 'show']);
     Route::apiresource('roles', RoleController::class);
+    Route::apiresource('permission', PermissionController::class);
     Route::get('all-users', [UserController::class, 'index']);
     Route::get('Admin/profile', [AdminProfileController::class, 'AdminProfile']);
     Route::post('update/profile', [AdminProfileController::class, 'AdminUpdateProfile']);

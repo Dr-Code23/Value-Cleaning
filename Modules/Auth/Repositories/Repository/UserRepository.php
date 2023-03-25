@@ -321,7 +321,7 @@ class UserRepository implements UserRepositoryInterface
 
     }
 
-    public function allCompaniesApproved(): array
+    public function allCompaniesUnapproved(): array
     {
         $companies = $this->userModel->query()->whereHas('roles', function ($query) {
 

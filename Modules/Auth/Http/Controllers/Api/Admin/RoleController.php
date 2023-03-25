@@ -2,6 +2,7 @@
 
 namespace Modules\Auth\Http\Controllers\Api\Admin;
 
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -14,14 +15,22 @@ use Illuminate\Support\Facades\DB;
 class RoleController extends Controller
 {
 
+    private $roleModel;
+    private $permissionModel;
 
-//    function __construct()
-//    {
-//        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index', 'store']]);
-//        $this->middleware('permission:role-create', ['only' => ['store']]);
-//        $this->middleware('permission:role-edit', ['only' => ['update']]);
-//        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
-//    }
+    public function __construct(Role $role, Permission $permission)
+    {
+        $this->roleModel = $role;
+        $this->permissionModel = $permission;
+
+        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:role-create', ['only' => ['store']]);
+        $this->middleware('permission:role-edit', ['only' => ['update']]);
+        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+
+
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -30,7 +39,7 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $roles = Role::orderBy('id', 'DESC')->paginate(5);
+        $roles = $this->roleModel->orderBy('id', 'DESC')->paginate(5);
         return response()->json([
             'success' => true,
             'message' => 'success',
@@ -54,8 +63,8 @@ class RoleController extends Controller
     public function store(RoleRequest $request)
     {
 
-        $role = Role::create(['name' => $request->input('name')]);
-        $role->syncPermissions($request->input('permission'));
+        $role = $this->roleModel->create(['name' => $request->input('name')]);
+        $role->syncPermissions([$request->input('permission')]);
         return response()->json([
             'success' => true,
             'message' => 'success', 'U Role created successfully',
@@ -72,8 +81,8 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        $role = Role::find($id);
-        $rolePermissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
+        $role = $this->roleModel->find($id);
+        $rolePermissions = $this->permissionModel->join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
             ->where("role_has_permissions.role_id", $id)
             ->get();
         return response()->json([
@@ -95,12 +104,7 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, $id)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'permission' => 'required',
-        ]);
-
-        $role = Role::find($id);
+        $role = $this->roleModel->find($id);
         $role->name = $request->input('name');
         $role->save();
 

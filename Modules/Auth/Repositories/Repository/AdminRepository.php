@@ -68,7 +68,7 @@ class AdminRepository implements AdminRepositoryInterface
             ], 500);
         }
         if (Auth::check()) {
-            if (!auth('api')->user()->hasRole('admin')) {
+            if (!auth('api')->user()->hasRole(['admin', 'employee'])) {
 
                 return response()->json(['error' => 'UnAuthorised'], 401);
             }
