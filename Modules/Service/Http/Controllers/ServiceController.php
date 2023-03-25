@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Service\Http\Controllers\Admin;
+namespace Modules\Service\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
@@ -10,7 +10,6 @@ use Illuminate\Routing\Controller;
 use Modules\Service\Http\Requests\CreateServicesRequest;
 use Modules\Service\Http\Requests\UpdateServicesRequest;
 use Modules\Service\Repositories\Interfaces\ServiceRepositoryInterface;
-use Modules\Service\Transformers\ServiceResource;
 
 class ServiceController extends Controller
 {

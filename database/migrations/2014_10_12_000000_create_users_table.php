@@ -22,6 +22,8 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->string('device_token')->nullable();
             $table->integer('reset_verification_code')->nullable();
+            $table->boolean('approved')->default(1);
+            $table->bigInteger('companyId')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

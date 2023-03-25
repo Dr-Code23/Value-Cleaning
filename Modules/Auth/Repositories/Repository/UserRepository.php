@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Modules\Auth\Emails\EventMail;
 use Modules\Auth\Entities\Notification;
+use Modules\Auth\Events\NewCompany;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
+use Modules\Auth\Transformers\CompanyResource;
 use Modules\Auth\Transformers\UserResource;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -45,6 +47,10 @@ class UserRepository implements UserRepositoryInterface
 
     }
 
+    /**
+     * @param $data
+     * @return array|JsonResponse
+     */
     public function Login($data)
     {
         $credentials = $data->only('email', 'password',);
@@ -52,34 +58,61 @@ class UserRepository implements UserRepositoryInterface
 
         try {
 
-            if (!$token = Auth::attempt($credentials)) {
+            if ($token = Auth::attempt($credentials)) {
+
+
+                $user = Auth::user();
+
+                if (!$user->approved) {
+                    Auth::logout();
+                    return response()
+                        ->json([
+                            'error' => 'Account not approved yet'
+                        ], 401);
+                }
+                if ($user->hasRole('company')) {
+                    return ['statusCode' => 200, 'status' => true,
+                        'message' => 'company successfully registered ',
+                        'data' => new CompanyResource($user),
+                        'token' => $token
+                    ];
+                } elseif ($user->hasRole('user')) {
+
+                    $user->update(['device_token' => $data->device_token]);
+
+                    return ['statusCode' => 200, 'status' => true,
+                        'message' => 'user successfully registered ',
+                        'data' => new UserResource($user),
+                        'token' => $token
+                    ];
+                } else {
+                    return response()->json(['error' => 'UnAuthorised'], 401);
+
+
+                }
+
+
+            } else {
                 return response()->json([
                     'success' => false,
                     'message' => 'Login credentials are invalid.',
                 ], 400);
             }
+
         } catch (JWTException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Could not create token.',
             ], 500);
         }
-        if (Auth::check()) {
-            if (!auth('api')->user()->hasRole('user')) {
 
-                return response()->json(['error' => 'UnAuthorised'], 401);
-            }
-        }
-        $user = auth()->user();
-        $user->update(['devise_token' => $data->devise_token]);
-        return ['statusCode' => 200, 'status' => true,
-            'message' => 'User successfully registered ',
-            'data' => new UserResource($user),
-            'token' => $token
-        ];
 
     }
 
+    /**
+     * @param $data
+     * @return JsonResponse
+     */
     public function forgotPassword($data)
     {
         $user = $this->userModel->where('email', $data->email)->first();
@@ -110,6 +143,10 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
+    /**
+     * @param $data
+     * @return JsonResponse
+     */
     public function reset($data)
     {
         $user = $this->userModel->where('email', $data->email)->first();
@@ -123,6 +160,9 @@ class UserRepository implements UserRepositoryInterface
         }
     }
 
+    /**
+     * @return array
+     */
     public function profile()
     {
         $id = Auth::id();
@@ -133,6 +173,10 @@ class UserRepository implements UserRepositoryInterface
         ];
     }
 
+    /**
+     * @param $data
+     * @return array
+     */
     public function updateProfile($data)
     {
         $id = Auth::id();
@@ -148,6 +192,10 @@ class UserRepository implements UserRepositoryInterface
         ];
     }
 
+    /**
+     * @param $data
+     * @return JsonResponse
+     */
     public function changePassword($data)
     {
         $auth = Auth::user();
@@ -163,14 +211,17 @@ class UserRepository implements UserRepositoryInterface
         return response()->json(['success', "Password Changed Successfully"]);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function deleteAccount()
     {
 
         $userID = Auth::id();
         try {
-            $user = User::find($userID);
+            $user = $this->userModel->find($userID);
             $user->delete();
-            return response()->json(["messages" => "deleted succefully", "status" => 200]);
+            return response()->json(["messages" => "deleted successfully", "status" => 200]);
         } catch (Exception $ex) {
             return response()->json(["messages" => $ex->getError()->message, "status" => 500]);
         }
@@ -205,5 +256,81 @@ class UserRepository implements UserRepositoryInterface
             'message' => 'delete'
         ];
 
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    public function companyRegister($data)
+    {
+        $user = $this->userModel->create([
+            'name' => $data->name,
+            'email' => $data->email,
+            'address' => $data->address,
+            'phone' => $data->phone,
+            'companyId' => $data->companyId,
+            'password' => hash::make($data->password),
+            'approved' => false,
+
+        ]);
+        $user->assignRole('company');
+
+        event(new NewCompany($user));
+
+
+        return ['statusCode' => 200, 'status' => true,
+            'message' => 'Your account is pending approval.',
+            'data' => new CompanyResource($user)
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function allCompanies(): array
+    {
+        $companies = $this->userModel->query()->whereHas('roles', function ($query) {
+
+            $query->where('name', 'company');
+
+        })->latest()->get();
+
+        return ['statusCode' => 200, 'status' => true,
+            'data' => CompanyResource::collection($companies)
+        ];
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function ShowCompany($id): JsonResponse
+    {
+        $company = $this->userModel->query()->whereHas('roles', function ($query) {
+
+            $query->where('name', 'company');
+
+        })->where('id', $id)->first();
+        if ($company) {
+            return response()->json(['statusCode' => 200, 'status' => true,
+                'data' => new CompanyResource($company)
+            ]);
+        }
+        return response()->json(['status' => 400, 'msg' => 'invalid id']);
+
+    }
+
+    public function allCompaniesApproved(): array
+    {
+        $companies = $this->userModel->query()->whereHas('roles', function ($query) {
+
+            $query->where('name', 'company');
+
+        })->latest()->get();
+
+        return ['statusCode' => 200, 'status' => true,
+            'data' => CompanyResource::collection($companies)
+        ];
     }
 }

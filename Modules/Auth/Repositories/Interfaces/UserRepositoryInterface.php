@@ -26,6 +26,14 @@ interface UserRepositoryInterface
 
     public function deleteNotification($id);
 
+    public function companyRegister($data);
+
+    public function allCompanies();
+
+    public function ShowCompany($id);
+
+    public function allCompaniesApproved();
+
 
 }
 

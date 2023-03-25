@@ -4,7 +4,7 @@ namespace Modules\Auth\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class UpdateCompanyRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -19,7 +19,7 @@ class UpdateRequest extends FormRequest
             'address' => '',
             'phone' => '',
             'companyId' => '',
-            "photo" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"];
+            "photo" => ""];
     }
 
     /**

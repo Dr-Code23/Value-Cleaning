@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Auth\Http\Controllers\Api\Auth;
+namespace Modules\Auth\Http\Controllers;
 
 use App\Models\User;
 use GuzzleHttp\Exception\ClientException;

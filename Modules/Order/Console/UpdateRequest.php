@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Auth\Http\Requests;
+namespace Modules\Review\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,12 +14,10 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|between:2,100',
-            'email' => 'string|email|max:100|',
-            'address' => '',
-            'phone' => '',
-            'companyId' => '',
-            "photo" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"];
+            'comments'=>'',
+            'star_rating'=>'',
+
+        ];
     }
 
     /**

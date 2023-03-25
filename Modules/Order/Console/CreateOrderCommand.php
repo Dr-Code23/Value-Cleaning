@@ -96,7 +96,7 @@ class CreateOrderCommand extends Command
                 }
 
                 $user = User::where('id', $order->user_id)->first();
-//                 review with eng.mohamed
+
                 $user->notify(new TaskReminderNotification($order));
             }
         }

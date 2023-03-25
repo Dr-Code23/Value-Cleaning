@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Modules\Chat\Entities\Message;
 use Modules\Chat\Entities\Room;
 use Modules\Order\Entities\Schedule;
+use Spatie\Permission\Traits\HasPermissions;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\MediaLibrary\HasMedia;
@@ -18,7 +19,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class User extends Authenticatable implements HasMedia, JWTSubject
 
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, InteractsWithMedia;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, InteractsWithMedia, HasPermissions;
 
 
     /**
@@ -32,6 +33,8 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         'password',
         'address',
         'phone',
+        'approved',
+        'companyId',
     ];
 
     /**
@@ -85,7 +88,7 @@ class User extends Authenticatable implements HasMedia, JWTSubject
 
     public function room()
     {
-        return $this->belongsToMany(Room::class,'room_users');
+        return $this->belongsToMany(Room::class, 'room_users');
     }
 
 

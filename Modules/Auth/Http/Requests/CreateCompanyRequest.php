@@ -4,7 +4,7 @@ namespace Modules\Auth\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class CreateCompanyRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,13 +13,16 @@ class UpdateRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
-            'name' => 'string|between:2,100',
-            'email' => 'string|email|max:100|',
-            'address' => '',
-            'phone' => '',
-            'companyId' => '',
-            "photo" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"];
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|unique:users',
+            'password' => 'required|string|confirmed|min:6',
+            'address' => 'required',
+            'phone' => 'required',
+            'companyId' => 'required|string|max:100|unique:users',
+
+        ];
     }
 
     /**
