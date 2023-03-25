@@ -6,7 +6,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Modules\Order\Entities\Order;
@@ -35,13 +34,25 @@ class CreateOrderCommand extends Command
     protected Order $orderModel;
 
     /**
+     * @var User
+     */
+    protected User $userModel;
+
+    /**
+     * @var Schedule
+     */
+    protected Schedule $scheduleModel;
+
+    /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(Order $order)
+    public function __construct(Order $order, User $user, Schedule $schedule)
     {
         $this->orderModel = $order;
+        $this->userModel = $user;
+        $this->scheduleModel = $schedule;
         parent::__construct();
     }
 
@@ -71,7 +82,7 @@ class CreateOrderCommand extends Command
                     try {
                         DB::beginTransaction();
 
-                        Schedule::create([
+                        $this->scheduleModel->create([
                             'order_id' => $order->id,
                             'date' => Carbon::now(),
                             'time' => $order->time,
@@ -93,12 +104,11 @@ class CreateOrderCommand extends Command
                         DB::rollBack();
                     }
 
-                    $user = User::where('id', $order->user_id)->first();
+                    $user = $this->userModel->where('id', $order->user_id)->first();
 
                     $user->notify(new TaskReminderNotification($order));
                 }
             }
-
         }
     }
 
