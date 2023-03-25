@@ -54,50 +54,51 @@ class CreateOrderCommand extends Command
     {
         $tomorrow = Carbon::now()->addDay()->dayOfWeek;
 
-        $orders = $this->orderModel->query()
+        $data = $this->orderModel->query()
             ->whereNot([
                 'repeat' => 'once',
                 'status' => 'canceled'
             ])
-            ->where('date', '=', Carbon::now()->addDay())
+            ->whereNot('date', Carbon::now())
             ->where('day', $tomorrow)
+            ->take(200)
             ->get();
 
-        if ($orders) {
-            foreach ($orders as $order) {
+        if ($data) {
+            foreach (array_chunk($data, 50) as $orders){
+                foreach ($orders as $order) {
+                    $dayOfWeek = Carbon::parse($order->date)->dayOfWeek;
+                    try {
+                        DB::beginTransaction();
 
-                $dayOfWeek = Carbon::parse($order->date)->dayOfWeek;
+                        Schedule::create([
+                            'order_id' => $order->id,
+                            'date' => Carbon::now(),
+                            'time' => $order->time,
+                            'day' => $dayOfWeek,
+                            'repeat' => $order->repeat,
+                            'user_id' => $order->user_id,
+                        ]);
 
-                try {
-                    DB::beginTransaction();
+                        // update => date at order
+//                        $order = $this->orderModel
+//                            ->query()
+//                            ->where('id', $order->id)->first();
 
-                    Schedule::create([
-                        'order_id' => $order->id,
-                        'date' => Carbon::now(),
-                        'time' => $order->time,
-                        'day' => $dayOfWeek,
-                        'repeat' => $order->repeat,
-                        'user_id' => $order->user_id,
-                    ]);
+                        $order->update(['date' => Carbon::now()]); // data => last create order
 
-                    // update => date at order
-                    $order = $this->orderModel
-                        ->query()
-                        ->where('id', $order->id)->first();
+                        DB::commit();
 
+                    } catch (Exception) {
+                        DB::rollBack();
+                    }
 
-                    $order->update(['date' => Carbon::now()]);
+                    $user = User::where('id', $order->user_id)->first();
 
-                    DB::commit();
-
-                } catch (Exception) {
-                    DB::rollBack();
+                    $user->notify(new TaskReminderNotification($order));
                 }
-
-                $user = User::where('id', $order->user_id)->first();
-
-                $user->notify(new TaskReminderNotification($order));
             }
+
         }
     }
 
