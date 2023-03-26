@@ -74,7 +74,7 @@ Route::middleware(['user_api', 'role:company'])->group(function () {
 Route::post('Admin/Register', [AdminController::class, 'AdminRegister']);
 Route::post('Admin/Login', [AdminController::class, 'AdminLogin']);
 
-Route::middleware(['user_api', 'role:admin'])->prefix("admin")->group(function () {
+Route::middleware(['user_api', 'p'])->prefix("admin")->group(function () {
     Route::get('CompanyNotApproved', [CompanyController::class, 'allCompaniesNotApproved']);
     Route::get('approvedCompany/{id}', [CompanyController::class, 'approved']);
     Route::get('allCompany', [CompanyController::class, 'allCompanies']);

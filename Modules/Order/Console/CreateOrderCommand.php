@@ -67,16 +67,16 @@ class CreateOrderCommand extends Command
 
         $data = $this->orderModel->query()
             ->whereNot([
-                'repeat' => 'once',
+                'repeat' => 'once' || 'monthly',
                 'status' => 'canceled'
             ])
             ->whereNot('date', Carbon::now())
             ->where('day', $tomorrow)
             ->take(200)
-            ->get();
+            ->get()->toArray();
 
         if ($data) {
-            foreach (array_chunk($data, 50) as $orders){
+            foreach (array_chunk($data, 50) as $orders) {
                 foreach ($orders as $order) {
                     $dayOfWeek = Carbon::parse($order->date)->dayOfWeek;
                     try {
