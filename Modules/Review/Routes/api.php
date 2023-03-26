@@ -16,7 +16,7 @@ use Modules\Review\Http\Controllers\WorkerReviewController;
 |
 */
 
-Route::middleware(['user_api','role:user'])->group(function(){
+Route::middleware(['user_api'])->group(function () {
     Route::get('Review', [ReviewController::class, 'index']);
     Route::post('create/Review', [ReviewController::class, 'store']);
     Route::post('update/Review/{id}', [ReviewController::class, 'update']);

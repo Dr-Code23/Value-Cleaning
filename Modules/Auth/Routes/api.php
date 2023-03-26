@@ -38,7 +38,7 @@ Route::get('/auth/{provider}/callback', [AuthController::class, 'handleProviderC
  * user
  */
 
-Route::middleware(['user_api', 'role:user'])->group(function () {
+Route::middleware(['user_api'])->group(function () {
 
     Route::get('all-company', [CompanyController::class, 'allCompanies']);
     Route::get('show-company/{id}', [CompanyController::class, 'showCompany']);
