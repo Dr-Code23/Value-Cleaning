@@ -19,7 +19,9 @@ class UpdateRequest extends FormRequest
             'address' => '',
             'phone' => '',
             'companyId' => '',
+            'role' => '',
             "photo" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"];
+
     }
 
     /**

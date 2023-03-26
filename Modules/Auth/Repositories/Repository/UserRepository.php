@@ -33,6 +33,8 @@ class UserRepository implements UserRepositoryInterface
             'name' => $data->name,
             'email' => $data->email,
             'address' => $data->address,
+            'latitude' => $data->latitude,
+            'longitude' => $data->latitude,
             'phone' => $data->phone,
             'password' => hash::make($data->password),
 
@@ -70,13 +72,13 @@ class UserRepository implements UserRepositoryInterface
                             'error' => 'Account not approved yet'
                         ], 401);
                 }
-                if ($user->hasRole('company')) {
+                if ($user->type = 'company') {
                     return ['statusCode' => 200, 'status' => true,
                         'message' => 'company successfully registered ',
                         'data' => new CompanyResource($user),
                         'token' => $token
                     ];
-                } elseif ($user->hasRole('user')) {
+                } elseif ($user->type = 'user') {
 
                     $user->update(['device_token' => $data->device_token]);
 
@@ -272,6 +274,7 @@ class UserRepository implements UserRepositoryInterface
             'companyId' => $data->companyId,
             'password' => hash::make($data->password),
             'approved' => false,
+            'type' => 'company',
 
         ]);
         $user->assignRole('company');
@@ -290,11 +293,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function allCompanies(): array
     {
-        $companies = $this->userModel->query()->whereHas('roles', function ($query) {
-
-            $query->where('name', 'company');
-
-        })->latest()->get();
+        $companies = $this->userModel->query()->where(['type' => 'company'])->latest()->get();
 
         return ['statusCode' => 200, 'status' => true,
             'data' => CompanyResource::collection($companies)
@@ -307,11 +306,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function ShowCompany($id): JsonResponse
     {
-        $company = $this->userModel->query()->whereHas('roles', function ($query) {
-
-            $query->where('name', 'company');
-
-        })->where('id', $id)->first();
+        $company = $this->userModel->query()->where(['type' => 'company', 'id' => $id])->first();
         if ($company) {
             return response()->json(['statusCode' => 200, 'status' => true,
                 'data' => new CompanyResource($company)
@@ -323,14 +318,11 @@ class UserRepository implements UserRepositoryInterface
 
     public function allCompaniesUnapproved(): array
     {
-        $companies = $this->userModel->query()->whereHas('roles', function ($query) {
-
-            $query->where('name', 'company');
-
-        })->latest()->get();
+        $companies = $this->userModel->query()->where(['type' => 'company', 'approved' => 0])->latest()->get();
 
         return ['statusCode' => 200, 'status' => true,
             'data' => CompanyResource::collection($companies)
         ];
     }
+
 }

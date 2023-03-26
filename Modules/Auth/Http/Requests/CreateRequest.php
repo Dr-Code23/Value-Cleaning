@@ -14,12 +14,14 @@ class CreateRequest extends FormRequest
     public function rules()
     {
 
-            return [
-                'name' => 'required|string|between:2,100',
-                'email' => 'required|string|email|max:100|unique:users',
-                'password' => 'required|string|confirmed|min:6',
-                'address' => 'required',
-                'phone' => 'required',
+        return [
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|unique:users',
+            'password' => 'required|string|confirmed|min:6',
+            'address' => 'required',
+            'phone' => 'required',
+            'latitude' => '',
+            'longitude' => '',
 
         ];
     }

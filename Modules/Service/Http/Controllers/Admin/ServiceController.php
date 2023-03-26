@@ -19,6 +19,8 @@ class ServiceController extends Controller
     public function __construct(ServiceRepositoryInterface $serviceRepository)
     {
         $this->serviceRepository = $serviceRepository;
+        $this->middleware('permission:service-list|service-create|service-edit|service-delete');
+
     }
 
     /**

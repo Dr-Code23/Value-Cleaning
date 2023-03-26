@@ -22,6 +22,7 @@ class UserController extends Controller
     public function __construct(User $user)
     {
         $this->userModel = $user;
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete');
 
     }
 
@@ -36,11 +37,12 @@ class UserController extends Controller
                 'user' => UserResource::collection($data)
             ], 201);
         }
-        $data = $this->userModel->query()->whereHas('roles', function ($query) {
+        $data = $this->userModel
+            ->query()
+            ->where('type', 'user')
+            ->latest()
+            ->get();
 
-            $query->where('name', 'user');
-
-        })->latest()->get();
         return response()->json([
             'success' => true,
             'user' => UserResource::collection($data)
@@ -63,12 +65,12 @@ class UserController extends Controller
     public function store(CreateRequest $request)
     {
 
-
+        $request['type'] = 'admin';
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
 
         $user = $this->userModel->create($input);
-        $user->assignRole($request->input('roles'));
+        $user->assignRole($request->input('role'));
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
@@ -108,22 +110,23 @@ class UserController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function update(UpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
 
 
-        $input = $request;
+        $input = $request->all();
         if (!empty($input['password'])) {
             $input['password'] = Hash::make($input['password']);
         } else {
             $input = Arr::except((array)$input, array('password'));
         }
 
-        $user = $this->userModel->find($id);
+        $user = $this->userModel->where('id', $id)->first();
         $user->update($input);
+
         DB::table('model_has_roles')->where('model_id', $id)->delete();
 
-        $user->assignRole($request->input('roles'));
+        $user->assignRole($request->role);
 
         return response()->json([
             'success' => true,

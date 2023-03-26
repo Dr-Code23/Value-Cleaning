@@ -15,16 +15,18 @@ class CreateRequest extends FormRequest
     {
 
 
-            return [
-                'name' => 'required|string|between:2,100',
-                'email' => 'required|string|email|max:100|unique:workers',
-                'address' => 'required',
-                'phone' => 'required',
-                'NIN'   => 'required|unique:workers',
-                'photo' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
+        return [
+            'name' => 'required|string|between:2,100',
+            'email' => 'required|string|email|max:100|unique:workers',
+            'address' => 'required',
+            'phone' => 'required',
+            'NIN' => 'required|unique:workers',
+            'latitude' => '',
+            'longitude' => '',
+            'photo' => ['image', 'mimes:jpg,png,jpeg,webp', 'max:2048'],
 
 
-            ];
+        ];
 
     }
 

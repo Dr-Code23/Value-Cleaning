@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Modules\Category\Http\Controllers\Admin\CategoryController;
 
 /*
@@ -15,9 +16,7 @@ use Modules\Category\Http\Controllers\Admin\CategoryController;
 */
 
 
-
-
-Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function() {
+Route::middleware(['user_api', 'permission:category-list|category-create|category-edit|category-delete'])->prefix("admin")->group(function () {
 
     Route::get('Category', [CategoryController::class, 'index']);
     Route::post('create/Category', [CategoryController::class, 'store']);

@@ -19,6 +19,8 @@ class CreateRequest extends FormRequest
             'time' => 'required',
             'day' => 'nullable',
             'address' => 'required',
+            'latitude' => '',
+            'longitude' => '',
             'repeat' => 'required',
             'service_id' => 'required',
             'sub_service_id' => 'sometimes|array',

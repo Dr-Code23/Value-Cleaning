@@ -21,6 +21,8 @@ class CreateCompanyRequest extends FormRequest
             'address' => 'required',
             'phone' => 'required',
             'companyId' => 'required|string|max:100|unique:users',
+            'latitude' => '',
+            'longitude' => '',
 
         ];
     }

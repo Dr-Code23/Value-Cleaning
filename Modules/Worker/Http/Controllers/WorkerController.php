@@ -17,27 +17,30 @@ class WorkerController extends Controller
     public function __construct(WorkerRepositoryInterface $WorkerRepository)
     {
         $this->WorkerRepository = $WorkerRepository;
+
     }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
 
 
-    public function activate($id){
+    public function activate($id)
+    {
         //sleep(3);
         $item = Worker::find($id);
-        if($item){
-            $item->active=!$item->active;
+        if ($item) {
+            $item->active = !$item->active;
             $item->save();
-            return response()->json(['status'=>$item->active,'msg'=>'updated successfully']);
+            return response()->json(['status' => $item->active, 'msg' => 'updated successfully']);
         }
-        return response()->json(['status'=>0,'msg'=>'invalid id']);
+        return response()->json(['status' => 0, 'msg' => 'invalid id']);
     }
 
     public function index(Request $request)
     {
-       return $this->WorkerRepository->index($request);
+        return $this->WorkerRepository->index($request);
     }
 
     /**

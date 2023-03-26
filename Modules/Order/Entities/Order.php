@@ -26,13 +26,17 @@ class Order extends Model implements HasMedia
         'time',
         'day',
         'address',
+        'latitude',
+        'longitude',
         'repeat',
         'status',
         'payment_status',
         'user_id',
         'service_id',
         'total_price',
-        'order_code',];
+        'order_code',
+        'scheduled_at',
+    ];
 
     public function services()
     {

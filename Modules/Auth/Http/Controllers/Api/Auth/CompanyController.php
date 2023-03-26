@@ -23,7 +23,6 @@ class CompanyController extends Controller
     {
         $this->userRepository = $userRepository;
         $this->userModel = $user;
-
     }
 
     /**
@@ -33,11 +32,7 @@ class CompanyController extends Controller
     public function approved($id)
     {
 
-        $company = $this->userModel->query()->whereHas('roles', function ($query) {
-
-            $query->where('name', 'company');
-
-        })->where('id', $id)->first();
+        $company = $this->userModel->query()->where(['id' => $id, 'type' => 'company'])->first();
         if ($company) {
             $company->approved = !$company->approved;
             $company->save();

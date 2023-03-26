@@ -32,7 +32,7 @@ interface UserRepositoryInterface
 
     public function ShowCompany($id);
 
-    public function allCompaniesApproved();
+    public function allCompaniesUnapproved();
 
 
 }

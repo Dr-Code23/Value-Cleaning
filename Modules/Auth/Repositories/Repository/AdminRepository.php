@@ -36,6 +36,7 @@ class AdminRepository implements AdminRepositoryInterface
             'address' => $data->address,
             'phone' => $data->phone,
             'password' => hash::make($data->password),
+            'type' => 'admin',
         ]);
 
         $user->syncRoles(['admin']);
@@ -68,8 +69,8 @@ class AdminRepository implements AdminRepositoryInterface
             ], 500);
         }
         if (Auth::check()) {
-            
-            if (!auth('api')->user()->hasRole(['admin', 'employee'])) {
+
+            if (!auth('api')->user()->type = 'admin') {
 
                 return response()->json(['error' => 'UnAuthorised'], 401);
             }

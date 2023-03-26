@@ -32,9 +32,12 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         'email',
         'password',
         'address',
+        'latitude',
+        'longitude',
         'phone',
         'approved',
         'companyId',
+        'type',
     ];
 
     /**

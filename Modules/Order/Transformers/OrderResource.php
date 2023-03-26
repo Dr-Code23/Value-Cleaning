@@ -23,7 +23,7 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'work_area' => $this->worke_aera,
+            'work_area' => $this->work_area,
             'date' => $this->date,
             'time' => $this->time,
             'day' => $this->day,

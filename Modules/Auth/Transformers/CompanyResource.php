@@ -23,6 +23,7 @@ class CompanyResource extends JsonResource
             'phone' => $this->phone,
             'companyId' => $this->companyId,
             'photo' => $this->getFirstMediaUrl('avatar'),
+            'type' => $this->type,
 
         ];
     }

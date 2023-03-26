@@ -18,7 +18,9 @@ class UpdateRequest extends FormRequest
             'email' => 'string|email|max:100',
             'address' => '',
             'phone' => '',
-            'NIN'   => '',
+            'NIN' => '',
+            'latitude' => '',
+            'longitude' => '',
             'photo' => '',
 
 

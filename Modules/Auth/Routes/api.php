@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminChangePasswordAController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminProfileController;
-use Modules\Auth\Http\Controllers\Api\Admin\PermissionController;
 use Modules\Auth\Http\Controllers\Api\Admin\RoleController;
 use Modules\Auth\Http\Controllers\Api\Admin\SendNotificationController;
 use Modules\Auth\Http\Controllers\Api\Admin\UserController;
@@ -74,14 +73,15 @@ Route::middleware(['user_api', 'role:company'])->group(function () {
 Route::post('Admin/Register', [AdminController::class, 'AdminRegister']);
 Route::post('Admin/Login', [AdminController::class, 'AdminLogin']);
 
-Route::middleware(['user_api', 'p'])->prefix("admin")->group(function () {
+Route::middleware(['user_api'])->prefix("admin")->group(function () {
     Route::get('CompanyNotApproved', [CompanyController::class, 'allCompaniesNotApproved']);
     Route::get('approvedCompany/{id}', [CompanyController::class, 'approved']);
     Route::get('allCompany', [CompanyController::class, 'allCompanies']);
     Route::get('showCompany/{id}', [CompanyController::class, 'showCompany']);
     Route::get('show-user/{id}', [UserController::class, 'show']);
     Route::apiresource('roles', RoleController::class);
-    Route::apiresource('permission', PermissionController::class);
+    Route::post('update-users/{id}', [UserController::class, 'update']);
+    Route::delete('/delete-user/{id}', [UserController::class, 'destroy']);
     Route::get('all-users', [UserController::class, 'index']);
     Route::get('Admin/profile', [AdminProfileController::class, 'AdminProfile']);
     Route::post('update/profile', [AdminProfileController::class, 'AdminUpdateProfile']);
