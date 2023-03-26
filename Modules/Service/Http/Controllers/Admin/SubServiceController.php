@@ -20,7 +20,9 @@ class SubServiceController extends Controller
     {
         $this->subserviceModel = $subservice;
         $this->middleware('permission:subService-list|subService-create|subService-edit|subService-delete');
-
+        $this->middleware('permission:subService-create', ['only' => ['store']]);
+        $this->middleware('permission:subService-edit', ['only' => ['update']]);
+        $this->middleware('permission:subService-delete', ['only' => ['destroy']]);
     }
 
     /**

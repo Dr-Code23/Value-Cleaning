@@ -15,7 +15,7 @@ use Modules\Announcement\Http\Controllers\AnnouncementController;
 |
 */
 
-Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
+Route::middleware(['user_api'])->prefix("admin")->group(function () {
     Route::get('announcement', [AnnouncementController::class, 'index']);
     Route::post('create/announcement', [AnnouncementController::class, 'store']);
     Route::post('update/announcement/{id}', [AnnouncementController::class, 'update']);

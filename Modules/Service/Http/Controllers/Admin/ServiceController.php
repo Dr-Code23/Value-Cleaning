@@ -20,7 +20,9 @@ class ServiceController extends Controller
     {
         $this->serviceRepository = $serviceRepository;
         $this->middleware('permission:service-list|service-create|service-edit|service-delete');
-
+        $this->middleware('permission:service-create', ['only' => ['store']]);
+        $this->middleware('permission:service-edit', ['only' => ['update']]);
+        $this->middleware('permission:service-delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -60,7 +62,7 @@ class ServiceController extends Controller
 
     public function addServiceWorker(Request $request, $id)
     {
-        $service = $this->serviceRepository->addServiceWoeker($request, $id);
+        $service = $this->serviceRepository->addServiceWorker()($request, $id);
         return ['statusCode' => 200, 'status' => true, 'data' => $service];
     }
 

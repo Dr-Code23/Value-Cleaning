@@ -16,7 +16,7 @@ use Modules\Worker\Http\Controllers\WorkerController;
 */
 
 
-Route::middleware(['user_api', 'permission:worker-list|worker-create|worker-edit|worker-delete'])->prefix("admin")->group(function () {
+Route::middleware(['user_api'])->prefix("admin")->group(function () {
     Route::get('active/worker/{id}', [WorkerController::class, 'activate']);
     Route::get('worker', [WorkerController::class, 'index']);
     Route::post('create/worker', [WorkerController::class, 'store']);
