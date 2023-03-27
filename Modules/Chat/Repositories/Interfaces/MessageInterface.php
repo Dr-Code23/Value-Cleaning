@@ -8,7 +8,7 @@ interface MessageInterface
     public function sendMessage($request);
 
     //Delete message
-    public function destroy($request);
+    public function destroy($id);
 
     // get room messages
     public function room($request);
@@ -19,11 +19,14 @@ interface MessageInterface
     // create Room
     public function createRoom($request);
 
+    // soft Delete
+    public function getSoft();
+
     // get Room
     public function getRoom($request);
 
     // delete room
-    public function deleteRoom($request);
+    public function deleteMessage($request);
 }
 
 
