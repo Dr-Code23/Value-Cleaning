@@ -8,12 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Auth\Entities\About;
 use Modules\Auth\Http\Requests\CreateAboutRequest;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
-class PermissionController extends Controller
+class AboutController extends Controller
 {
-
     private $aboutModel;
 
     public function __construct(About $about)

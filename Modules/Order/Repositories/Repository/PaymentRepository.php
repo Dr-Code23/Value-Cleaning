@@ -15,6 +15,7 @@ use Modules\Order\Entities\Order;
 class PaymentRepository implements PaymentRepositoryInterface
 {
     use payment;
+
     public function makePayment($data)
 
     {
@@ -56,7 +57,7 @@ class PaymentRepository implements PaymentRepositoryInterface
     public function checkoutPayment($data)
     {
         try {
-            $order=Order::where('id',$data->order_id)->first();
+            $order = Order::where('id', $data->order_id)->first();
             $stripe = new StripeClient(env('STRIPE_SECRET'));
             $charge = $stripe->charges->create([
                 'card' => $data['token'],
@@ -70,8 +71,8 @@ class PaymentRepository implements PaymentRepositoryInterface
             ]);
             if ($charge->status == 'succeeded') {
                 $data = ['transaction_id' => $charge->id];
-                $order['payment_status']='Credit';
-                $order['status']= 'Finished';
+                $order['payment_status'] = 'credit';
+                $order['status'] = 'finished';
                 $order->update();
                 return ['statusCode' => 200,
                     'status' => true, 'message' => 'Transaction Success', 'data' => $data];

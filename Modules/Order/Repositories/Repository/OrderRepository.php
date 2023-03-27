@@ -180,7 +180,7 @@ class OrderRepository implements OrderRepositoryInterface
 
         $order->update(['status' => 'canceled']);
 
-        event(new OrderCanceled($id));
+        event(new OrderCanceled($order));
 
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Order Canceled successfully ',

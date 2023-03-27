@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Auth\Http\Controllers\Api\Admin\AboutController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminChangePasswordAController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminProfileController;
@@ -49,6 +50,8 @@ Route::middleware(['user_api'])->group(function () {
     Route::delete('delete-account', [UserProfileController::class, 'deleteAccount']);
     Route::get('notification', [AuthController::class, 'notification']);
     Route::delete('deleteNotification/{id}', [AuthController::class, 'deleteNotification']);
+    Route::get('about', [AboutController::class, 'index']);
+
 
 });
 
@@ -90,5 +93,7 @@ Route::middleware(['user_api'])->prefix("admin")->group(function () {
     Route::get('logout', [AdminProfileController::class, 'Logout']);
     Route::post('send', [SendNotificationController::class, 'sendNotification']);
     Route::get('all', [AdminController::class, 'all']);
+    Route::apiresource('about', AboutController::class);
+
 
 });
