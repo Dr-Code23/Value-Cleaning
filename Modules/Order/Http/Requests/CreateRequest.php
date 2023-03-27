@@ -14,16 +14,19 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'worke_aera'=> 'required',
+            'work_area' => 'required',
             'date' => 'required',
             'time' => 'required',
+            'day' => 'nullable',
             'address' => 'required',
-            'repeat' => 'nullable',
+            'latitude' => '',
+            'longitude' => '',
+            'repeat' => 'required',
             'service_id' => 'required',
-            'sub_service_id' => 'nullable',
+            'sub_service_id' => 'sometimes|array',
             'total_price' => 'nullable',
-            'delivery_price'=> 'nullable',
-            'gallery'  =>'nullable',
+            'delivery_price' => 'nullable',
+            'gallery' => 'sometimes|array',
 
 
         ];

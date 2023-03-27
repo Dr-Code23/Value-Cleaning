@@ -9,6 +9,7 @@ use Modules\Announcement\Entities\Announcement;
 use Modules\Announcement\Transformers\AnnouncementResource;
 use Modules\Category\Entities\Category;
 use Modules\Category\Transformers\CategoryResource;
+use Modules\Favorite\Entities\Favorite;
 use Modules\Offer\Entities\Offer;
 use Modules\Offer\Transformers\OfferResource;
 use Modules\Order\Entities\Order;
@@ -26,45 +27,47 @@ class HomeController extends Controller
     public function userHome()
     {
         $Service = Service::where('active', 1)->get();
-        $categories= Category::latest()->get();
-        $announcement =Announcement::latest()->get();
-        return response()->json(["announcement"=> AnnouncementResource::collection($announcement), "Service"=>SubServiceResource::collection($Service) ,"categories" =>CategoryResource::collection($categories) ]);
+        $categories = Category::latest()->get();
+        $announcement = Announcement::latest()->get();
+        return response()->json(["announcement" => AnnouncementResource::collection($announcement), "Service" => SubServiceResource::collection($Service), "categories" => CategoryResource::collection($categories)]);
 
     }
 
     public function serviceDetails($id)
     {
-        $SubService=Service::find($id);
-        $rate= Review::where('service_id',$id)->avg('star_rating');
+        $SubService = Service::find($id);
+        $rate = Review::where('service_id', $id)->avg('star_rating');
 
         return ['statusCode' => 200,
-            'status' => true ,
-            'data' =>  new ServiceResource($SubService ),
-            'rate'=>$rate ];
+            'status' => true,
+            'data' => new ServiceResource($SubService),
+            'rate' => $rate];
     }
 
     public function subService($id)
     {
-        $SubService=SubService::where('service_id',$id)->get();
+        $SubService = SubService::where('service_id', $id)->get();
         return ['statusCode' => 200,
-            'status' => true ,
-            'data' => $SubService ];
+            'status' => true,
+            'data' => $SubService];
     }
-public function topServices()
-{
-    $skus = Order::selectRaw('COUNT(*)')
-        ->whereColumn('service_id','services.id')
-        ->getQuery();
-    $services = Service::select('*')
-        ->selectSub($skus, 'skus_count')
-        ->orderBy('skus_count', 'DESC')->get() ;
-    return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services) ];
 
-}
+    public function topServices()
+    {
+        $skus = Order::selectRaw('COUNT(*)')
+            ->whereColumn('service_id', 'services.id')
+            ->getQuery();
+        $services = Service::select('*')
+            ->selectSub($skus, 'skus_count')
+            ->orderBy('skus_count', 'DESC')->get();
+        return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services)];
+
+    }
+
     public function jobDone($id)
     {
-        $job_done =Order::where(["service_id"=>$id,'status'=>'Finished'])->count();
-        return ['statusCode' => 200, 'status' => true, 'job_done' => $job_done ];
+        $job_done = Order::where(["service_id" => $id, 'status' => 'Finished'])->count();
+        return ['statusCode' => 200, 'status' => true, 'job_done' => $job_done];
     }
 
 }

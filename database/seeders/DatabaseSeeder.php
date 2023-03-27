@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
@@ -14,6 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $adminRole = Role::create(['name' => 'admin','guard_name'=>'api']);
-        $employeeRole = Role::create(['name' => 'user','guard_name'=>'api']);   }
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'api']);
+        $employeeRole = Role::create(['name' => 'user', 'guard_name' => 'api']);
+        $Role = Role::create(['name' => 'company', 'guard_name' => 'api']);
+
+        $permissions = Permission::pluck('id', 'id')->all();
+
+        $adminRole->syncPermissions($permissions);
+    }
 }

@@ -18,7 +18,10 @@ class UpdateRequest extends FormRequest
             'email' => 'string|email|max:100|',
             'address' => '',
             'phone' => '',
-            "photo" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"        ];
+            'companyId' => '',
+            'role' => '',
+            "photo" => "image|mimes:jpeg,png,jpg,gif,svg|max:2048"];
+
     }
 
     /**

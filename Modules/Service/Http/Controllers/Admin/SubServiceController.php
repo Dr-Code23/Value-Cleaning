@@ -3,7 +3,9 @@
 namespace Modules\Service\Http\Controllers\Admin;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Modules\Service\Entities\SubService;
 use Modules\Service\Http\Requests\CreateSubServiceRequest;
@@ -17,14 +19,19 @@ class SubServiceController extends Controller
     public function __construct(SubService $subservice)
     {
         $this->subserviceModel = $subservice;
+        $this->middleware('permission:subService-list|subService-create|subService-edit|subService-delete');
+        $this->middleware('permission:subService-create', ['only' => ['store']]);
+        $this->middleware('permission:subService-edit', ['only' => ['update']]);
+        $this->middleware('permission:subService-delete', ['only' => ['destroy']]);
     }
+
     /**
      * Display a listing of the resource.
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
-        $SubServices= $this->subserviceModel->latest()->get();
+        $SubServices = $this->subserviceModel->latest()->get();
         return SubServiceResource::collection($SubServices);
 
     }
@@ -37,11 +44,11 @@ class SubServiceController extends Controller
     public function store(CreateSubServiceRequest $request)
     {
         $SubServices = $this->subserviceModel->create([
-            'title'      => [
-                'en'     => $request['title_en'],
-                'sv'     => $request['title_sv'],
+            'title' => [
+                'en' => $request['title_en'],
+                'sv' => $request['title_sv'],
             ],
-            'price'      => $request['price'],
+            'price' => $request['price'],
             'service_id' => $request['service_id']
         ]);
         return ['statusCode' => 200, 'status' => true, 'message' => 'Created successfully', 'data' => new SubServiceResource($SubServices)];
@@ -55,18 +62,18 @@ class SubServiceController extends Controller
      */
     public function show($id)
     {
-        $SubService=$this->subserviceModel->findOrFail($id);
+        $SubService = $this->subserviceModel->findOrFail($id);
         return ['statusCode' => 200,
-            'status' => true ,
-            'data' => new SubServiceResource($SubService) ];
+            'status' => true,
+            'data' => new SubServiceResource($SubService)];
     }
 
     public function showWith($id)
     {
-        $SubService=$this->subserviceModel->where('service_id',$id)->get();
+        $SubService = $this->subserviceModel->where('service_id', $id)->get();
         return ['statusCode' => 200,
-            'status' => true ,
-            'data' => $SubService ];
+            'status' => true,
+            'data' => $SubService];
     }
 
     /**
@@ -79,30 +86,30 @@ class SubServiceController extends Controller
     {
         $SubService = $this->subserviceModel->where('id', $id)->first();
         $SubService->update([
-            'title'      => [
-                'en'     => $request['title_en'],
-                'sv'     => $request['title_sv'],
+            'title' => [
+                'en' => $request['title_en'],
+                'sv' => $request['title_sv'],
             ],
-            'price'      => $request['price'],
+            'price' => $request['price'],
             'service_id' => $request['service_id']
         ]);
         return ['statusCode' => 200,
-            'status' => true ,
+            'status' => true,
             'message' => 'Subservice updated successfully ',
-            'data' => new SubServiceResource($SubService) ];
+            'data' => new SubServiceResource($SubService)];
     }
 
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy($id)
     {
         $SubService = $this->subserviceModel->find($id);
         $SubService->delete();
-        $msg='Deleted';
-        return response()->json(['statusCode' => 200,'status' => true , 'message' =>  $msg ]);
+        $msg = 'Deleted';
+        return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
 
     }
 }

@@ -14,7 +14,7 @@ use Modules\Favorite\Http\Controllers\FavoriteController;
 |
 */
 
-Route::middleware(['user_api','role:user','setlocale'])->group(function(){
+Route::middleware(['user_api', 'setlocale'])->group(function () {
     Route::get('Favorite', [FavoriteController::class, 'index']);
     Route::post('create/Favorite', [FavoriteController::class, 'store']);
     Route::get('show/Favorite/{id}', [FavoriteController::class, 'show']);

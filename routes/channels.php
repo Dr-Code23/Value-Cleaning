@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('private-orders', function ($user) {
+Broadcast::channel('private-admin', function ($user) {
     return $user->hasRole('admin');
 });

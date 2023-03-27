@@ -4,30 +4,39 @@ namespace Modules\Auth\Repositories\Repository;
 
 use App\Models\User;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Modules\Auth\Emails\EventMail;
+use Modules\Auth\Entities\Notification;
+use Modules\Auth\Events\NewCompany;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
+use Modules\Auth\Transformers\CompanyResource;
 use Modules\Auth\Transformers\UserResource;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserRepository implements UserRepositoryInterface
 {
     private $userModel;
+    private $notificationModel;
 
-    public function __construct(User $user)
+    public function __construct(User $user, Notification $notification)
     {
         $this->userModel = $user;
+        $this->notificationModel = $notification;
     }
+
     public function register($data)
     {
         $user = $this->userModel->create([
-            'name'=> $data->name,
-            'email'=> $data->email,
-            'address'=> $data->address,
-            'phone'=> $data->phone,
-            'password'=> hash::make($data->password),
+            'name' => $data->name,
+            'email' => $data->email,
+            'address' => $data->address,
+            'latitude' => $data->latitude,
+            'longitude' => $data->latitude,
+            'phone' => $data->phone,
+            'password' => hash::make($data->password),
 
         ]);
         $user->assignRole('user');
@@ -39,6 +48,11 @@ class UserRepository implements UserRepositoryInterface
         ];
 
     }
+
+    /**
+     * @param $data
+     * @return array|JsonResponse
+     */
     public function Login($data)
     {
         $credentials = $data->only('email', 'password',);
@@ -46,34 +60,61 @@ class UserRepository implements UserRepositoryInterface
 
         try {
 
-            if (!$token = Auth::attempt($credentials)) {
+            if ($token = Auth::attempt($credentials)) {
+
+
+                $user = Auth::user();
+
+                if (!$user->approved) {
+                    Auth::logout();
+                    return response()
+                        ->json([
+                            'error' => 'Account not approved yet'
+                        ], 401);
+                }
+                if ($user->type = 'company') {
+                    return ['statusCode' => 200, 'status' => true,
+                        'message' => 'company successfully registered ',
+                        'data' => new CompanyResource($user),
+                        'token' => $token
+                    ];
+                } elseif ($user->type = 'user') {
+
+                    $user->update(['device_token' => $data->device_token]);
+
+                    return ['statusCode' => 200, 'status' => true,
+                        'message' => 'user successfully registered ',
+                        'data' => new UserResource($user),
+                        'token' => $token
+                    ];
+                } else {
+                    return response()->json(['error' => 'UnAuthorised'], 401);
+
+
+                }
+
+
+            } else {
                 return response()->json([
                     'success' => false,
                     'message' => 'Login credentials are invalid.',
                 ], 400);
             }
+
         } catch (JWTException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Could not create token.',
             ], 500);
         }
-        if (Auth::check()) {
-            if (!auth('api')->user()->hasRole('user')) {
 
-                return response()->json(['error' => 'UnAuthorised'], 401);
-            }
-        }
-        $user=  auth()->user();
-        $user->update(['devise_token'=>$data->devise_token]);
-        return ['statusCode' => 200, 'status' => true,
-            'message' => 'User successfully registered ',
-            'data' => new UserResource($user),
-            'token'=>$token
-        ];
 
     }
 
+    /**
+     * @param $data
+     * @return JsonResponse
+     */
     public function forgotPassword($data)
     {
         $user = $this->userModel->where('email', $data->email)->first();
@@ -86,9 +127,10 @@ class UserRepository implements UserRepositoryInterface
             return response()->json(['status' => true, 'message' => 'check your inbox']);
 
         } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again'],400);
+            return response()->json(['status' => false, 'message' => 'email not found, try again'], 400);
         }
     }
+
     public function checkCode($data)
     {
         $user = $this->userModel->where('email', $data->email)->first();
@@ -96,74 +138,191 @@ class UserRepository implements UserRepositoryInterface
             if ($user->reset_verification_code == $data->code) {
                 return response()->json(['status' => true, 'message' => 'you will be redirected to set new password']);
             }
-            return response()->json(['status' => false, 'message' => 'code is invalid, try again'],400);
+            return response()->json(['status' => false, 'message' => 'code is invalid, try again'], 400);
 
         } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again'],400);
+            return response()->json(['status' => false, 'message' => 'email not found, try again'], 400);
         }
     }
+
+    /**
+     * @param $data
+     * @return JsonResponse
+     */
     public function reset($data)
     {
         $user = $this->userModel->where('email', $data->email)->first();
         if ($user) {
             $user->password = Hash::make($data->password);
             $user->save();
-            return response()->json([$user->password,'status' => true, 'message' => 'password has been updated']);
+            return response()->json([$user->password, 'status' => true, 'message' => 'password has been updated']);
 
         } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again'],400);
+            return response()->json(['status' => false, 'message' => 'email not found, try again'], 400);
         }
     }
+
+    /**
+     * @return array
+     */
     public function profile()
     {
-        $id =Auth::id();
+        $id = Auth::id();
         $user = $this->userModel->find($id);
 
-        return ['statusCode' => 200,'status' => true ,
+        return ['statusCode' => 200, 'status' => true,
             'data' => new UserResource($user)
         ];
     }
 
+    /**
+     * @param $data
+     * @return array
+     */
     public function updateProfile($data)
     {
-        $id =Auth::id();
+        $id = Auth::id();
         $user = $this->userModel->find($id);
         $user->update($data->all());
         if ($data->hasFile('photo')) {
             $user->media()->delete();
             $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
         }
-        return ['statusCode' => 200,'status' => true ,
+        return ['statusCode' => 200, 'status' => true,
             'message' => 'user updated successfully ',
             'data' => new UserResource($user)
         ];
     }
+
+    /**
+     * @param $data
+     * @return JsonResponse
+     */
     public function changePassword($data)
     {
         $auth = Auth::user();
 
         // The passwords matches
-        if (!Hash::check($data->get('current_password'), $auth->password))
-        {
+        if (!Hash::check($data->get('current_password'), $auth->password)) {
             return response()->json(['error', "Current Password is Invalid"]);
         }
 
-        $user =  $this->userModel->find($auth->id);
-        $user->password =  Hash::make($data->new_password);
+        $user = $this->userModel->find($auth->id);
+        $user->password = Hash::make($data->new_password);
         $user->save();
-        return  response()->json(['success', "Password Changed Successfully"]);
+        return response()->json(['success', "Password Changed Successfully"]);
     }
+
+    /**
+     * @return JsonResponse
+     */
     public function deleteAccount()
     {
 
-        $userID =Auth::id();
-        try{
-            $user = User::find($userID);
+        $userID = Auth::id();
+        try {
+            $user = $this->userModel->find($userID);
             $user->delete();
-            return response()->json(["messages" => "deleted succefully" , "status" => 200]);
-        }catch(Exception $ex){
-            return response()->json(["messages" =>$ex->getError()->message , "status" => 500]);
+            return response()->json(["messages" => "deleted successfully", "status" => 200]);
+        } catch (Exception $ex) {
+            return response()->json(["messages" => $ex->getError()->message, "status" => 500]);
         }
 
     }
+
+    /**
+     * @return array
+     */
+    public function notification()
+    {
+        $notification = $this->notificationModel
+            ->query()
+            ->where('user_id', Auth::id())
+            ->markAsRead()
+            ->get();
+        return ['statusCode' => 200, 'status' => true,
+            'data' => $notification
+        ];
+
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function deleteNotification($id)
+    {
+        $this->notificationModel->where('id', $id);
+
+        return ['statusCode' => 200, 'status' => true,
+            'message' => 'delete'
+        ];
+
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    public function companyRegister($data)
+    {
+        $user = $this->userModel->create([
+            'name' => $data->name,
+            'email' => $data->email,
+            'address' => $data->address,
+            'phone' => $data->phone,
+            'companyId' => $data->companyId,
+            'password' => hash::make($data->password),
+            'approved' => false,
+            'type' => 'company',
+
+        ]);
+        $user->assignRole('company');
+
+        event(new NewCompany($user));
+
+
+        return ['statusCode' => 200, 'status' => true,
+            'message' => 'Your account is pending approval.',
+            'data' => new CompanyResource($user)
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function allCompanies(): array
+    {
+        $companies = $this->userModel->query()->where(['type' => 'company'])->latest()->get();
+
+        return ['statusCode' => 200, 'status' => true,
+            'data' => CompanyResource::collection($companies)
+        ];
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function ShowCompany($id): JsonResponse
+    {
+        $company = $this->userModel->query()->where(['type' => 'company', 'id' => $id])->first();
+        if ($company) {
+            return response()->json(['statusCode' => 200, 'status' => true,
+                'data' => new CompanyResource($company)
+            ]);
+        }
+        return response()->json(['status' => 400, 'msg' => 'invalid id']);
+
+    }
+
+    public function allCompaniesUnapproved(): array
+    {
+        $companies = $this->userModel->query()->where(['type' => 'company', 'approved' => 0])->latest()->get();
+
+        return ['statusCode' => 200, 'status' => true,
+            'data' => CompanyResource::collection($companies)
+        ];
+    }
+
 }

@@ -14,13 +14,16 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('worke_aera');
-            $table->string('date');
+            $table->string('work_area');
+            $table->date('date');
             $table->time('time');
             $table->string('address');
+            $table->double('latitude', 15, 8)->nullable();
+            $table->double('longitude', 15, 8)->nullable();
+            $table->integer('day');
             $table->enum('repeat', ['once', 'weekly', 'monthly']);
-            $table->enum('status', ['In Process', 'Canceled', 'Finished'])->default('In Process');
-            $table->enum('payment_status', ['Credit', 'Receipt'])->default('Receipt');
+            $table->enum('status', ['processing', 'canceled', 'finished'])->default('processing');
+            $table->enum('payment_status', ['credit', 'receipt'])->default('receipt');
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->cascadeOnUpdate()
@@ -29,7 +32,7 @@ return new class extends Migration {
                 ->constrained('services')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->float('delivery_price')->nullable();
+            $table->dateTime('scheduled_at')->nullable();
             $table->double('total_price');
             $table->string('order_code');
             $table->timestamps();

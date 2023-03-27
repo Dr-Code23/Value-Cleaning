@@ -3,6 +3,8 @@
 namespace Modules\Auth\Http\Controllers\Api\Auth;
 
 use App\Models\User;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Modules\Auth\Http\Requests\CreateRequest;
@@ -20,23 +22,27 @@ class AuthController extends Controller
         $this->UserRepository = $UserRepository;
     }
 
-    public function register(CreateRequest $request)
+    /**
+     * @param CreateRequest $request
+     * @return mixed
+     */
+    public function register(CreateRequest $request): mixed
     {
-        //Validate data
-        $user= $this->UserRepository->register($request);
-
-        return $user;
-
+        return $this->UserRepository->register($request);
 
     }
 
 
-    public function Login(loginRequest $request)
+    /**
+     * @param loginRequest $request
+     * @return mixed
+     */
+    public function Login(loginRequest $request): mixed
     {
 
-        $user= $this->UserRepository->login($request);
+        $user = $this->UserRepository->login($request);
 
-        return  $user;
+        return $user;
 
 
     }
@@ -58,12 +64,11 @@ class AuthController extends Controller
     }
 
 
-
     /**
      * Obtain the user information from Provider.
      *
      * @param $provider
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function handleProviderCallback($provider)
     {
@@ -99,8 +104,8 @@ class AuthController extends Controller
         $userCreated->assignRole('user');
 
         $token = jwtAuth::fromUser($userCreated);
-        return response()->json(['statusCode' => 200,'status' => true ,
-            'message' => ' success  ','data' => new UserResource($userCreated),'Access-Token' => $token]);
+        return response()->json(['statusCode' => 200, 'status' => true,
+            'message' => ' success  ', 'data' => new UserResource($userCreated), 'Access-Token' => $token]);
     }
 
     /**
@@ -109,9 +114,23 @@ class AuthController extends Controller
      */
     protected function validateProvider($provider)
     {
-        if (!in_array($provider, ['facebook','google'])) {
+        if (!in_array($provider, ['facebook', 'google'])) {
             return response()->json(['error' => 'Please login using facebook or google'], 422);
         }
+    }
+
+    public function notification()
+    {
+
+        return $this->UserRepository->notification();
+
+    }
+
+    public function deleteNotification($id)
+    {
+
+        return $this->UserRepository->deleteNotification($id);
+
     }
 
 

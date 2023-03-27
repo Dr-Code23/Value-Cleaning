@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Modules\Worker\Http\Controllers\WorkerController;
 
 /*
@@ -15,9 +16,7 @@ use Modules\Worker\Http\Controllers\WorkerController;
 */
 
 
-
-
-Route::middleware(['user_api','role:admin'])->prefix("admin")->group(function(){
+Route::middleware(['user_api'])->prefix("admin")->group(function () {
     Route::get('active/worker/{id}', [WorkerController::class, 'activate']);
     Route::get('worker', [WorkerController::class, 'index']);
     Route::post('create/worker', [WorkerController::class, 'store']);

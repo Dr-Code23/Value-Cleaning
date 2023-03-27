@@ -4,6 +4,7 @@ namespace Modules\Favorite\Repositories\Repository;
 
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Modules\Favorite\Entities\Favorite;
 use Modules\Favorite\Repositories\Interfaces\FavoriteRepositoryInterface;
@@ -20,11 +21,12 @@ class FavoriteRepository implements FavoriteRepositoryInterface
         $this->favoriteModel = $favorite;
     }
 
-    public function index(){
+    public function index()
+    {
 
         $Favorite = $this->favoriteModel->with('services')->latest()->get();
         return ['statusCode' => 200, 'status' => true,
-            'data' =>  FavoriteResource::collection($Favorite)
+            'data' => FavoriteResource::collection($Favorite)
         ];
 
     }
@@ -67,14 +69,17 @@ class FavoriteRepository implements FavoriteRepositoryInterface
 
         $favorite = $this->favoriteModel->find($id);
         return ['statusCode' => 200, 'status' => true,
-            'data' =>  new FavoriteResource($favorite)
+            'data' => new FavoriteResource($favorite)
         ];
     }
 
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
     public function destroy($id)
     {
-        $favorite = $this->favoriteModel->find($id);
-        $favorite->delete();
+        $favorite = $this->favoriteModel->where('service_id', $id)->delete();
         $msg = 'Deleted';
         return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
     }
