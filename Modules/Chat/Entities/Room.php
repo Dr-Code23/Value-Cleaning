@@ -9,10 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Room extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = ['delete_by'];
-    protected $dates = ['deleted_at'];
+    protected $fillable = [];
 
     function users(){
         return $this->belongsToMany(User::class, 'room_users');

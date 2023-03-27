@@ -23,6 +23,10 @@ class Message extends Model implements HasMedia
     {
         return $this->belongsTo(Room::class);
     }
+    public function soft()
+    {
+        return $this->hasMany(MessageUser::class);
+    }
 
 
 }

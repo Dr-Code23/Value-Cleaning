@@ -50,7 +50,7 @@ class ChatController extends Controller
     // delete room
     public function delete(Request $request)
     {
-        $message = $this->message->deleteRoom($request);
+        $message = $this->message->deleteMessage($request);
         if ($message) {
             return $this->messageResponse(($message), 'The room delete', 201);
         }
@@ -87,4 +87,10 @@ class ChatController extends Controller
         return $this->messageResponse(null, 'The Message Not delete', 400);
     }
 
+    //  get SoftDeletes
+    public function getMessage()
+    {
+
+        return $message = $this->message->getSoft();
+    }
 }
