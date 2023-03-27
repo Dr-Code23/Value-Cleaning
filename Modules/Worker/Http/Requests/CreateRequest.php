@@ -18,11 +18,11 @@ class CreateRequest extends FormRequest
         return [
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:workers',
-            'address' => 'required',
+            'address' => 'nullable',
             'phone' => 'required',
             'NIN' => 'required|unique:workers',
-            'latitude' => '',
-            'longitude' => '',
+            'latitude' => ['regex:/^[-]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/'],
+            'longitude' => ['regex:/^[-]?((1[0-7]|[1-9])?\d(\.\d+)?|180(\.0+)?)$/'],
             'photo' => ['image', 'mimes:jpg,png,jpeg,webp', 'max:2048'],
 
 

@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->string('name');
             $table->string('email')->unique();
             $table->string('address');
-            $table->double('latitude', 15, 8);
-            $table->double('longitude', 15, 8);
+            $table->double('latitude', 15, 8)->nullable();
+            $table->double('longitude', 15, 8)->nullable();
             $table->bigInteger('phone');
             $table->bigInteger('NIN')->unique();
             $table->boolean('active')->default(1);

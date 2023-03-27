@@ -52,6 +52,28 @@ class UserController extends Controller
         ], 201);
     }
 
+    public function allEmployee(Request $request)
+    {
+        if ($request->q) {
+            $data = $this->userModel->where("email", "like", "%$request->q%")
+                ->orwhere("name", "like", "%$request->q%")->orderBy('id', 'DESC')->get();
+            return response()->json([
+                'success' => true,
+                'user' => UserResource::collection($data)
+            ], 201);
+        }
+        $data = $this->userModel
+            ->query()
+            ->where('type', 'employee')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'user' => UserResource::collection($data)
+        ], 201);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

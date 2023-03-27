@@ -10,6 +10,7 @@ use Modules\Order\Entities\Order;
 use Modules\Review\Entities\Review;
 use Modules\Review\Transformers\ReviewResource;
 use Modules\Service\Entities\Service;
+use Modules\Worker\Transformers\WorkerResource;
 
 class ServiceResource extends JsonResource
 {
@@ -42,14 +43,13 @@ class ServiceResource extends JsonResource
             'description' => $this->description,
             'price' => $this->price,
             "category" => $this->category->title,
-            "offer_id" => $this->offer_id,
             'active' => $this->active,
-            'workers' => $this->workers,
+            'workers' => WorkerResource::collection($this->workers),
             'images' => $this->getFirstMediaUrl('services'),
             'Review' => ReviewResource::collection($this->revices),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'rate' => $rate,
+            'rate' => $rate ?? 0,
             'is_favorite' => $is_favorite,
         ];
     }

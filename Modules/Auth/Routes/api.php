@@ -83,6 +83,7 @@ Route::middleware(['user_api'])->prefix("admin")->group(function () {
     Route::post('update-users/{id}', [UserController::class, 'update']);
     Route::delete('/delete-user/{id}', [UserController::class, 'destroy']);
     Route::get('all-users', [UserController::class, 'index']);
+    Route::get('all-employee', [UserController::class, 'allEmployee']);
     Route::get('Admin/profile', [AdminProfileController::class, 'AdminProfile']);
     Route::post('update/profile', [AdminProfileController::class, 'AdminUpdateProfile']);
     Route::post('Admin-change-password', [AdminChangePasswordAController::class, 'adminChangePassword']);
