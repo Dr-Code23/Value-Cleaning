@@ -39,11 +39,11 @@ class AboutController extends Controller
 
     public function store(CreateAboutRequest $request)
     {
-        $permission = $this->aboutModel->create($request->all());
+        $about = $this->aboutModel->create($request->all());
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'permission' => $permission
+            'permission' => $about
         ], 200);
 
     }
@@ -55,11 +55,11 @@ class AboutController extends Controller
      */
     public function show($id)
     {
-        $permission = $this->aboutModel->query()->where('id', $id)->first();
+        $about = $this->aboutModel->query()->where('id', $id)->first();
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'permission' => $permission
+            'permission' => $about
         ], 200);
 
     }
@@ -73,13 +73,13 @@ class AboutController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $permission = $this->aboutModel->query()->where('id', $id)->first();
+        $about = $this->aboutModel->query()->where('id', $id)->first();
 
-        $permission->update($request);
+        $about->update($request);
         return response()->json([
             'success' => true,
             'message' => 'success update',
-            'permission' => $permission
+            'permission' => $about
         ], 200);
     }
 
@@ -90,8 +90,8 @@ class AboutController extends Controller
      */
     public function destroy($id)
     {
-        $permission = $this->aboutModel->query()->where('id', $id)->first();
-        $permission->delete();
+        $about = $this->aboutModel->query()->where('id', $id)->first();
+        $about->delete();
         return response()->json([
             'success' => true,
             'message' => 'success delete',
