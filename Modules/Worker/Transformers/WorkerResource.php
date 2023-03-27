@@ -25,7 +25,7 @@ class WorkerResource extends JsonResource
             'NIN' => $this->NIN,
             'active'=>$this->active,
             'review'=> ReviewWorkerResource::collection($this->revices) ,
-            'count'  => Worker::count(),
+            'count'  => Worker::count() ?? 0,
             'photo'  => $this->getFirstMediaUrl('workers'),
         ];    }
 }

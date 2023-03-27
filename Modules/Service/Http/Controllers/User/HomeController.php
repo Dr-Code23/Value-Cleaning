@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Announcement\Entities\Announcement;
 use Modules\Announcement\Transformers\AnnouncementResource;
+use Modules\Auth\Entities\SendNotification;
 use Modules\Category\Entities\Category;
 use Modules\Category\Transformers\CategoryResource;
 use Modules\Favorite\Entities\Favorite;
@@ -29,7 +30,8 @@ class HomeController extends Controller
         $Service = Service::where('active', 1)->get();
         $categories = Category::latest()->get();
         $announcement = Announcement::latest()->get();
-        return response()->json(["announcement" => AnnouncementResource::collection($announcement), "Service" => SubServiceResource::collection($Service), "categories" => CategoryResource::collection($categories)]);
+        $notification = SendNotification::where('is_read', false)->count();
+        return response()->json(['notification' => $notification ?? 0, "announcement" => AnnouncementResource::collection($announcement), "Service" => SubServiceResource::collection($Service), "categories" => CategoryResource::collection($categories)]);
 
     }
 
@@ -66,7 +68,7 @@ class HomeController extends Controller
 
     public function jobDone($id)
     {
-        $job_done = Order::where(["service_id" => $id, 'status' => 'Finished'])->count();
+        $job_done = Order::where(["service_id" => $id, 'status' => 'finished'])->count();
         return ['statusCode' => 200, 'status' => true, 'job_done' => $job_done];
     }
 

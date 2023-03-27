@@ -11,6 +11,7 @@ use Modules\Review\Entities\Review;
 use Modules\Review\Transformers\ReviewResource;
 use Modules\Service\Entities\Service;
 use Modules\Worker\Transformers\WorkerResource;
+use Modules\Worker\Transformers\WorkerShowResource;
 
 class ServiceResource extends JsonResource
 {
@@ -34,9 +35,7 @@ class ServiceResource extends JsonResource
             $is_favorite = false;
         }
         $rate = Review::where('service_id', $this->id)->avg('star_rating');
-        if (!$rate) {
-            $rate = 0;
-        }
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -44,7 +43,7 @@ class ServiceResource extends JsonResource
             'price' => $this->price,
             "category" => $this->category->title,
             'active' => $this->active,
-            'workers' => WorkerResource::collection($this->workers),
+            'workers' => WorkerShowResource::collection($this->workers),
             'images' => $this->getFirstMediaUrl('services'),
             'Review' => ReviewResource::collection($this->revices),
             'created_at' => $this->created_at,
