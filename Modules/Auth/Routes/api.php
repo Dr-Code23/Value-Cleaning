@@ -1,11 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Modules\Auth\Http\Controllers\Api\Admin\AboutController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminChangePasswordAController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminController;
 use Modules\Auth\Http\Controllers\Api\Admin\AdminProfileController;
+use Modules\Auth\Http\Controllers\Api\Admin\FrontEnd\AboutController;
+use Modules\Auth\Http\Controllers\Api\Admin\FrontEnd\ContactUsController;
+use Modules\Auth\Http\Controllers\Api\Admin\FrontEnd\FooterController;
+use Modules\Auth\Http\Controllers\Api\Admin\FrontEnd\TermsAndConditionsController;
 use Modules\Auth\Http\Controllers\Api\Admin\RoleController;
 use Modules\Auth\Http\Controllers\Api\Admin\SendNotificationController;
 use Modules\Auth\Http\Controllers\Api\Admin\UserController;
@@ -49,6 +51,7 @@ Route::middleware(['user_api'])->group(function () {
     Route::post('change-password', [ChangePasswordController::class, 'changePassword']);
     Route::delete('delete-account', [UserProfileController::class, 'deleteAccount']);
     Route::get('notification', [AuthController::class, 'notification']);
+    Route::get('unreadNotification', [AuthController::class, 'unreadNotification']);
     Route::delete('deleteNotification/{id}', [AuthController::class, 'deleteNotification']);
     Route::get('about', [AboutController::class, 'index']);
 
@@ -61,14 +64,6 @@ Route::middleware(['user_api'])->group(function () {
 
 Route::post('companyRegister', [CompanyController::class, 'companyRegister']);
 
-Route::middleware(['user_api', 'role:company'])->group(function () {
-
-    Route::get('logout', [UserProfileController::class, 'logout']);
-    Route::get('profile', [UserProfileController::class, 'profile']);
-    Route::post('update/profile', [UserProfileController::class, 'updateProfile']);
-    Route::post('change-password', [ChangePasswordController::class, 'changePassword']);
-
-});
 
 /**
  * admin
@@ -94,6 +89,18 @@ Route::middleware(['user_api'])->prefix("admin")->group(function () {
     Route::post('send', [SendNotificationController::class, 'sendNotification']);
     Route::get('all', [AdminController::class, 'all']);
     Route::apiresource('about', AboutController::class);
+    Route::apiresource('footer', FooterController::class,);
+    Route::apiresource('contact-us', ContactUsController::class,);
+    Route::apiresource('terms-and-conditions', TermsAndConditionsController::class,);
 
 
 });
+/**
+ *  FrontEnd --> Footer , ContactUs and  About
+ */
+
+Route::post('contact-us', [ContactUsController::class, 'store']);
+Route::get('footers', [FooterController::class, 'index']);
+Route::get('about', [AboutController::class, 'index']);
+
+

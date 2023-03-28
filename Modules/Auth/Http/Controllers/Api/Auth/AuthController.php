@@ -119,6 +119,9 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function notification()
     {
 
@@ -126,6 +129,20 @@ class AuthController extends Controller
 
     }
 
+    /**
+     * @return mixed
+     */
+    public function unreadNotification()
+    {
+
+        return $this->UserRepository->unreadNotification();
+
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function deleteNotification($id)
     {
 

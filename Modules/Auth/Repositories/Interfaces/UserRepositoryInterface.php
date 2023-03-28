@@ -24,6 +24,8 @@ interface UserRepositoryInterface
 
     public function notification();
 
+    public function unreadNotification();
+
     public function deleteNotification($id);
 
     public function companyRegister($data);

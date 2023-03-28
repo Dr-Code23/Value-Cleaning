@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Modules\Auth\Emails\EventMail;
 use Modules\Auth\Entities\Notification;
+use Modules\Auth\Entities\SendNotification;
+use Modules\Auth\Entities\TermsAndConditions;
 use Modules\Auth\Events\NewCompany;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 use Modules\Auth\Transformers\CompanyResource;
@@ -21,7 +23,7 @@ class UserRepository implements UserRepositoryInterface
     private $userModel;
     private $notificationModel;
 
-    public function __construct(User $user, Notification $notification)
+    public function __construct(User $user, SendNotification $notification)
     {
         $this->userModel = $user;
         $this->notificationModel = $notification;
@@ -169,9 +171,12 @@ class UserRepository implements UserRepositoryInterface
     {
         $id = Auth::id();
         $user = $this->userModel->find($id);
-
-        return ['statusCode' => 200, 'status' => true,
-            'data' => new UserResource($user)
+        $termsAndConditions = TermsAndConditions::all();
+        return [
+            'statusCode' => 200,
+            'status' => true,
+            'data' => new UserResource($user),
+            'termsAndConditions' => $termsAndConditions ?? [],
         ];
     }
 
@@ -239,6 +244,22 @@ class UserRepository implements UserRepositoryInterface
             ->query()
             ->where('user_id', Auth::id())
             ->markAsRead()
+            ->get();
+        return ['statusCode' => 200, 'status' => true,
+            'data' => $notification
+        ];
+
+    }
+
+    /**
+     * @return array
+     */
+
+    public function unreadNotification()
+    {
+        $notification = $this->notificationModel
+            ->query()
+            ->where(['user_id' => Auth::id(), 'is_read' => false])
             ->get();
         return ['statusCode' => 200, 'status' => true,
             'data' => $notification

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Order\Http\Requests\CreatePaymentRequest;
 use Modules\Order\Repositories\Interfaces\OrderRepositoryInterface;
 use Modules\Order\Repositories\Interfaces\PaymentRepositoryInterface;
 
@@ -17,7 +18,8 @@ class StripeController extends Controller
     {
         $this->PaymentRepository = $PaymentRepository;
     }
-    public function makePayment(Request $request)
+
+    public function makePayment(CreatePaymentRequest $request)
 
     {
         return $this->PaymentRepository->makePayment($request);
@@ -31,7 +33,7 @@ class StripeController extends Controller
 
     public function checkoutPayment(Request $request)
     {
-    return $this->PaymentRepository->checkoutPayment($request);
+        return $this->PaymentRepository->checkoutPayment($request);
 
     }
 

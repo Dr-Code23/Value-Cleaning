@@ -1,8 +1,7 @@
 <?php
 
-namespace Modules\Auth\Http\Controllers\Api\Admin;
+namespace Modules\Auth\Http\Controllers\Api\Admin\FrontEnd;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;

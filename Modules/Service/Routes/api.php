@@ -36,11 +36,13 @@ Route::middleware(['user_api', 'setlocale'])->prefix("admin")->group(function ()
 
 
 });
-Route::middleware(['user_api', 'role:user', 'setlocale'])->group(function () {
+Route::middleware(['user_api', 'setlocale'])->group(function () {
     Route::get('userHome', [HomeController::class, 'userHome']);
     Route::get('all/SubService/{id}', [HomeController::class, 'subService']);
     Route::get('service/{id}', [HomeController::class, 'serviceDetails']);
     Route::get('jobDone/{id}', [HomeController::class, 'jobDone']);
     Route::get('top-services', [HomeController::class, 'topServices']);
+    Route::get('userHome', [HomeController::class, 'userHome']);
+
 
 });
