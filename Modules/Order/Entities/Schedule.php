@@ -15,6 +15,7 @@ class Schedule extends Model
 
     protected $guarded = [];
 
+    protected $table = 'Schedules';
 
     public function order()
     {

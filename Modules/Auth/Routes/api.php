@@ -78,6 +78,7 @@ Route::middleware(['user_api'])->prefix("admin")->group(function () {
     Route::get('showCompany/{id}', [CompanyController::class, 'showCompany']);
     Route::get('show-user/{id}', [UserController::class, 'show']);
     Route::apiresource('roles', RoleController::class);
+    Route::apiresource('users', UserController::class);
     Route::post('update-users/{id}', [UserController::class, 'update']);
     Route::delete('/delete-user/{id}', [UserController::class, 'destroy']);
     Route::get('all-users', [UserController::class, 'index']);
