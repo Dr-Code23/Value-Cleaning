@@ -74,26 +74,28 @@ class UserRepository implements UserRepositoryInterface
                             'error' => 'Account not approved yet'
                         ], 401);
                 }
-                if ($user->type = 'company') {
-                    return ['statusCode' => 200, 'status' => true,
-                        'message' => 'company successfully registered ',
+                if ($user->type == 'company') {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Company successfully logged in.',
                         'data' => new CompanyResource($user),
                         'token' => $token
-                    ];
-                } elseif ($user->type = 'user') {
-
+                    ]);
+                } elseif ($user->type == 'user') {
                     $user->update(['device_token' => $data->device_token]);
 
-                    return ['statusCode' => 200, 'status' => true,
-                        'message' => 'user successfully registered ',
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'User successfully logged in.',
                         'data' => new UserResource($user),
                         'token' => $token
-                    ];
-                } else {
-                    return response()->json(['error' => 'UnAuthorised'], 401);
-
-
+                    ]);
                 }
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized access.'
+                ], 401);
 
 
             } else {

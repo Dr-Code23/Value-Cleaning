@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Auth\Entities\ContactUs;
+use Modules\Auth\Events\Contact_us;
 
 class ContactUsController extends Controller
 {
@@ -45,7 +46,7 @@ class ContactUsController extends Controller
     {
         $message = $this->contactUsModel->create($request->all());
 
-        event(new ContactUs($message));
+        event(new Contact_us($message));
 
         return response()->json($message, 201);
 

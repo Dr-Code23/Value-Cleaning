@@ -22,7 +22,7 @@ class TermsAndConditionsController extends Controller
     public function index()
     {
         $termsAndConditions = $this->termsAndConditionsModel->all();
-        return response()->json($termsAndConditions);
+        return response()->json(['success' => true, $termsAndConditions]);
     }
 
     public function store(CreateTermsAndConditionsRequest $request)
@@ -34,13 +34,13 @@ class TermsAndConditionsController extends Controller
 
         $termsAndConditions->save();
 
-        return response()->json(['message' => 'Terms and conditions created successfully']);
+        return response()->json(['success' => true, 'message' => 'Terms and conditions created successfully']);
     }
 
     public function show($id)
     {
         $termsAndConditions = $this->termsAndConditionsModel->find($id);
-        return response()->json($termsAndConditions);
+        return response()->json(['success' => true, $termsAndConditions]);
     }
 
     public function update(updateTermsAndConditionsRequest $request, $id)
@@ -52,7 +52,7 @@ class TermsAndConditionsController extends Controller
 
         $termsAndConditions->save();
 
-        return response()->json(['message' => 'Terms and conditions updated successfully']);
+        return response()->json(['success' => true, 'message' => 'Terms and conditions updated successfully']);
     }
 
     public function destroy($id)
@@ -60,6 +60,6 @@ class TermsAndConditionsController extends Controller
         $termsAndConditions = $this->termsAndConditionsModel->find($id);
         $termsAndConditions->delete();
 
-        return response()->json(['message' => 'Terms and conditions deleted successfully']);
+        return response()->json(['success' => true, 'message' => 'Terms and conditions deleted successfully']);
     }
 }

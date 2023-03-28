@@ -23,11 +23,11 @@ class AboutController extends Controller
      */
     public function index()
     {
-        $permission = $this->aboutModel->latest()->get();
+        $about = $this->aboutModel->latest()->get();
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'permission' => $permission
+            'about' => $about
         ], 200);
     }
 
@@ -42,7 +42,7 @@ class AboutController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'permission' => $about
+            'about' => $about
         ], 200);
 
     }
@@ -58,7 +58,7 @@ class AboutController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'permission' => $about
+            'about' => $about
         ], 200);
 
     }
@@ -78,7 +78,7 @@ class AboutController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success update',
-            'permission' => $about
+            'about' => $about
         ], 200);
     }
 

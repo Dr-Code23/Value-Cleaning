@@ -7,7 +7,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ContactUs implements ShouldBroadcast
+class Contact_us implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

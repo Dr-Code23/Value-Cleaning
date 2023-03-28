@@ -100,7 +100,7 @@ Route::middleware(['user_api'])->prefix("admin")->group(function () {
  */
 
 Route::post('contact-us', [ContactUsController::class, 'store']);
-Route::get('footers', [FooterController::class, 'index']);
+Route::get('footer', [FooterController::class, 'index']);
 Route::get('about', [AboutController::class, 'index']);
 
 

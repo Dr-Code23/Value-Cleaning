@@ -29,6 +29,8 @@ class UserResource extends JsonResource
             'avatar' => $this->providers,
             'count' => User::count(),
             'type' => $this->type,
+            'companyId' => $this->companyId ?? 0,
+
 
         ];
     }
