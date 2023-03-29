@@ -26,6 +26,8 @@ class PaymentRepository implements PaymentRepositoryInterface
                 'exp_month' => $data->exp_month,
                 'exp_year' => $data->exp_year,
                 'cvc' => $data->cvc,
+                'name' => $data->name ?? '',
+
             ],
         ]);
 
@@ -43,10 +45,12 @@ class PaymentRepository implements PaymentRepositoryInterface
             $stripe = new StripeClient(env('STRIPE_SECRET'));
             $cards = $stripe->customers->allSources(
                 $transaction,
-                ['object' => 'card', 'limit' => 7]
             // you can remove the limit key to get all the cards
             );
-            return $cards;
+            return ['statusCode' => 200,
+                'status' => true,
+                'message' => 'get successfully ',
+                'data' => $cards->data,];
         } catch (Exception $e) {
             Log::error(
                 'Failed to fetch user cards',
