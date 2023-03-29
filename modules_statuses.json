@@ -8,5 +8,6 @@
     "Order": true,
     "Review": true,
     "Announcement": true,
-    "Chat": true
+    "Chat": true,
+    "Expenses": true
 }

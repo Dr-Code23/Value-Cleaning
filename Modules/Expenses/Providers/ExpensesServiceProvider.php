@@ -1,22 +1,27 @@
 <?php
 
-namespace Modules\Chat\Providers;
+namespace Modules\Expenses\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
-use Modules\Chat\Repositories\Repository\MessageRepository;
+use Modules\Expenses\Repositories\Interfaces\ExpenseInterface;
+use Modules\Expenses\Repositories\Interfaces\PaymentInterface;
+use Modules\Expenses\Repositories\Interfaces\TypeInterface;
+use Modules\Expenses\Repositories\Repository\ExpenseRepository;
+use Modules\Expenses\Repositories\Repository\PaymentRepository;
+use Modules\Expenses\Repositories\Repository\TypeRepository;
 
-class ChatServiceProvider extends ServiceProvider
+class ExpensesServiceProvider extends ServiceProvider
 {
     /**
      * @var string $moduleName
      */
-    protected $moduleName = 'Chat';
+    protected $moduleName = 'Expenses';
 
     /**
      * @var string $moduleNameLower
      */
-    protected $moduleNameLower = 'chat';
+    protected $moduleNameLower = 'expenses';
 
     /**
      * Boot the application events.
@@ -39,7 +44,9 @@ class ChatServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
-
+        $this->app->bind(ExpenseInterface::class, ExpenseRepository::class);
+        $this->app->bind(TypeInterface::class, TypeRepository::class);
+        $this->app->bind(PaymentInterface::class, PaymentRepository::class);
     }
 
     /**

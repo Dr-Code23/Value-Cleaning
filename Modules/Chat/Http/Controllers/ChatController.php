@@ -5,14 +5,14 @@ namespace Modules\Chat\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Chat\Http\Requests\MessageRequest;
-use Modules\Chat\Repositories\Interfaces\MessageInterface;
+use Modules\Chat\Repositories\Interfaces\ExpenseInterface;
 
 class ChatController extends Controller
 {
     use MessageResponseTrait;
     protected $message;
 
-    public function __construct(MessageInterface $message)
+    public function __construct(ExpenseInterface $message)
     {
         $this->message = $message;
     }
