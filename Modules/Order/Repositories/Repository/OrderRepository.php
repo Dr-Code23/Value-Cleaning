@@ -141,9 +141,8 @@ class OrderRepository implements OrderRepositoryInterface
             }
         }
 
-//        event(new OrderCreated($order));
+        event(new OrderCreated($order));
 //        broadcast(new OrderCreated($order))->toOthers();
-
         return response()->json([
             'statusCode' => 200,
             'status' => true,

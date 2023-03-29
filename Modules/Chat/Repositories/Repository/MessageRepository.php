@@ -88,7 +88,7 @@ class MessageRepository implements MessageInterface
         $room = new Room();
         $room->save();
         $user_1 = auth()->id();
-       $user_2 = User::where('type' , 'admin')->first()->id;
+        $user_2 = User::where('type' , 'admin')->first()->id;
         $user_ids = [$user_1, $user_2];
         $room->users()->sync($user_ids);
         event(new NewRoom($room));
