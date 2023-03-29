@@ -2,6 +2,8 @@
 
 namespace Modules\Order\Events;
 
+use App\Models\User;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -26,7 +28,7 @@ class OrderCreated implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {
@@ -40,8 +42,9 @@ class OrderCreated implements ShouldBroadcast
      */
     public function broadcastWith()
     {
+        $user = User::where('id', $this->order->user_id)->first();
         return [
-            'message' => 'Order #' . $this->order . ' has been created.',
+            'message' => 'Order #' . $this->order->id . ' has been created.' . ' by user ' . $user->name,
         ];
     }
 }

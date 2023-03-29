@@ -9,9 +9,6 @@
     "Review": true,
     "Announcement": true,
     "Chat": true,
-<<<<<<< HEAD
-    "Requirement": true
-=======
+    "Requirement": true,
     "Expenses": true
->>>>>>> 5c98bc95bfa440713a05a4fdde3a1338e138a4d3
 }
