@@ -2,7 +2,6 @@
 
 namespace Modules\Service\Http\Controllers\User;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Announcement\Entities\Announcement;
@@ -10,15 +9,12 @@ use Modules\Announcement\Transformers\AnnouncementResource;
 use Modules\Auth\Entities\SendNotification;
 use Modules\Category\Entities\Category;
 use Modules\Category\Transformers\CategoryResource;
-use Modules\Favorite\Entities\Favorite;
-use Modules\Offer\Entities\Offer;
-use Modules\Offer\Transformers\OfferResource;
 use Modules\Order\Entities\Order;
+use Modules\Requirement\Entities\Requirement;
+use Modules\Requirement\Transformers\RequirementResource;
 use Modules\Review\Entities\Review;
 use Modules\Service\Entities\Service;
 use Modules\Service\Entities\SubService;
-use Modules\Service\Http\Requests\CreateSubServiceRequest;
-use Modules\Service\Http\Requests\UpdateSubServiceRequest;
 use Modules\Service\Transformers\ServiceResource;
 use Modules\Service\Transformers\SubServiceResource;
 
@@ -52,6 +48,24 @@ class HomeController extends Controller
         return ['statusCode' => 200,
             'status' => true,
             'data' => $SubService];
+    }
+
+    public function requirement($id)
+    {
+        $requirement = Requirement::where('service_id', $id)->get();
+        return ['statusCode' => 200,
+            'status' => true,
+            'data' => RequirementResource::collection($requirement)];
+    }
+
+    public function countRequirement(Request $request, $id)
+    {
+        $requirement = Requirement::where('id', $id)->first();
+        $requirement->update(['count' => $request['count']]);
+
+        return ['statusCode' => 200,
+            'status' => true,
+            'data' => $requirement];
     }
 
     public function topServices()

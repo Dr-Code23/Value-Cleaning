@@ -24,8 +24,9 @@ class CreateRequest extends FormRequest
             'repeat' => 'required',
             'service_id' => 'required',
             'sub_service_id' => 'sometimes|array',
+            'requirement_id' => 'sometimes|array',
+            'count' => 'sometimes|array',
             'total_price' => 'nullable',
-            'delivery_price' => 'nullable',
             'gallery' => 'sometimes|array',
 
 

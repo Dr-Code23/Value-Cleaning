@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Modules\Requirement\Entities\Requirement;
 use Modules\Service\Entities\Service;
 use Modules\Service\Entities\SubService;
 use Modules\Worker\Entities\Worker;
@@ -56,6 +57,11 @@ class Order extends Model implements HasMedia
     public function sub_services()
     {
         return $this->belongsToMany(SubService::class);
+    }
+
+    public function requirements()
+    {
+        return $this->belongsToMany(Requirement::class);
     }
 
     public function schedules()

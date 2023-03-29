@@ -4,12 +4,10 @@ namespace Modules\Order\Transformers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
-use Modules\Order\Entities\Order;
-use Modules\Service\Entities\SubService;
+use Illuminate\Support\Facades\DB;
+use Modules\Requirement\Transformers\RequirementResource;
 use Modules\Service\Transformers\ServiceResource;
 use Modules\Service\Transformers\SubServiceResource;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class OrderResource extends JsonResource
 {
@@ -36,6 +34,8 @@ class OrderResource extends JsonResource
             'total_price' => $this->total_price,
             'order_code' => $this->order_code,
             'subService' => SubServiceResource::collection($this->sub_services),
+            'requirement' => RequirementResource::collection($this->requirements),
+            'count' => DB::table('order_requirement')->where('order_id', $this->id)->select('count')->get(),
             'gallery1' => $this->getMedia('Orders'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

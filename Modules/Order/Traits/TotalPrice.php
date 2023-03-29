@@ -2,10 +2,11 @@
 
 namespace Modules\Order\Traits;
 
+use Illuminate\Support\Facades\DB;
 use Modules\Offer\Entities\Offer;
+use Modules\Requirement\Entities\Requirement;
 use Modules\Service\Entities\Service;
 use Modules\Service\Entities\SubService;
-use Nette\Utils\Arrays;
 
 trait TotalPrice
 {
@@ -15,24 +16,33 @@ trait TotalPrice
      */
     public function totalPrice($data)
     {
+
         $subservicesPrices = 0;
         if ($data['sub_service_id']) {
             $subservicesPrices = SubService::whereIn('id', $data['sub_service_id'])->sum('price');
         }
+        $requirementPrices = 0;
+        if ($data['requirement_id']) {
+            $requirements = Requirement::whereIn('id', $data['requirement_id'])->sum('requirement_price');
+            $count = array_sum($data['count']);
 
-        $servicesPrice = Service::where('id', $data['service_id'])->first('price');
-        $offer = Offer::where('service_id', $data['service_id'])->first('offer_percent');
-        if ($offer && $subservicesPrices) {
-            $servicePrice = $servicesPrice - ($servicesPrice * $offer / 100);
-            $totalPrice = $servicePrice + $subservicesPrices;
-            return $totalPrice;
-        } elseif ($subservicesPrices) {
+            $requirementPrices = $requirements * $count;
 
-            return $totalPrice = ($subservicesPrices + $servicesPrice->price);
-        } else {
-            return $totalPrice = $servicesPrice->price;
         }
 
+        $service = Service::where('id', $data['service_id'])->first();
+        $servicePrice = $service->price;
+
+        $offerPercent = 0;
+        $offer = Offer::where('service_id', $service->id)->first();
+        if ($offer) {
+            $offerPercent = $offer->offer_percent;
+        }
+
+        $discountAmount = $servicePrice * $offerPercent / 100;
+        $totalPrice = $servicePrice + $subservicesPrices + $requirementPrices - $discountAmount;
+
+        return $totalPrice;
     }
 
 

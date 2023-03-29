@@ -29,7 +29,9 @@ class PaymentRepository implements PaymentRepositoryInterface
             ],
         ]);
 
-        return $this->storePayment($token);
+        $data = $this->storePayment($token);
+        return ['statusCode' => 200,
+            'status' => true, 'message' => 'add payment Success', 'data' => $data];
     }
 
     public function allPayment()

@@ -15,16 +15,7 @@ class Worker extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    protected $fillable = [
-        'name',
-        'email',
-        'address',
-        'latitude',
-        'longitude',
-        'phone',
-        'NIN',
-
-    ];
+    protected $guarded = [];
 
 
     public function services()

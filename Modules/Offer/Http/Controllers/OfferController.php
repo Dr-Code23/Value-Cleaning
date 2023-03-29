@@ -34,7 +34,7 @@ class OfferController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param Request $request
-     * @return Renderable
+     * @return array
      */
     public function store(CreateRequest $request)
     {
@@ -48,7 +48,7 @@ class OfferController extends Controller
     /**
      * Show the specified resource.
      * @param int $id
-     * @return Renderable
+     * @return array
      */
     public function show($id)
     {
@@ -62,7 +62,7 @@ class OfferController extends Controller
      * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
-     * @return Renderable
+     * @return array
      */
     public function update(UpdateRequest $request, $id)
     {
@@ -78,7 +78,7 @@ class OfferController extends Controller
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Renderable
+     * @return array
      */
     public function destroy($id)
     {

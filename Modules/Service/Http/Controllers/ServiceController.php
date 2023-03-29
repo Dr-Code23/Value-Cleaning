@@ -57,7 +57,7 @@ class ServiceController extends Controller
 
     public function addServiceWorker(Request $request, $id)
     {
-        $service = $this->serviceRepository->addServiceWoeker($request, $id);
+        $service = $this->serviceRepository->addServiceWorker($request, $id);
         return ['statusCode' => 200, 'status' => true, 'data' => $service];
     }
 

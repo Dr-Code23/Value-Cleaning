@@ -4,11 +4,13 @@ namespace Modules\Offer\Http\Controllers\Admin;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 use Modules\Offer\Entities\Offer;
 use Modules\Offer\Http\Requests\CreateRequest;
 use Modules\Offer\Http\Requests\UpdateRequest;
 use Modules\Offer\Transformers\OfferResource;
+use Modules\Requirement\Transformers\RequirementResource;
 
 class OfferController extends Controller
 {
@@ -18,9 +20,10 @@ class OfferController extends Controller
     {
         $this->offerModel = $offer;
     }
+
     /**
      * Display a listing of the resource.
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
@@ -32,26 +35,26 @@ class OfferController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param Request $request
-     * @return Renderable
+     * @return array
      */
     public function store(CreateRequest $request)
     {
 
-        $offer=$this->offerModel->create($request->all());
+        $offer = $this->offerModel->create($request->all());
 
-        return ['statusCode' => 200,'status' => true ,'message'=>'Created successfully' ,'data' => new OfferResource($offer) ];
+        return ['statusCode' => 200, 'status' => true, 'message' => 'Created successfully', 'data' => new OfferResource($offer)];
 
     }
 
     /**
      * Show the specified resource.
      * @param int $id
-     * @return Renderable
+     * @return array
      */
     public function show($id)
     {
-        $offer=$this->offerModel->find($id);
-        return ['statusCode' => 200,'status' => true  ,'data' => new OfferResource($offer) ];
+        $offer = $this->offerModel->find($id);
+        return ['statusCode' => 200, 'status' => true, 'data' => new OfferResource($offer)];
 
     }
 
@@ -60,7 +63,7 @@ class OfferController extends Controller
      * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
-     * @return Renderable
+     * @return array
      */
     public function update(UpdateRequest $request, $id)
     {
@@ -69,20 +72,20 @@ class OfferController extends Controller
         $offer->update();
 
 
-        return ['statusCode' => 200,'status' => true ,'message'=>'Updated successfully' ,'data' => new OfferResource($offer) ];
+        return ['statusCode' => 200, 'status' => true, 'message' => 'Updated successfully', 'data' => new OfferResource($offer)];
 
     }
 
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Renderable
+     * @return array
      */
     public function destroy($id)
     {
         $offer = $this->offerModel->find($id);
         $offer->delete();
-        return ['statusCode' => 200,'status' => true ,'message'=>'Deleted successfully' ];
+        return ['statusCode' => 200, 'status' => true, 'message' => 'Deleted successfully'];
 
     }
 }
