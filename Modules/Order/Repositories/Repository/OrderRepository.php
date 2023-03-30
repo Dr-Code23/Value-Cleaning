@@ -118,21 +118,14 @@ class OrderRepository implements OrderRepositoryInterface
         if ($data['sub_service_id']) {
             $order->sub_services()->sync($data['sub_service_id']);
         }
-        if ($data['requirement_id']) {
+        if (!empty($data['requirement_id'])) {
             $requirements = [];
-            for ($i = 0; $i < count($data['requirement_id']); $i++) {
-                $requirements[] = [
-                    'requirement_id' => (int)$data['requirement_id'][$i],
-                    'count' => (int)$data['count'][$i]
-                ];
+            foreach ($data['requirement_id'] as $key => $requirement_id) {
+                $count = isset($data['count'][$key]) ? (int)$data['count'][$key] : 0;
+                $requirements[$requirement_id] = ['count' => $count];
             }
 
-            $dataToSync = [];
-            foreach ($requirements as $requirement) {
-                $dataToSync[(int)$requirement['requirement_id']] = ['count' => (int)$requirement['count']];
-            }
-            $order->requirements()->sync($dataToSync);
-
+            $order->requirements()->sync($requirements);
         }
 
         if ($data->gallery) {

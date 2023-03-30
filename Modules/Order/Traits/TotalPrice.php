@@ -22,13 +22,19 @@ trait TotalPrice
             $subservicesPrices = SubService::whereIn('id', $data['sub_service_id'])->sum('price');
         }
         $requirementPrices = 0;
-        if ($data['requirement_id']) {
-            $requirements = Requirement::whereIn('id', $data['requirement_id'])->sum('requirement_price');
-            $count = array_sum($data['count']);
 
-            $requirementPrices = $requirements * $count;
+        if (!empty($data['requirement_id'])) {
+            $requirements = Requirement::whereIn('id', $data['requirement_id'])->get();
 
+            $result = [];
+            foreach ($requirements as $key => $requirement) {
+                $result[] = $requirement->requirement_price * (isset($data['count'][$key]) ? $data['count'][$key] : 0);
+
+            }
+
+            $requirementPrices = array_sum($result);
         }
+
 
         $service = Service::where('id', $data['service_id'])->first();
         $servicePrice = $service->price;
