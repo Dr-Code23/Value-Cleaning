@@ -58,15 +58,6 @@ class HomeController extends Controller
             'data' => RequirementResource::collection($requirement)];
     }
 
-    public function countRequirement(Request $request, $id)
-    {
-        $requirement = Requirement::where('id', $id)->first();
-        $requirement->update(['count' => $request['count']]);
-
-        return ['statusCode' => 200,
-            'status' => true,
-            'data' => $requirement];
-    }
 
     public function topServices()
     {

@@ -34,7 +34,6 @@ class ServiceResource extends JsonResource
         } else {
             $is_favorite = false;
         }
-        $rate = Review::where('service_id', $this->id)->avg('star_rating');
 
         return [
             'id' => $this->id,
@@ -48,7 +47,7 @@ class ServiceResource extends JsonResource
             'Review' => ReviewResource::collection($this->revices),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'rate' => $rate ?? 0,
+            'rate' => $this->revices->avg('star_rating') ?? 0,
             'is_favorite' => $is_favorite,
         ];
     }

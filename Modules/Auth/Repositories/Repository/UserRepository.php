@@ -34,7 +34,7 @@ class UserRepository implements UserRepositoryInterface
         $user = $this->userModel->create([
             'name' => $data->name,
             'email' => $data->email,
-            'address' => $data->address,
+            'address' => json_encode($data['address']),
             'latitude' => $data->latitude,
             'longitude' => $data->latitude,
             'phone' => $data->phone,
@@ -190,6 +190,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $id = Auth::id();
         $user = $this->userModel->find($id);
+        $data['address'] = json_encode($data['address']);
         $user->update($data->all());
         if ($data->hasFile('photo')) {
             $user->media()->delete();

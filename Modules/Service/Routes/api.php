@@ -40,7 +40,6 @@ Route::middleware(['user_api', 'setlocale'])->group(function () {
     Route::get('userHome', [HomeController::class, 'userHome']);
     Route::get('all/SubService/{id}', [HomeController::class, 'subService']);
     Route::get('all/requirement/{id}', [HomeController::class, 'requirement']);
-    Route::post('count-requirement/{id}', [HomeController::class, 'countRequirement']);
     Route::get('service/{id}', [HomeController::class, 'serviceDetails']);
     Route::get('jobDone/{id}', [HomeController::class, 'jobDone']);
     Route::get('top-services', [HomeController::class, 'topServices']);

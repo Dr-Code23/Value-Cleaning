@@ -70,20 +70,20 @@ class AdminRepository implements AdminRepositoryInterface
         }
         if (Auth::check()) {
 
-            if (!auth('api')->user()->type = 'admin' || 'employee') {
+            if (auth('api')->user()->type == 'admin' || 'employee') {
+                $user = auth()->user();
 
-                return response()->json(['error' => 'UnAuthorised'], 401);
+                return ['statusCode' => 200, 'status' => true,
+                    'message' => 'Admin successfully registered ',
+                    'data' => new UserResource($user),
+                    'token' => $token
+                ];
+
+
             }
-
+            return response()->json(['statusCode' => 401, 'status' => false, 'error' => 'UnAuthorised'], 401);
         }
 
-        $user = auth()->user();
-
-        return ['statusCode' => 200, 'status' => true,
-            'message' => 'Admin successfully registered ',
-            'data' => new UserResource($user),
-            'token' => $token
-        ];
     }
 
     public function forgotPassword($data)
