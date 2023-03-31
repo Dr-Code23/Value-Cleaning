@@ -27,6 +27,9 @@ interface MessageInterface
 
     // delete room
     public function deleteMessage($request);
+
+    // latest message
+    public function latest($request);
 }
 
 

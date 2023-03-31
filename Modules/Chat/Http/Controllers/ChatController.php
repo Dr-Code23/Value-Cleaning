@@ -5,14 +5,14 @@ namespace Modules\Chat\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Chat\Http\Requests\MessageRequest;
-use Modules\Chat\Repositories\Interfaces\ExpenseInterface;
+use Modules\Chat\Repositories\Interfaces\MessageInterface;
 
 class ChatController extends Controller
 {
     use MessageResponseTrait;
     protected $message;
 
-    public function __construct(ExpenseInterface $message)
+    public function __construct(MessageInterface $message)
     {
         $this->message = $message;
     }
@@ -90,7 +90,9 @@ class ChatController extends Controller
     //  get SoftDeletes
     public function getMessage()
     {
-
         return $message = $this->message->getSoft();
+    }
+    public  function latestMessage(Request $request){
+        return $message = $this->message->latest($request);
     }
 }
