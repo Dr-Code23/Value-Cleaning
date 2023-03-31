@@ -48,4 +48,6 @@ Route::middleware(['user_api', 'permission:order-list|order-create|order-edit|or
     Route::get('finishedOrder', [OrderAdminController::class, 'finishedOrder']);
     Route::get('show/order/{id}', [OrderAdminController::class, 'show']);
     Route::delete('delete/Order/{id}', [OrderAdminController::class, 'destroy']);
+    Route::get('home', [OrderAdminController::class, 'home']);
+
 });

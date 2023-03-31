@@ -68,21 +68,23 @@ class AdminRepository implements AdminRepositoryInterface
                 'message' => 'Could not create token.',
             ], 500);
         }
-        if (Auth::check()) {
-
-            if (auth('api')->user()->type == 'admin' || 'employee') {
-                $user = auth()->user();
-
-                return ['statusCode' => 200, 'status' => true,
-                    'message' => 'Admin successfully registered ',
-                    'data' => new UserResource($user),
-                    'token' => $token
-                ];
 
 
-            }
+        if (Auth::user()->type == 'admin') {
+
+            $user = auth()->user();
+
+            return ['statusCode' => 200, 'status' => true,
+                'message' => 'Admin successfully registered ',
+                'data' => new UserResource($user),
+                'token' => $token
+            ];
+
+
+        } else {
             return response()->json(['statusCode' => 401, 'status' => false, 'error' => 'UnAuthorised'], 401);
         }
+
 
     }
 

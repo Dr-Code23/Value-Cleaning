@@ -145,11 +145,41 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     {
 
         $toDay = Order::query()->whereDate('created_at', Carbon::today())->count();
+        $toMonth = Order::query()
+            ->whereDate('created_at', '>=', Carbon::now()->startOfMonth())
+            ->whereDate('created_at', '<=', Carbon::now()->endOfMonth())
+            ->count();
+        $toYear = Order::query()->whereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()])->count();
+        $total_price_atYear = Order::
+        query()
+            ->where('status', 'finished')
+            ->whereBetween('created_at', [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()])
+            ->sum('total_price');
+        $total_price = Order::query()->where('status', 'finished')
+            ->whereDate('created_at', '>=', Carbon::now()->startOfMonth())
+            ->whereDate('created_at', '<=', Carbon::now()->endOfMonth())
+            ->sum('total_price');
+        $all_total_price = Order::query()->where('status', 'finished')->sum('total_price');
         $finished = Order::query()->where('status', 'finished')->count();
+
         $cancel = Order::query()->where('status', 'canceled')->count();
         $process = Order::query()->where('status', 'processing')->count();
-        return response()->json(['toDay' => $toDay, 'finished' => $finished, 'cancel' => $cancel, 'process' => $process]);
+
+        return response()->json([
+            'statusCode' => 200,
+            'status' => true,
+            'all_total_price' => $all_total_price,
+            'total_price_atYear' => $total_price_atYear,
+            'totale_price_atMonth' => $total_price,
+            'toDay' => $toDay,
+            'tomonth' => $toMonth,
+            'toyear' => $toYear,
+            'finished' => $finished,
+            'cancel' => $cancel,
+            'processing' => $process
+        ]);
     }
+
 
     /**
      * @param $id

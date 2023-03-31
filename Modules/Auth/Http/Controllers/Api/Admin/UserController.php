@@ -42,7 +42,7 @@ class UserController extends Controller
         }
         $data = $this->userModel
             ->query()
-            ->where('type', 'user')
+            ->where('type', 'admin')
             ->latest()
             ->get();
 
