@@ -39,6 +39,9 @@ class AboutController extends Controller
     public function store(CreateAboutRequest $request)
     {
         $about = $this->aboutModel->create($request->all());
+        if ($request->hasFile('photo')) {
+            $about->addMediaFromRequest('photo')->toMediaCollection('about');
+        }
         return response()->json([
             'success' => true,
             'message' => 'success',
@@ -75,6 +78,11 @@ class AboutController extends Controller
         $about = $this->aboutModel->query()->where('id', $id)->first();
 
         $about->update($request);
+        if ($request->hasFile('photo')) {
+            $about->media()->delete();
+            $about->addMediaFromRequest('photo')->toMediaCollection('about');
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'success update',

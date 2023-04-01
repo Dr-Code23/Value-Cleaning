@@ -64,7 +64,7 @@ class UserController extends Controller
         }
         $data = $this->userModel
             ->query()
-            ->where('type', 'employee')
+            ->where('type', 'admin')
             ->latest()
             ->get();
 
@@ -95,11 +95,16 @@ class UserController extends Controller
         $input['password'] = Hash::make($input['password']);
 
         $user = $this->userModel->create($input);
+        $user->update($request->all());
+        if ($request->hasFile('photo')) {
+            $user->media()->delete();
+            $user->addMediaFromRequest('photo')->toMediaCollection('avatar');
+        }
         $user->assignRole($request->input('role'));
         return response()->json([
             'success' => true,
             'message' => 'User created successfully',
-            'user' => $user
+            'user' => new UserResource($user)
         ], 201);
 
     }
