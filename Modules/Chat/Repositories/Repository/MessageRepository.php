@@ -20,8 +20,12 @@ class MessageRepository implements MessageInterface
     // get room messages
     public function room($request)
     {
+
         $message = Message::where('room_id',$request->id)->first();
-        $message->update(['seen_at' => Carbon::now()]);
+        if($message != null) {
+            $message->seen_at = Carbon::now();
+            $message->save();
+        }
         $roomId = explode(',', $request->input('id'));
         $rooms = Message::whereHas('room', function ($q) use ($roomId) {
             $q->where('id', $roomId);
@@ -46,11 +50,18 @@ class MessageRepository implements MessageInterface
     {
         $user_1 = auth()->id();
         $user_ids = [$user_1, $request->user_2];
-        $message = Room::has('users', '=', count($user_ids))
+      return  $message = Room::has('users', '=', count($user_ids))
             ->whereHas('users', function ($query) use ($user_ids) {
                 $query->whereIn('user_id', $user_ids);
             }, '=', count($user_ids))->get('id');
-        return $message;
+
+        $latest = Message::where(['room_id' => $request->id])->first();
+        $unread = Message::where('room_id',$request->id)->where('seen_at',0)->count();
+        $data = [
+            'latest' => $latest,
+            'unread' => $unread,
+        ];
+        return $data;
     }
 
     //  send Message
@@ -88,7 +99,8 @@ class MessageRepository implements MessageInterface
         $room = new Room();
         $room->save();
         $user_1 = auth()->id();
-        $user_2 = User::where('type' , 'admin')->first()->id;
+     //   User::where('type' , 'admin')->first()->id;
+        $user_2 = $request->user_2;
         $user_ids = [$user_1, $user_2];
         $room->users()->sync($user_ids);
         event(new NewRoom($room));
@@ -102,6 +114,18 @@ class MessageRepository implements MessageInterface
         $message->seen_at = Carbon::now();
         $message->save();
         return $message;
+    }
+
+    // latest Message
+    public function latest($request)
+    {
+     $latest = Message::where(['room_id' => $request->id])->first();
+     $unread = Message::where('room_id',$request->id)->where('seen_at',0)->count();
+        $data = [
+            'latest' => $latest,
+            'unread' => $unread,
+        ];
+        return $data;
     }
 
     public function deleteMessage($request)

@@ -4,6 +4,7 @@ namespace Modules\Chat\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Chat\Repositories\Interfaces\MessageInterface;
 use Modules\Chat\Repositories\Repository\MessageRepository;
 
 class ChatServiceProvider extends ServiceProvider
@@ -39,6 +40,7 @@ class ChatServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->bind(MessageInterface::class, MessageRepository::class);
 
     }
 
