@@ -10,6 +10,7 @@ use Modules\Chat\Repositories\Interfaces\MessageInterface;
 class ChatController extends Controller
 {
     use MessageResponseTrait;
+
     protected $message;
 
     public function __construct(MessageInterface $message)
@@ -22,7 +23,7 @@ class ChatController extends Controller
     {
         $message = $this->message->getRoom($request);
         if ($message) {
-            return $this->messageResponse(($message), 'Room Found', 201);
+            return $this->messageResponse(($message), 'Room Found', 200);
         }
         return $this->messageResponse(null, 'Room Not Found', 400);
     }
@@ -34,7 +35,7 @@ class ChatController extends Controller
         if (count($message) == null) {
             $message = $this->message->createRoom($request);  // failure
         }
-            return $this->messageResponse(($message), 'Success', 201);
+        return $this->messageResponse(($message), 'Success', 201);
     }
 
     // read Message
@@ -42,7 +43,7 @@ class ChatController extends Controller
     {
         $message = $this->message->readMessage($id);
         if ($message) {
-            return $this->messageResponse(($message), 'The Message Seen', 201);
+            return $this->messageResponse(($message), 'The Message Seen', 200);
         }
         return $this->messageResponse(null, 'The Room Not Save', 400);
     }
@@ -52,7 +53,7 @@ class ChatController extends Controller
     {
         $message = $this->message->deleteMessage($request);
         if ($message) {
-            return $this->messageResponse(($message), 'The room delete', 201);
+            return $this->messageResponse(($message), 'The room delete', 200);
         }
         return $this->messageResponse(null, 'The Room Not delete', 400);
     }
@@ -63,7 +64,7 @@ class ChatController extends Controller
     {
         $message = $this->message->room($request);
         if ($message) {
-            return $this->messageResponse(($message), 'The room message', 201);
+            return $this->messageResponse(($message), 'The room message', 200);
         }
         return $this->messageResponse(null, 'The Room Not found', 400);
     }
@@ -72,7 +73,7 @@ class ChatController extends Controller
     {
         $message = $this->message->sendMessage($request);
         if ($message) {
-            return $this->messageResponse(($message), 'The Message Saved', 201);
+            return $this->messageResponse(($message), 'The Message Saved', 200);
         }
         return $this->messageResponse(null, 'The Message Not Save', 400);
     }
@@ -82,7 +83,7 @@ class ChatController extends Controller
     {
         $message = $this->message->destroy($id);
         if ($message) {
-            return $this->messageResponse(($message), 'The Message delete', 201);
+            return $this->messageResponse(($message), 'The Message delete', 200);
         }
         return $this->messageResponse(null, 'The Message Not delete', 400);
     }
@@ -92,7 +93,9 @@ class ChatController extends Controller
     {
         return $message = $this->message->getSoft();
     }
-    public  function latestMessage(Request $request){
+
+    public function latestMessage(Request $request)
+    {
         return $message = $this->message->latest($request);
     }
 }

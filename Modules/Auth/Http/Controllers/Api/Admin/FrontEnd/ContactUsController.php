@@ -39,7 +39,7 @@ class ContactUsController extends Controller
 
     /**
      * @param Request $request
-     * @return JsonResponse
+     * @return array
      */
 
     public function store(Request $request)
@@ -48,7 +48,10 @@ class ContactUsController extends Controller
 
         event(new Contact_us($message));
 
-        return response()->json($message, 201);
+        return ['statusCode' => 200, 'status' => true,
+            'message' => ' successfully send ',
+            'data' => $message
+        ];
 
 
     }
