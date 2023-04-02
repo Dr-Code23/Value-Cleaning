@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Modules\Offer\Entities\Offer;
 use Modules\Order\Entities\Order;
 use Modules\Order\Events\OrderCanceled;
@@ -255,6 +256,7 @@ class OrderRepository implements OrderRepositoryInterface
         $service = $this->serviceModel->query()->where('id', $order->service_id)->first();
 
         $offer = $this->offerModel->query()->where('service_id', $order->service_id)->first();
+        $count = DB::table('order_requirement')->where('order_id', $order->id)->first();
 
         $data = [
             'date' => date('m/d/Y'),
@@ -262,6 +264,7 @@ class OrderRepository implements OrderRepositoryInterface
             'user' => Auth::user(),
             'service' => new ServiceResource($service),
             'offer' => $offer,
+            'count' => $count
         ];
 
         $pdf = PDF::loadView('order::index', $data);

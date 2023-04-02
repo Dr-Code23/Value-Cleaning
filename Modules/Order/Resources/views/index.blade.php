@@ -3,15 +3,16 @@
 <head>
     <meta charset="utf-8">
     <title>Example 1</title>
-    <link rel="stylesheet" href="style.css" media="all" />
+    <link rel="stylesheet" href="style.css" media="all"/>
     <style>
         @import 'https://fonts.googleapis.com/css2?family=Kanit:wght@400;500&display=swap';
 
 
-        *{
+        * {
             margin: 0;
             padding: 5px;
         }
+
         .clearfix:after {
             content: "";
             display: table;
@@ -45,8 +46,8 @@
         }
 
         h1 {
-            border-top: 1px solid  #5D6975;
-            border-bottom: 1px solid  #5D6975;
+            border-top: 1px solid #5D6975;
+            border-bottom: 1px solid #5D6975;
             color: #5D6975;
             font-size: 2.4em;
             line-height: 1.4em;
@@ -143,20 +144,21 @@
             padding: 8px 0;
             text-align: center;
         }
-        .h1
-        {
-            color:white;
-            background:#012169;
+
+        .h1 {
+            color: white;
+            background: #012169;
         }
-        .h3{
-            color:#012169;
+
+        .h3 {
+            color: #012169;
         }
     </style>
 </head>
 <body>
 <header class="clearfix">
     <div id="logo">
-        <img src="https://valucleaning.erp-everest.com/storage/app/public/Valu Clean Logo 01.png" alt="">    </div>
+        <img src="https://valucleaning.erp-everest.com/storage/app/public/Valu Clean Logo 01.png" alt=""></div>
     <h1 class='h1'>INVOICE {{$order->order_code}}</h1>
     <div id="company" class="clearfix">
 
@@ -171,11 +173,11 @@
         </br>
 
 
-        <div><span>ADDRESS : </span> {{$user->address}}</div>
+        <div><span>ADDRESS : </span> {{$order->address}}</div>
         </br>
 
 
-        <div><span>EMAIL : </span>  <a href="{{$user->email}}">{{$user->email}}</a></div>
+        <div><span>EMAIL : </span> <a href="{{$user->email}}">{{$user->email}}</a></div>
         </br>
 
 
@@ -191,6 +193,7 @@
             <th class="desc">PRICE</th>
         </tr>
         </thead>
+
         <tbody>
         <tr>
             <td class="service"> Repeat: {{$order->repeat}}
@@ -207,25 +210,44 @@
 
         </tr>
         <tr>
-            <td class="service">Service Name : </td>
+            <td class="service">Service Name :</td>
             <td class="desc">{{$service->title}}</td>
             <td class="unit">{{$service->price}} $</td>
         </tr>
+        <td class="service">Extra Service Name :</td>
+
         @foreach($order->sub_services as $subService)
             <tr>
+                <td class="desc"></td>
 
-                <td class="service">Extra Service Name : </td>
+
                 <td class="desc">{{$subService->title}}</td>
                 <td class="unit">{{$subService->price}} $</td>
 
-            </tr> @endforeach
+            </tr>
+        @endforeach
+        <td class="service">requirement :</td>
+
+        @foreach($order->requirements as $requirement)
+            <tr>
+                <td class="desc"></td>
+
+                <td class="desc">{{$requirement->title}}</td>
+                <td class="unit">{{$requirement->requirement_price}} $</td>
+
+
+                <td class="unit"> Count :{{$count->count ?? 0 }}</td>
+
+
+            </tr>
+        @endforeach
         <tr>
             <td colspan="4">SUBTOTAL</td>
             <td class="total">{{$order->total_price}} $</td>
         </tr>
         <tr>
             <td colspan="4">discount</td>
-            <td class="total">{{$offer->offer_percent ?? ''}}%</td>
+            <td class="total">{{$offer->offer_percent ?? 0}}%</td>
         </tr>
         <tr>
             <td colspan="4" class="grand total">GRAND TOTAL</td>
@@ -237,8 +259,11 @@
         </div>
     </table>
 </main>
-<footer class='h1'>
-    Invoice was created on a computer and is valid without the signature and seal.
-</footer>
+<h3>
+    <footer class='h1'>
+        Dr.Code for Software and Electronic Systems <a href="https://doctor-code.net">Dr.Code</a>
+    </footer>
+</h3>
+
 </body>
 </html>
