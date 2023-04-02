@@ -27,7 +27,9 @@ class AboutController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'about' => $about
+            'about' => $about,
+            'photo' => $about->getFirstMediaUrl('about')
+
         ], 200);
     }
 
@@ -39,13 +41,14 @@ class AboutController extends Controller
     public function store(CreateAboutRequest $request)
     {
         $about = $this->aboutModel->create($request->all());
-        if ($request->hasFile('photo')) {
+        if ($request->photo) {
             $about->addMediaFromRequest('photo')->toMediaCollection('about');
         }
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'about' => $about
+            'about' => $about,
+            'photo' => $about->getFirstMediaUrl('about')
         ], 200);
 
     }
@@ -61,7 +64,9 @@ class AboutController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'about' => $about
+            'about' => $about,
+            'photo' => $about->getFirstMediaUrl('about')
+
         ], 200);
 
     }
@@ -86,7 +91,9 @@ class AboutController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'success update',
-            'about' => $about
+            'about' => $about,
+            'photo' => $about->getFirstMediaUrl('about')
+
         ], 200);
     }
 

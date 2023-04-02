@@ -5,12 +5,17 @@ namespace Modules\Auth\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Auth\Database\factories\AboutFactory;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class About extends Model
+class About extends Model implements HasMedia
 {
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'title',
+        'description'
+    ];
 
     protected $table = 'about';
 
