@@ -96,6 +96,7 @@ class ChatController extends Controller
 
     public function latestMessage(Request $request)
     {
-        return $message = $this->message->latest($request);
+        $message = $this->message->latest($request);
+        return $this->messageResponse($message, 'all', 200);
     }
 }
