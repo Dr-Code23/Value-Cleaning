@@ -30,6 +30,9 @@ interface MessageInterface
 
     // latest message
     public function latest($request);
+
+    // All Rooms Message
+    public function allRoom();
 }
 
 

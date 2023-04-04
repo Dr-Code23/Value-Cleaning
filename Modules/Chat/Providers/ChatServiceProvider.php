@@ -40,7 +40,7 @@ class ChatServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
-        $this->app->bind(MessageInterface::class, MessageRepository::class);
+       $this->app->bind(MessageInterface::class, MessageRepository::class);
 
     }
 

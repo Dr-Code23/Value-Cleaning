@@ -136,5 +136,11 @@ class MessageRepository implements MessageInterface
         $message->save();
         return $message;
     }
+    public function allRoom()
+    {
+      $roomMessage =Room::with('message','users')->get();
+        return $roomMessage;
+    }
+
 }
 
