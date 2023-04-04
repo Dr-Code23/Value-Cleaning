@@ -18,6 +18,15 @@ class ChatController extends Controller
     }
 
     // get room with message
+    public function index()
+    {
+        $rooms = $this->message->allRoom();
+        if ($rooms) {
+            return $this->messageResponse(($rooms), 'Room Found', 201);
+        }
+        return $this->messageResponse(null, 'Room Not Found', 400);
+    }
+    // get room with message
     public function room(Request $request)
     {
         $message = $this->message->getRoom($request);
