@@ -187,26 +187,19 @@
 <main>
     <table>
         <thead>
+
+        </thead>
         <tr>
             <th class="service">Order</th>
             <th class="desc">Name</th>
             <th class="desc">PRICE</th>
         </tr>
-        </thead>
-
         <tbody>
         <tr>
-            <td class="service"> Repeat: {{$order->repeat}}
-                </br>
-                </br>
-                </br>
-                Date: {{$order->date}}
-                </br>
-                </br>
-                </br>
+            <td class="service"> Repeat: {{$order->repeat}}</td>
+            <td class="service"> Date: {{$order->date}}</td>
+            <td class="service"> Time: {{$order->time}}</td>
 
-                Time {{$order->time}}
-            </td>
 
         </tr>
         <tr>
@@ -226,7 +219,7 @@
 
             </tr>
         @endforeach
-        <td class="service">requirement :</td>
+        <td class="service">Other :</td>
 
         @foreach($order->requirements as $requirement)
             <tr>
@@ -255,10 +248,10 @@
         </tr>
         </tbody>
         <div>
-            Thank You ..
         </div>
     </table>
 </main>
+
 <h3>
     <footer class='h1'>
         Dr.Code for Software and Electronic Systems <a href="https://doctor-code.net">Dr.Code</a>
