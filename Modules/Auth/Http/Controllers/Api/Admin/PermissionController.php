@@ -14,11 +14,11 @@ use Spatie\Permission\Models\Role;
 class PermissionController extends Controller
 {
 
-    private $aboutModel;
+    private $permissionModel;
 
-    public function __construct(About $about)
+    public function __construct(Permission $permission)
     {
-        $this->aboutModel = $about;
+        $this->permissionModel = $permission;
     }
 
     /**
@@ -27,7 +27,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permission = $this->aboutModel->latest()->get();
+        $permission = $this->permissionModel->latest()->get();
         return response()->json([
             'success' => true,
             'message' => 'success',
@@ -35,69 +35,4 @@ class PermissionController extends Controller
         ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return JsonResponse
-     */
-
-    public function store(CreateAboutRequest $request)
-    {
-        $permission = $this->aboutModel->create($request->all());
-        return response()->json([
-            'success' => true,
-            'message' => 'success',
-            'permission' => $permission
-        ], 200);
-
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function show($id)
-    {
-        $permission = $this->aboutModel->query()->where('id', $id)->first();
-        return response()->json([
-            'success' => true,
-            'message' => 'success',
-            'permission' => $permission
-        ], 200);
-
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function update(Request $request, $id)
-    {
-        $permission = $this->aboutModel->query()->where('id', $id)->first();
-
-        $permission->update($request);
-        return response()->json([
-            'success' => true,
-            'message' => 'success update',
-            'permission' => $permission
-        ], 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function destroy($id)
-    {
-        $permission = $this->aboutModel->query()->where('id', $id)->first();
-        $permission->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'success delete',
-        ], 200);
-    }
 }

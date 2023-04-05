@@ -88,50 +88,6 @@ class AdminRepository implements AdminRepositoryInterface
 
     }
 
-    public function forgotPassword($data)
-    {
-        $user = $this->userModel->where('email', $data->email)->first();
-        if ($user) {
-            // 1 generate verification code
-            $user->reset_verification_code = rand(100000, 999999);
-            $user->save();
-            // 2 send email
-            Mail::to($user->email)->send(new EventMail($user));
-            return response()->json(['status' => true, 'message' => 'check your inbox']);
-
-        } else {
-
-            return response()->json(['status' => false, 'message' => 'email not found, try again']);
-        }
-    }
-
-    public function checkCode($data)
-    {
-        $user = $this->userModel->where('email', $data->email)->first();
-        if ($user) {
-            if ($user->reset_verification_code == $data->code) {
-                return response()->json(['status' => true, 'message' => 'you will be redirected to set new password']);
-            }
-            return response()->json(['status' => false, 'message' => 'code is invalid, try again'], 400);
-
-        } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again']);
-        }
-    }
-
-    public function reset($data)
-    {
-        $user = $this->userModel->where('email', $data->email)->first();
-        if ($user) {
-            $user->password = Hash::make($data->password);
-            $user->save();
-            return response()->json([$user->password, 'status' => true, 'message' => 'password has been updated']);
-
-        } else {
-            return response()->json(['status' => false, 'message' => 'email not found, try again']);
-        }
-    }
-
     public function profile()
     {
         $id = Auth::id();
@@ -175,12 +131,6 @@ class AdminRepository implements AdminRepositoryInterface
     public function pushNotification($data)
     {
         return $this->Notification($data);
-    }
-
-
-    public function all()
-    {
-
     }
 
 }

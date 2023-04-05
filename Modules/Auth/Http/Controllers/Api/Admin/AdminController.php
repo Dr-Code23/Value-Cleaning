@@ -19,7 +19,7 @@ class AdminController extends Controller
 
     public function AdminRegister(CreateRequest $request)
     {
-        return  $this->AdminRepository->register($request);
+        return $this->AdminRepository->register($request);
 
 
     }
@@ -27,14 +27,8 @@ class AdminController extends Controller
 
     public function AdminLogin(loginRequest $request)
     {
-        return  $this->AdminRepository->login($request);
+        return $this->AdminRepository->login($request);
 
     }
 
-
-    public function all()
-    {
-        return $this->AdminRepository->all();
-
-    }
 }
