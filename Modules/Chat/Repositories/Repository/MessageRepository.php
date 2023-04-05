@@ -50,16 +50,18 @@ class MessageRepository implements MessageInterface
     {
         $user_1 = auth()->id();
         $user_ids = [$user_1, $request->user_2];
-      return  $message = Room::has('users', '=', count($user_ids))
+        $message = Room::has('users', '=', count($user_ids))
             ->whereHas('users', function ($query) use ($user_ids) {
                 $query->whereIn('user_id', $user_ids);
             }, '=', count($user_ids))->get('id');
-
-        $latest = Message::where(['room_id' => $request->id])->first();
-        $unread = Message::where('room_id',$request->id)->where('seen_at',0)->count();
+        foreach($message as $i) {
+            $latest = Message::where(['room_id' => $i->id])->latest()->first();
+            $unRead = Message::where('room_id', $i->id)->where('seen_at', 0)->count();
+        }
         $data = [
             'latest' => $latest,
-            'unread' => $unread,
+            'unread' => $unRead,
+            'room' => $message
         ];
         return $data;
     }
