@@ -4,6 +4,8 @@ namespace Modules\Chat\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Modules\Chat\Events\MakeAgoraCall;
 use Modules\Chat\Http\Requests\MessageRequest;
 use Modules\Chat\Repositories\Interfaces\MessageInterface;
 use TomatoPHP\LaravelAgora\Services\Agora;
@@ -141,4 +143,13 @@ class ChatController extends Controller
 
     }
 
+    public function callUser(Request $request)
+    {
+
+        $data['userToCall'] = $request->user_to_call;
+        $data['channelName'] = $request->channel_name;
+        $data['from'] = Auth::id();
+
+        broadcast(new MakeAgoraCall($data))->toOthers();
+    }
 }
