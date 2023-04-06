@@ -73,7 +73,7 @@ class ServiceRepository implements ServiceRepositoryInterface
 
     public function findService($id)
     {
-        $service = $this->serviceModel->where('id', $id)->first();
+        $service = $this->serviceModel->where('id', $id)->with('workers')->first();
         $rate = Review::where('service_id', $id)->avg('star_rating');
         return ['statusCode' => 200,
             'status' => true,
@@ -102,7 +102,9 @@ class ServiceRepository implements ServiceRepositoryInterface
             $service->media()->delete();
             $service->addMediaFromRequest('gallery')->toMediaCollection('services');
         }
-
+        if ($data['worker_id']) {
+            $service->workers()->sync($data['worker_id']);
+        }
         return ['statusCode' => 200,
             'status' => true,
             'message' => 'service updated successfully ',

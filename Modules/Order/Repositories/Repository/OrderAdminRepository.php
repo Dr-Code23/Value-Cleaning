@@ -116,7 +116,7 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
 
         $order = $this->orderModel->query()->find($id);
 
-        $order->workers()->sync($data->all());
+        $order->workers()->sync($data->worker_id);
 
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Order updated successfully ',

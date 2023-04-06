@@ -8,6 +8,7 @@ use Modules\Auth\Transformers\UserResource;
 use Modules\Requirement\Transformers\RequirementResource;
 use Modules\Service\Transformers\ServiceResource;
 use Modules\Service\Transformers\SubServiceResource;
+use Modules\Worker\Transformers\WorkerResource;
 
 class OrderAdminResource extends JsonResource
 {
@@ -31,7 +32,7 @@ class OrderAdminResource extends JsonResource
             'payment_status' => $this->payment_status,
             'user' => UserResource::collection($this->users),
             'service' => ServiceResource::collection($this->services),
-            'workers' => $this->workers,
+            'workers' => WorkerResource::collection($this->workers),
             'extraServices' => SubServiceResource::collection($this->sub_services),
             'requirement' => RequirementResource::collection($this->requirements),
             'total_price' => $this->total_price,
