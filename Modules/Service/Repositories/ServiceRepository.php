@@ -74,11 +74,10 @@ class ServiceRepository implements ServiceRepositoryInterface
     public function findService($id)
     {
         $service = $this->serviceModel->where('id', $id)->with('workers')->first();
-        $rate = Review::where('service_id', $id)->avg('star_rating');
         return ['statusCode' => 200,
             'status' => true,
             'data' => $service,
-            'rate' => $rate ?? 0];
+            'rate' => $service->revices->avg('star_rating')];
     }
 
     public function updateService($data, $id)
