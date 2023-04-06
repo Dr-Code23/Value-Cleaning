@@ -28,6 +28,7 @@ class ChatController extends Controller
         }
         return $this->messageResponse(null, 'Room Not Found', 400);
     }
+
     // get room with message
     public function room(Request $request)
     {
@@ -136,7 +137,7 @@ class ChatController extends Controller
         // Generate an Agora token for the specified channel name and UID
         $token = $agora->token();
         // Return the generated token as a JSON response
-        return $this->messageResponse($token, 'token', 200);
+        return $this->messageResponse(['token' => $token, 'channel' => $channelName], 'token', 200);
 
     }
 
