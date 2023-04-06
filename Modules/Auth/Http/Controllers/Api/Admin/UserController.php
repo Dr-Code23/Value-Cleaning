@@ -42,7 +42,7 @@ class UserController extends Controller
         }
         $data = $this->userModel
             ->query()
-            ->where('type', 'admin')
+            ->where('type', 'user')
             ->latest()
             ->get();
 
@@ -62,15 +62,22 @@ class UserController extends Controller
                 'user' => UserResource::collection($data)
             ], 201);
         }
-        $data = $this->userModel
-            ->query()
-            ->where('type', 'admin')
+        $data = User::where('type', 'admin')
+            ->whereDoesntHave('roles', function ($query) {
+                $query->where('name', 'admin');
+            })
             ->latest()
             ->get();
 
+        $count = $this->userModel
+            ->query()
+            ->where('type', 'admin')
+            ->count();
+
         return response()->json([
             'success' => true,
-            'user' => UserResource::collection($data)
+            'user' => UserResource::collection($data),
+            'count' => $count,
         ], 201);
     }
 
