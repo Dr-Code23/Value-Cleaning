@@ -66,9 +66,9 @@ class ServiceController extends Controller
         return ['statusCode' => 200, 'status' => true, 'data' => $service];
     }
 
-    public function deleteWorkerFromService(Request $request, $id)
+    public function WorkerFromService($id)
     {
-        return $this->serviceRepository->deleteWorkerFromService($request, $id);
+        return $this->serviceRepository->WorkerFromService($id);
     }
 
     /**

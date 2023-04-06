@@ -24,7 +24,7 @@ Route::middleware(['user_api', 'setlocale'])->prefix("admin")->group(function ()
     Route::delete('delete/service/{id}', [ServiceController::class, 'destroy']);
     Route::get('Active/service/{id}', [ServiceController::class, 'activate']);
     Route::post('find/service/{id}', [ServiceController::class, 'addServiceWorker']);
-    Route::post('Delete/WorkerFromService/{id}', [ServiceController::class, 'deleteWorkerFromService']);
+    Route::get('WorkerFromService/{id}', [ServiceController::class, 'WorkerFromService']);
     Route::get('service', [ServiceController::class, 'index']);
     Route::get('show/service/{id}', [ServiceController::class, 'show']);
     Route::get('SubService', [SubServiceController::class, 'index']);

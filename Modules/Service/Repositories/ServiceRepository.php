@@ -62,13 +62,13 @@ class ServiceRepository implements ServiceRepositoryInterface
         $sevice->workers()->sync($data->all());
     }
 
-    public function deleteWorkerFromService($data, $id)
+    public function WorkerFromService($id)
     {
         $sevice = $this->serviceModel->findOrFail($id);
 
-        $sevice->workers()->detach($data->worker_id);
+        $sevice->workers();
 
-        return ['statusCode' => 200, 'status' => true, 'message' => 'service Deleted successfully ',];
+        return ['statusCode' => 200, 'status' => true, 'data' => $sevice->workers, 'message' => 'all worker from service successfully ',];
     }
 
     public function findService($id)
