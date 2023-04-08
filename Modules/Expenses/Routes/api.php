@@ -8,7 +8,7 @@ use Modules\Expenses\Http\Controllers\TypeController;
 
 
 
-Route::middleware('auth:api')->get('/expenses', function () {
+// Route::group(['middleware' => 'auth:api'], function () {
 Route::post('store-expense', [ExpenseController::class, 'store']);
 Route::get('get-expense', [ExpenseController::class, 'index']);
 Route::post('update-expense', [ExpenseController::class, 'update']);
@@ -27,4 +27,4 @@ Route::post('update-payment', [PaymentController::class, 'update']);
 Route::post('delete-payments', [PaymentController::class, 'destroy']);
 Route::post('edit-payment', [PaymentController::class, 'edit']);
 
-});
+// });

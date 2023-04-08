@@ -12,7 +12,7 @@ class TypeController extends Controller
 {
 
     use ExpenseResponseTrait;
-    protected $typeExpense;
+    protected $typeExpenses;
 
     public function __construct(TypeInterface $typeExpenses)
     {
