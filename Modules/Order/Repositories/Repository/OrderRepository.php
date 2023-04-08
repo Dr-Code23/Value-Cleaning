@@ -117,7 +117,14 @@ class OrderRepository implements OrderRepositoryInterface
         $schedule = $this->schedule($order);
 
         if ($data['sub_service_id']) {
-            $order->sub_services()->sync($data['sub_service_id']);
+            if (is_array($data['sub_service_id'])) {
+                $order->sub_services()->sync($data['sub_service_id']);
+            } else {
+
+                $sub_service_id = explode(',', $data['sub_service_id']);
+
+                $order->sub_services()->sync($sub_service_id);
+            }
         }
         if (!empty($data['requirement_id'])) {
             $requirements = [];

@@ -2,6 +2,7 @@
 
 namespace Modules\Chat\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class ChatController extends Controller
     {
         $rooms = $this->message->allRoom();
         if ($rooms) {
-            return $this->messageResponse(($rooms), 'Room Found', 201);
+            return $this->messageResponse(($rooms), 'Room Found', 200);
         }
         return $this->messageResponse(null, 'Room Not Found', 400);
     }
@@ -115,13 +116,14 @@ class ChatController extends Controller
 
     public function generateToken(Request $request)
     {
+//        try {
         // Get the Agora credentials from environment variables
         $appId = env('AGORA_APP_ID');
         $appCertificate = env('AGORA_APP_CERTIFICATE');
 
 // Get the channel name and user ID from the request parameters
-        $channelName = $request->input('channelName');
-        $uid = $request->input('uid');
+        $channelName = "value-clean" . Auth::id();
+        $uid = Auth::id();
 
 // Ensure that $uid is set to a non-null string value
         if (!$uid) {
@@ -138,18 +140,23 @@ class ChatController extends Controller
         $agora->channel($channelName);
         // Generate an Agora token for the specified channel name and UID
         $token = $agora->token();
+        $data = [
+            'token' => $token,
+            'channel' => $channelName,
+            'user_id' => $uid
+        ];
+
+//        broadcast(new MakeAgoraCall($data))->toOthers();
+
         // Return the generated token as a JSON response
         return $this->messageResponse(['token' => $token, 'channel' => $channelName], 'token', 200);
 
+
+//        } catch (Exception $exception) {
+//            // Handle exceptions that may occur while generating the token
+//            throw new Exception('Failed to generate Agora token');
+//        }
     }
 
-    public function callUser(Request $request)
-    {
 
-        $data['userToCall'] = $request->user_to_call;
-        $data['channelName'] = $request->channel_name;
-        $data['from'] = Auth::id();
-
-        broadcast(new MakeAgoraCall($data))->toOthers();
-    }
 }

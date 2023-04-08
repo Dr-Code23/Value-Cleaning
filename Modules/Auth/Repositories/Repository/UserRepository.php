@@ -82,8 +82,8 @@ class UserRepository implements UserRepositoryInterface
                         'token' => $token
                     ]);
                 } elseif ($user->type == 'user') {
-                    $user->update(['device_token' => $data->device_token]);
-
+                    $user['device_token'] = $data->device_token;
+                    $user->update();
                     return response()->json([
                         'success' => true,
                         'message' => 'User successfully logged in.',

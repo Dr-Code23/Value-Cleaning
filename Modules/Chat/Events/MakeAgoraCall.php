@@ -2,6 +2,7 @@
 
 namespace Modules\Chat\Events;
 
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 
@@ -33,6 +34,19 @@ class MakeAgoraCall implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('agora-online-channel');
+        return ['video-call'];
+    }
+
+    public function broadcastAs()
+    {
+        return 'MakeAgoraCall';
+    }
+
+    public function broadcastWith()
+    {
+        $user = User::where('id', $this->data['user_id'])->first();
+        return [
+            'message' => 'video call from ' . $user->name,
+        ];
     }
 }

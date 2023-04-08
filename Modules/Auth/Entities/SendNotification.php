@@ -25,7 +25,7 @@ class SendNotification extends Model
 
     public function users()
     {
-        return $this->hasMany(User::class, 'id', 'user_id');
+        return $this->hasMany(User::class);
     }
 
 }

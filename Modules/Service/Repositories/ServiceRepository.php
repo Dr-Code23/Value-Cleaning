@@ -51,7 +51,9 @@ class ServiceRepository implements ServiceRepositoryInterface
         $service->addMediaFromRequest('gallery')->toMediaCollection('services');
         $service->save();
 
-        $service->workers()->sync($data['worker_id']);
+        $workerIds = explode(',', $data['worker_id']);
+
+        $service->workers()->sync($workerIds);
 
         return ['statusCode' => 200, 'status' => true, 'data' => $service];
     }

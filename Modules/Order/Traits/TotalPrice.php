@@ -19,7 +19,17 @@ trait TotalPrice
 
         $subservicesPrices = 0;
         if ($data['sub_service_id']) {
-            $subservicesPrices = SubService::whereIn('id', $data['sub_service_id'])->sum('price');
+            if (is_array($data['sub_service_id'])) {
+
+                $sub_service_id = $data['sub_service_id'];
+
+            } else {
+
+                $sub_service_id = explode(',', $data['sub_service_id']);
+
+            }
+
+            $subservicesPrices = SubService::whereIn('id', $sub_service_id)->sum('price');
         }
         $requirementPrices = 0;
 
