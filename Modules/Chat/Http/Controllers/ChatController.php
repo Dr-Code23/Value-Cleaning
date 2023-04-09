@@ -116,46 +116,49 @@ class ChatController extends Controller
 
     public function generateToken(Request $request)
     {
-//        try {
-        // Get the Agora credentials from environment variables
-        $appId = env('AGORA_APP_ID');
-        $appCertificate = env('AGORA_APP_CERTIFICATE');
+        try {
+            // Get the Agora credentials from environment variables
+            $appId = env('AGORA_APP_ID');
+            $appCertificate = env('AGORA_APP_CERTIFICATE');
 
 // Get the channel name and user ID from the request parameters
-        $channelName = "value-clean" . Auth::id();
-        $uid = Auth::id();
+            $channelName = "value-clean" . Auth::id();
+
+            $uid = Auth::id();
 
 // Ensure that $uid is set to a non-null string value
-        if (!$uid) {
-            $uid = (string)rand(999, 1999);
-        }
+            if (!$uid) {
+                $uid = (string)rand(999, 1999);
+            }
 
 // Create an instance of the Agora class with the Agora app ID and app certificate
-        $agora = Agora::make($appId, $appCertificate);
+            $agora = Agora::make($appId, $appCertificate);
 
 // Set the UID of the token to the specified user ID
-        $agora->uId($uid);
+            $agora->uId($uid);
 
 // Specify the channel name for the token
-        $agora->channel($channelName);
-        // Generate an Agora token for the specified channel name and UID
-        $token = $agora->token();
-        $data = [
-            'token' => $token,
-            'channel' => $channelName,
-            'user_id' => $uid
-        ];
+            $agora->channel($channelName);
+            // Generate an Agora token for the specified channel name and UID
+            $token = $agora->token();
+            $token1 = $agora->token();
 
-//        broadcast(new MakeAgoraCall($data))->toOthers();
+            $data = [
+                'token' => $token1,
+                'channel' => $channelName,
+                'user_id' => Auth::id()
+            ];
 
-        // Return the generated token as a JSON response
-        return $this->messageResponse(['token' => $token, 'channel' => $channelName], 'token', 200);
+            broadcast(new MakeAgoraCall($data))->toOthers();
+
+            // Return the generated token as a JSON response
+            return $this->messageResponse(['token' => $token, 'channel' => $channelName], 'token', 200);
 
 
-//        } catch (Exception $exception) {
-//            // Handle exceptions that may occur while generating the token
-//            throw new Exception('Failed to generate Agora token');
-//        }
+        } catch (Exception $exception) {
+            // Handle exceptions that may occur while generating the token
+            throw new Exception('Failed to generate Agora token');
+        }
     }
 
 
