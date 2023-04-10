@@ -70,28 +70,29 @@ class CreateOrderCommand extends Command
                 'repeat' => 'once',
                 'status' => 'canceled'
             ])
-            ->whereNot(['scheduled_at' => null])
-            ->where('day', $tomorrow)
+            ->whereNot(['scheduled_at' => Carbon::now()])
+            ->where(['day' => $tomorrow, 'repeat' => 'weekly'])
             ->take(200)
             ->get()->toArray();
         if ($data) {
             if (count($data) > 0) {
                 foreach (array_chunk($data, 50) as $orders) {
                     foreach ($orders as $order) {
-                        $dayOfWeek = Carbon::parse($order->date)->dayOfWeek;
+                        $dayOfWeek = Carbon::parse($order['date'])->dayOfWeek;
                         try {
                             DB::beginTransaction();
 
                             $this->scheduleModel->create([
-                                'order_id' => $order->id,
+                                'order_id' => $order['id'],
                                 'date' => Carbon::now()->addDay(),
-                                'time' => $order->time,
+                                'time' => $order['time'],
                                 'day' => $dayOfWeek,
-                                'repeat' => $order->repeat,
-                                'user_id' => $order->user_id,
+                                'user_id' => $order['user_id'],
                             ]);
 
-                            $order->update(['scheduled_at' => Carbon::now()]); // data => last create order
+                            $orderModel = $this->orderModel->find($order['id']);
+                            $orderModel->scheduled_at = Carbon::now();
+                            $orderModel->save();
 
                             DB::commit();
 
@@ -99,7 +100,7 @@ class CreateOrderCommand extends Command
                             DB::rollBack();
                         }
 
-                        $user = $this->userModel->where('id', $order->user_id)->first();
+                        $user = $this->userModel->where('id', $order['user_id'])->first();
 
                         $user->notify(new TaskReminderNotification($order));
                     }

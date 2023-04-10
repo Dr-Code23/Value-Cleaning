@@ -36,8 +36,7 @@ class TaskReminderNotification extends Notification
     {
 
         return (new MailMessage)
-            ->line('You have a task reminder for order #' . $this->order->id . '!')
-            ->action('View Order', url('show/order/' . $this->order->id))
+            ->line('You have a task reminder for order #' . $this->order['id'] . '!')
             ->line('Thank you for using our application!');
     }
 

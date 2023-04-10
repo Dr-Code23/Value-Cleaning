@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Modules\Order\Console\CreateOrderCommand;
+use Modules\Order\Console\CreateOrderMonthlyCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -12,7 +13,9 @@ class Kernel extends ConsoleKernel
      * @var string[]
      */
     protected $commands = [
-        CreateOrderCommand::class
+        CreateOrderCommand::class,
+        CreateOrderMonthlyCommand::class
+
     ];
 
     /**

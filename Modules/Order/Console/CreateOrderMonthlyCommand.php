@@ -2,9 +2,14 @@
 
 namespace Modules\Order\Console;
 
+use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Modules\Order\Entities\Order;
+use Modules\Order\Entities\Schedule;
+use Modules\Order\Notifications\TaskReminderNotification;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -16,12 +21,30 @@ class CreateOrderMonthlyCommand extends Command
     protected $description = 'Create orders that monthly';
 
     /**
+     * @var Order
+     */
+    protected Order $orderModel;
+
+    /**
+     * @var User
+     */
+    protected User $userModel;
+
+    /**
+     * @var Schedule
+     */
+    protected Schedule $scheduleModel;
+
+    /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Order $order, User $user, Schedule $schedule)
     {
+        $this->orderModel = $order;
+        $this->userModel = $user;
+        $this->scheduleModel = $schedule;
         parent::__construct();
     }
 
@@ -30,31 +53,52 @@ class CreateOrderMonthlyCommand extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(): void
     {
-        $orders = Order::where(function ($query) {
-            return $query->where('status', 'Finished')
-                ->orWhere('status', 'Processing');
-        })->where('repeat', 'monthly')->get();
-        foreach ($orders as $order) {
-            // Create the new order
-            $newOrder = Order::create([
-                'worke_aera' => $order->worke_aera,
-                'date' => Carbon::parse($order->date),
-                'time' => Carbon::parse($order->time),
-                'address' => $order->address,
-                'repeat' => $order->repeat,
-                'status' => $order->status,
-                'payment_status' => $order->payment_status,
-                'user_id' => $order->user_id,
-                'service_id' => $order->service_id,
-                'total_price' => $order->total_price,
-                'delivery_price' => $order->delivery_price,
-                'order_code' => '#' . str_pad($order->id + 1, 8, '0', STR_PAD_LEFT),
-            ]);
+        $tomorrow = Carbon::now()->addMonthNoOverflow()->day;
+
+        $data = $this->orderModel->query()
+            ->whereNot([
+                'repeat' => 'once',
+                'status' => 'canceled'
+            ])
+            ->whereNot(['scheduled_at' => Carbon::now()])
+            ->where(['day' => $tomorrow, 'repeat' => 'monthly'])
+            ->take(200)
+            ->get()->toArray();
+        if ($data) {
+            if (count($data) > 0) {
+                foreach (array_chunk($data, 50) as $orders) {
+                    foreach ($orders as $order) {
+                        $dayOfWeek = Carbon::parse($order['date'])->dayOfWeek;
+                        try {
+                            DB::beginTransaction();
+
+                            $this->scheduleModel->create([
+                                'order_id' => $order['id'],
+                                'date' => Carbon::now()->addDay(),
+                                'time' => $order['time'],
+                                'day' => $dayOfWeek,
+                                'user_id' => $order['user_id'],
+                            ]);
+
+                            $orderModel = $this->orderModel->find($order['id']);
+                            $orderModel->scheduled_at = Carbon::now();
+                            $orderModel->save();
+
+                            DB::commit();
+
+                        } catch (Exception) {
+                            DB::rollBack();
+                        }
+
+                        $user = $this->userModel->where('id', $order['user_id'])->first();
+
+                        $user->notify(new TaskReminderNotification($order));
+                    }
+                }
+            }
         }
-
-
     }
 
     /**

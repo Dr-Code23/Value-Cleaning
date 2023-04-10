@@ -107,60 +107,61 @@ class OrderRepository implements OrderRepositoryInterface
      */
     public function store($data): JsonResponse
     {
-        try {
-            $data['user_id'] = auth()->id();
-            $data['total_price'] = $this->totalPrice($data);
-            $data['order_code'] = '#' . str_pad($this->totalPrice($data) + 1, 8, "0", STR_PAD_LEFT);
-            $data['date'] = Carbon::parse(date('Y-m-d', strtotime($data['date'])));
-            $data['day'] = Carbon::parse($data['date'])->dayOfWeek;
-            $order = $this->orderModel->create($data->all());
-            $order['order_code'] = '#' . str_pad($order->id + 1, 8, "0", STR_PAD_LEFT);
-            $order->update();
-            $schedule = $this->schedule($order);
+//        try {
+        $data['user_id'] = auth()->id();
+        $data['total_price'] = $this->totalPrice($data);
+        $data['order_code'] = '#' . str_pad($this->totalPrice($data) + 1, 8, "0", STR_PAD_LEFT);
+        $data['date'] = Carbon::parse(date('Y-m-d', strtotime($data['date'])));
+        $data['day'] = Carbon::parse($data['date'])->dayOfWeek;
+        $data['scheduled_at'] = Carbon::now();
+        $order = $this->orderModel->create($data->all());
+        $order['order_code'] = '#' . str_pad($order->id + 1, 8, "0", STR_PAD_LEFT);
+        $order->update();
+        $schedule = $this->schedule($order);
 
-            if ($data['sub_service_id']) {
-                if (is_array($data['sub_service_id'])) {
-                    $order->sub_services()->sync($data['sub_service_id']);
-                } else {
+        if ($data['sub_service_id']) {
+            if (is_array($data['sub_service_id'])) {
+                $order->sub_services()->sync($data['sub_service_id']);
+            } else {
 
-                    $sub_service_id = explode(',', $data['sub_service_id']);
+                $sub_service_id = explode(',', $data['sub_service_id']);
 
-                    $order->sub_services()->sync($sub_service_id);
-                }
+                $order->sub_services()->sync($sub_service_id);
             }
-            if (!empty($data['requirement_id'])) {
-                $requirements = [];
-                foreach ($data['requirement_id'] as $key => $requirement_id) {
-                    $count = isset($data['count'][$key]) ? (int)$data['count'][$key] : 0;
-                    $requirements[$requirement_id] = ['count' => $count];
-                }
-
-                $order->requirements()->sync($requirements);
-            }
-
-            if ($data->gallery) {
-                foreach ($data->gallery as $gallery) {
-                    $order->addMedia($gallery)->toMediaCollection('Orders');
-                }
-            }
-
-            event(new OrderCreated($order));
-//        broadcast(new OrderCreated($order))->toOthers();
-            return response()->json([
-                'statusCode' => 200,
-                'status' => true,
-                'data' => new OrderResource($order),
-                'schedule' => $schedule
-            ]);
-
-        } catch (Exception) {
-            return response()->json([
-                'statusCode' => 400,
-                'status' => false,
-                'message' => 'can not create order',
-                'data' => [],
-            ]);
         }
+        if (!empty($data['requirement_id'])) {
+            $requirements = [];
+            foreach ($data['requirement_id'] as $key => $requirement_id) {
+                $count = isset($data['count'][$key]) ? (int)$data['count'][$key] : 0;
+                $requirements[$requirement_id] = ['count' => $count];
+            }
+
+            $order->requirements()->sync($requirements);
+        }
+
+        if ($data->gallery) {
+            foreach ($data->gallery as $gallery) {
+                $order->addMedia($gallery)->toMediaCollection('Orders');
+            }
+        }
+
+        event(new OrderCreated($order));
+//        broadcast(new OrderCreated($order))->toOthers();
+        return response()->json([
+            'statusCode' => 200,
+            'status' => true,
+            'data' => new OrderResource($order),
+            'schedule' => $schedule
+        ]);
+
+//        } catch (Exception) {
+//            return response()->json([
+//                'statusCode' => 400,
+//                'status' => false,
+//                'message' => 'can not create order',
+//                'data' => [],
+//            ]);
+//        }
     }
 
     /**
