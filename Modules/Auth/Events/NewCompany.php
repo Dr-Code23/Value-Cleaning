@@ -31,7 +31,15 @@ class NewCompany implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['companies'];
+        return ['new-company'];
+    }
+
+    /**
+     * @return string
+     */
+    public function broadcastAs()
+    {
+        return 'new-company';
     }
 
     public function broadcastWith()

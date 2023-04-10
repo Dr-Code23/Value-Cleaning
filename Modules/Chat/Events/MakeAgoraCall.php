@@ -37,11 +37,18 @@ class MakeAgoraCall implements ShouldBroadcast
         return ['video-call'];
     }
 
+    public function broadcastAs()
+    {
+        return 'make-agora-call';
+    }
+
     public function broadcastWith()
     {
         $user = User::where('id', $this->data['user_id'])->first();
         return [
             'message' => 'video call from ' . $user->name,
+
+            'data' => $this->data
         ];
     }
 }

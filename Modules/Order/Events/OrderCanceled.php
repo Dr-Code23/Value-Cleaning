@@ -31,7 +31,12 @@ class OrderCanceled implements ShouldBroadcast
      */
     public function broadcastOn(): array
     {
-        return ['orders'];
+        return ['order-canceled'];
+    }
+
+    public function broadcastAs()
+    {
+        return 'order-canceled';
     }
 
     /**

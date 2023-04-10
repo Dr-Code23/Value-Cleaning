@@ -12,6 +12,7 @@ class NewRoom implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $room;
+
     /**
      * Create a new event instance.
      *
@@ -31,5 +32,10 @@ class NewRoom implements ShouldBroadcast
     {
         // return new PrivateChannel('new-message');
         return ['new-room'];
+    }
+
+    public function broadcastAs()
+    {
+        return 'new-room';
     }
 }

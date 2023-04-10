@@ -36,6 +36,10 @@ class Contact_us implements ShouldBroadcast
         ];
     }
 
+    public function broadcastAs()
+    {
+        return 'contactUs';
+    }
 
     public function broadcastWith()
     {

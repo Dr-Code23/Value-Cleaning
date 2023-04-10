@@ -32,7 +32,15 @@ class OrderCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['orders'];
+        return ['order-created'];
+    }
+
+    /**
+     * @return string
+     */
+    public function broadcastAs()
+    {
+        return 'order-created';
     }
 
     /**

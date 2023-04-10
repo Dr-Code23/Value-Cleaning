@@ -1,6 +1,7 @@
 <?php
 
 namespace Modules\Chat\Events;
+
 use Carbon\Carbon;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -29,6 +30,7 @@ class NewMessage implements ShouldBroadcast
     {
         $this->message = $message;
     }
+
     /**
      * Get the channels the event should be broadcast on.
      *
@@ -38,5 +40,13 @@ class NewMessage implements ShouldBroadcast
     {
         // return new PrivateChannel('new-message');
         return ['new-message'];
+    }
+
+    /**
+     * @return string
+     */
+    public function broadcastAs()
+    {
+        return 'new-message';
     }
 }
