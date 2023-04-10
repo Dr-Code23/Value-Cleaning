@@ -12,6 +12,7 @@ class TypeController extends Controller
 {
 
     use ExpenseResponseTrait;
+
     protected $typeExpenses;
 
     public function __construct(TypeInterface $typeExpenses)
@@ -24,7 +25,7 @@ class TypeController extends Controller
      */
     public function index()
     {
-        return $typeExpenses = $this->typeExpenses->getType();
+        return $typeExpense = $this->typeExpenses->getType();
     }
 
     /**
@@ -45,9 +46,9 @@ class TypeController extends Controller
     {
          $typeExpenses = $this->typeExpenses->storeType($request);
         if ($typeExpenses) {
-            return $this->messageResponse(($typeExpenses), 'type Expenses Saved', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses Saved', 200);
         }
-        return $this->messageResponse(null, 'type Expenses Not Save', 400);
+        return $this->expenseResponse(null, 'type Expenses Not Save', 400);
     }
 
     /**
@@ -69,9 +70,9 @@ class TypeController extends Controller
     {
          $typeExpenses = $this->typeExpenses->editType($request);
         if ($typeExpenses) {
-            return $this->messageResponse(($typeExpenses), 'type Expenses found', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses found', 200);
         }
-        return $this->messageResponse(null, 'type Expenses Not found', 400);
+        return $this->expenseResponse(null, 'type Expenses Not found', 400);
     }
 
     /**
@@ -84,9 +85,9 @@ class TypeController extends Controller
     {
          $typeExpenses = $this->typeExpenses->updateType($request);
         if ($typeExpenses) {
-            return $this->messageResponse(($typeExpenses), 'type Expenses update', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses update', 200);
         }
-        return $this->messageResponse(null, 'type Expenses Not update', 400);
+        return $this->expenseResponse(null, 'type Expenses Not update', 400);
     }
 
     /**
@@ -98,8 +99,8 @@ class TypeController extends Controller
     {
          $typeExpenses = $this->typeExpenses->destroy($request);
         if ($typeExpenses) {
-            return $this->messageResponse(($typeExpenses), 'type Expenses delete', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses delete', 200);
         }
-        return $this->messageResponse(null, 'type Expenses Not delete', 400);
+        return $this->expenseResponse(null, 'type Expenses Not delete', 400);
     }
 }

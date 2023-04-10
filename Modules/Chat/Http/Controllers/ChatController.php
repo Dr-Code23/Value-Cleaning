@@ -49,7 +49,13 @@ class ChatController extends Controller
         if (count($message) == null) {
             $message = $this->message->createRoom($request);  // failure
         }
-        return $this->messageResponse(($message), 'Success', 201);
+        return $this->messageResponse(($message), 'Success', 200);
+    }
+
+    // get Room of User
+    public function getUser()
+    {
+       return $message = $this->message->getRoomUser();
     }
 
     // read Message
@@ -108,6 +114,12 @@ class ChatController extends Controller
         return $message = $this->message->getSoft();
     }
 
+        // check user or admin
+    public function checkRoom()
+    {
+        $message = $this->message->checkUser();
+        return $this->messageResponse($message, 'found', 200);
+    }
     public function latestMessage(Request $request)
     {
         $message = $this->message->latest($request);

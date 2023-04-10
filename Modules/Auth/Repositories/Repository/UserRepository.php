@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Modules\Auth\Emails\EventMail;
-use Modules\Auth\Entities\Notification;
 use Modules\Auth\Entities\SendNotification;
 use Modules\Auth\Entities\TermsAndConditions;
 use Modules\Auth\Events\NewCompany;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 use Modules\Auth\Transformers\CompanyResource;
 use Modules\Auth\Transformers\UserResource;
+use Modules\Chat\Entities\Room;
+use Modules\Chat\Events\NewRoom;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserRepository implements UserRepositoryInterface
@@ -84,6 +85,15 @@ class UserRepository implements UserRepositoryInterface
                 } elseif ($user->type == 'user') {
                     $user['device_token'] = $data->device_token;
                     $user->update();
+                    // Create Room
+                    $userr = auth()->id();
+                    $room = Room::where('user_id', $userr)->first();
+                    if ($room == null) {
+                        $room = new Room();
+                        $room->user_id = auth()->id();
+                        $room->save();
+                        event(new NewRoom($room));
+                    }
                     return response()->json([
                         'success' => true,
                         'message' => 'User successfully logged in.',

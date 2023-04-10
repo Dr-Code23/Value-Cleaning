@@ -18,12 +18,6 @@ class TypeRepository implements TypeInterface
 
     public function storeType($request)
     {
-         //Validated
-         $validateUser = Validator::make($request->all(),
-         [
-             'name' => 'required'
-         ]);
-
         $typeExpense = new TypeExpense();
         $typeExpense->name = $request->name;
         $typeExpense->notes = $request->notes;

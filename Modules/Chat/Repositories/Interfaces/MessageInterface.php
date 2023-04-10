@@ -33,6 +33,15 @@ interface MessageInterface
 
     // All Rooms Message
     public function allRoom();
+
+    // get Room User
+    public function getRoomUser();
+
+    // send Message admin
+    public function messageAdmin($request);
+
+     // check user or admin
+    public  function checkUser();
 }
 
 

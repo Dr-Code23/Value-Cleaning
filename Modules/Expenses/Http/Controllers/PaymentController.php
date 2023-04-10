@@ -24,7 +24,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        return $payment = $this->payment->getPayment();
+        return $payments = $this->payment->getPayment();
     }
 
     /**
@@ -43,7 +43,7 @@ class PaymentController extends Controller
      */
     public function store(PaymentRequest $request)
     {
-        return $payment = $this->payment->storePayment($request);
+        return $payments = $this->payment->storePayment($request);
     }
 
     /**
@@ -65,9 +65,9 @@ class PaymentController extends Controller
     {
          $payment = $this->payment->editPayment($request);
         if ($payment) {
-            return $this->messageResponse(($payment), 'payment Saved', 201);
+            return $this->expenseResponse(($payment), 'payment Saved', 200);
         }
-        return $this->messageResponse(null, 'payment Not Saved', 400);
+        return $this->expenseResponse(null, 'payment Not Saved', 400);
     }
 
     /**
@@ -80,9 +80,9 @@ class PaymentController extends Controller
     {
          $payment = $this->payment->updatePayment($request);
         if ($payment) {
-            return $this->messageResponse(($payment), 'payment update', 201);
+            return $this->expenseResponse(($payment), 'payment update', 200);
         }
-        return $this->messageResponse(null, 'payment Not update', 400);
+        return $this->expenseResponse(null, 'payment Not update', 400);
     }
 
     /**
@@ -94,8 +94,8 @@ class PaymentController extends Controller
     {
          $payment = $this->payment->destroy($request);
         if ($payment) {
-            return $this->messageResponse(($payment), 'payment deleted', 201);
+            return $this->expenseResponse(($payment), 'payment deleted', 200);
         }
-        return $this->messageResponse(null, 'payment Not deleted', 400);
+        return $this->expenseResponse(null, 'payment Not deleted', 400);
     }
 }

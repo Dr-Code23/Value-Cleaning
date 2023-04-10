@@ -3,6 +3,7 @@
 namespace Modules\Expenses\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use PHPUnit\Framework\Constraint\IsFalse;
 
 class TypeRequest extends FormRequest
 {
@@ -15,13 +16,13 @@ class TypeRequest extends FormRequest
     {
         return [
 
-            'name' => 'required.unique:expenses|max:255',
+            'name' => 'required.unique:type_expenses',
         ];
     }
     public function messages()
     {
         return [
-            'name.required' => 'message required',
+            'name.required' => 'name required',
         ];
     }
     /**
@@ -31,6 +32,6 @@ class TypeRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return False;
     }
 }

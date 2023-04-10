@@ -11,10 +11,11 @@ class Room extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = ['user_id'];
 
-    function users(){
-        return $this->belongsToMany(User::class, 'room_users');
+    public function users()
+    {
+        return $this->belongsTo(User::class,'user_id','id');
     }
     public function message()
     {
