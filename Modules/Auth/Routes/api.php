@@ -90,6 +90,9 @@ Route::middleware(['user_api'])->prefix("admin")->group(function () {
     Route::post('Admin-change-password', [AdminChangePasswordAController::class, 'adminChangePassword']);
     Route::get('logout', [AdminProfileController::class, 'Logout']);
     Route::post('send', [SendNotificationController::class, 'sendNotification']);
+    Route::get('allNotification', [SendNotificationController::class, 'sendNotification']);
+    Route::delete('deleteNotification/{id}', [SendNotificationController::class, 'sendNotification']);
+
     Route::get('all', [AdminController::class, 'all']);
     Route::apiresource('about', AboutController::class);
     Route::apiresource('footer', FooterController::class,);

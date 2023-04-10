@@ -2,8 +2,11 @@
 
 namespace Modules\Expenses\Http\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Expenses\Http\Requests\TypeRequest;
 use Modules\Expenses\Repositories\Interfaces\TypeInterface;
@@ -12,12 +15,14 @@ class TypeController extends Controller
 {
 
     use ExpenseResponseTrait;
+
     protected $typeExpenses;
 
     public function __construct(TypeInterface $typeExpenses)
     {
         $this->typeExpenses = $typeExpenses;
     }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -39,15 +44,15 @@ class TypeController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param Request $request
-     * @return Renderable
+     * @return Application|ResponseFactory|Response
      */
-    public function store(TypeRequest $request)
+    public function store(Request $request)
     {
-         $typeExpenses = $this->typeExpenses->storeType($request);
+        $typeExpenses = $this->typeExpenses->storeType($request);
         if ($typeExpenses) {
-            return $this->messageResponse(($typeExpenses), 'type Expenses Saved', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses Saved', 201);
         }
-        return $this->messageResponse(null, 'type Expenses Not Save', 400);
+        return $this->expenseResponse(null, 'type Expenses Not Save', 400);
     }
 
     /**
@@ -63,30 +68,30 @@ class TypeController extends Controller
     /**
      * Show the form for editing the specified resource.
      * @param int $id
-     * @return Renderable
+     * @return Application|ResponseFactory|Response
      */
     public function edit(Request $request)
     {
-         $typeExpenses = $this->typeExpenses->editType($request);
+        $typeExpenses = $this->typeExpenses->editType($request);
         if ($typeExpenses) {
-            return $this->messageResponse(($typeExpenses), 'type Expenses found', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses found', 201);
         }
-        return $this->messageResponse(null, 'type Expenses Not found', 400);
+        return $this->expenseResponse(null, 'type Expenses Not found', 400);
     }
 
     /**
      * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
-     * @return Renderable
+     * @return Application|ResponseFactory|Response
      */
-    public function update(TypeRequest $request)
+    public function update(Request $request)
     {
-         $typeExpenses = $this->typeExpenses->updateType($request);
+        $typeExpenses = $this->typeExpenses->updateType($request);
         if ($typeExpenses) {
-            return $this->messageResponse(($typeExpenses), 'type Expenses update', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses update', 201);
         }
-        return $this->messageResponse(null, 'type Expenses Not update', 400);
+        return $this->expenseResponse(null, 'type Expenses Not update', 400);
     }
 
     /**
@@ -96,10 +101,10 @@ class TypeController extends Controller
      */
     public function destroy(Request $request)
     {
-         $typeExpenses = $this->typeExpenses->destroy($request);
+        $typeExpenses = $this->typeExpenses->destroy($request);
         if ($typeExpenses) {
-            return $this->messageResponse(($typeExpenses), 'type Expenses delete', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses delete', 201);
         }
-        return $this->messageResponse(null, 'type Expenses Not delete', 400);
+        return $this->expenseResponse(null, 'type Expenses Not delete', 400);
     }
 }

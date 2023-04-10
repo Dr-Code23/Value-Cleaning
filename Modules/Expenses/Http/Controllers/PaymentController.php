@@ -12,12 +12,14 @@ class PaymentController extends Controller
 {
 
     use ExpenseResponseTrait;
+
     protected $payment;
 
     public function __construct(PaymentInterface $payment)
     {
         $this->payment = $payment;
     }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -41,7 +43,7 @@ class PaymentController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(PaymentRequest $request)
+    public function store(Request $request)
     {
         return $payment = $this->payment->storePayment($request);
     }
@@ -63,11 +65,11 @@ class PaymentController extends Controller
      */
     public function edit(Request $request)
     {
-         $payment = $this->payment->editPayment($request);
+        $payment = $this->payment->editPayment($request);
         if ($payment) {
-            return $this->messageResponse(($payment), 'payment Saved', 201);
+            return $this->expenseResponse(($payment), 'payment Saved', 201);
         }
-        return $this->messageResponse(null, 'payment Not Saved', 400);
+        return $this->expenseResponse(null, 'payment Not Saved', 400);
     }
 
     /**
@@ -76,13 +78,13 @@ class PaymentController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(PaymentRequest $request)
+    public function update(Request $request)
     {
-         $payment = $this->payment->updatePayment($request);
+        $payment = $this->payment->updatePayment($request);
         if ($payment) {
-            return $this->messageResponse(($payment), 'payment update', 201);
+            return $this->expenseResponse(($payment), 'payment update', 201);
         }
-        return $this->messageResponse(null, 'payment Not update', 400);
+        return $this->expenseResponse(null, 'payment Not update', 400);
     }
 
     /**
@@ -92,10 +94,10 @@ class PaymentController extends Controller
      */
     public function destroy(Request $request)
     {
-         $payment = $this->payment->destroy($request);
+        $payment = $this->payment->destroy($request);
         if ($payment) {
-            return $this->messageResponse(($payment), 'payment deleted', 201);
+            return $this->expenseResponse(($payment), 'payment deleted', 201);
         }
-        return $this->messageResponse(null, 'payment Not deleted', 400);
+        return $this->expenseResponse(null, 'payment Not deleted', 400);
     }
 }

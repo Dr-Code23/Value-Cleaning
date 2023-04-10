@@ -12,19 +12,21 @@ class ExpenseController extends Controller
 {
 
     use ExpenseResponseTrait;
+
     protected $expense;
 
     public function __construct(ExpenseInterface $expense)
     {
         $this->expense = $expense;
     }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-       return $expense = $this->expense->getExpense();
+        return $expense = $this->expense->getExpense();
     }
 
     /**
@@ -43,11 +45,11 @@ class ExpenseController extends Controller
      */
     public function store(ExpenseRequest $request)
     {
-         $expense = $this->expense->storeExpense($request);
+        $expense = $this->expense->storeExpense($request);
         if ($expense) {
-            return $this->messageResponse(($expense), 'expense Saved', 201);
+            return $this->expenseResponse(($expense), 'expense Saved', 201);
         }
-        return $this->messageResponse(null, 'expense Not Saved', 400);
+        return $this->expenseResponse(null, 'expense Not Saved', 400);
     }
 
     /**
@@ -67,22 +69,21 @@ class ExpenseController extends Controller
      */
     public function edit(Request $request)
     {
-         $expense = $this->expense->editExpense($request);
+        $expense = $this->expense->editExpense($request);
         if ($expense) {
-            return $this->messageResponse(($expense), 'expense found', 201);
+            return $this->expenseResponse(($expense), 'expense found', 201);
         }
-        return $this->messageResponse(null, 'expense Not found', 400);
+        return $this->expenseResponse(null, 'expense Not found', 400);
     }
-
 
 
     public function update(ExpenseRequest $request)
     {
-         $expense = $this->expense->updateExpense($request);
+        $expense = $this->expense->updateExpense($request);
         if ($expense) {
-            return $this->messageResponse(($expense), 'expense Update', 201);
+            return $this->expenseResponse(($expense), 'expense Update', 201);
         }
-        return $this->messageResponse(null, 'expense Not Update', 400);
+        return $this->expenseResponse(null, 'expense Not Update', 400);
     }
 
     /**
@@ -92,10 +93,10 @@ class ExpenseController extends Controller
      */
     public function destroy(Request $request)
     {
-         $expense = $this->expense->destroy($request);
+        $expense = $this->expense->destroy($request);
         if ($expense) {
-            return $this->messageResponse(($expense), 'expense Deleted', 201);
+            return $this->expenseResponse(($expense), 'expense Deleted', 201);
         }
-        return $this->messageResponse(null, 'expense Not Deleted', 400);
+        return $this->expenseResponse(null, 'expense Not Deleted', 400);
     }
 }

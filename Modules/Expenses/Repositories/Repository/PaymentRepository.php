@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Expenses\Repositories\Repository;
+
 use Modules\Expenses\Entities\Payment;
 use Modules\Expenses\Repositories\Interfaces\PaymentInterface;
 
@@ -13,7 +15,6 @@ class PaymentRepository implements PaymentInterface
     }
 
 
-
     public function storePayment($request)
     {
         $payments = new Payment();
@@ -22,6 +23,7 @@ class PaymentRepository implements PaymentInterface
         $payments->date = $request->date;
         $payments->notes = $request->notes;
         $payments->save();
+        return $payments;
     }
 
     public function updatePayment($request)
@@ -32,6 +34,8 @@ class PaymentRepository implements PaymentInterface
         $payments->date = $request->date;
         $payments->notes = $request->notes;
         $payments->save();
+        return $payments;
+
     }
 
     public function getPayment()
@@ -43,6 +47,8 @@ class PaymentRepository implements PaymentInterface
     {
         $payments = Payment::where('id', $request->id)->first();
         $payments->delete();
+        return $payments;
+
     }
 
 }

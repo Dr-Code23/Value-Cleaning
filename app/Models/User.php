@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Modules\Auth\Entities\SendNotification;
 use Modules\Chat\Entities\Message;
 use Modules\Chat\Entities\Room;
 use Modules\Order\Entities\Schedule;
@@ -94,5 +95,8 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         return $this->belongsToMany(Room::class, 'room_users');
     }
 
-
+    public function unreadSendNotifications()
+    {
+        return $this->hasMany(SendNotification::class)->where('is_read', false);
+    }
 }

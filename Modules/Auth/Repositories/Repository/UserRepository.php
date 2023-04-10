@@ -243,15 +243,19 @@ class UserRepository implements UserRepositoryInterface
      */
     public function notification()
     {
-        $notification = $this->notificationModel
+        $notifications = $this->notificationModel
             ->query()
             ->where('user_id', Auth::id())
-            ->markAsRead()
             ->get();
-        return ['statusCode' => 200, 'status' => true,
-            'data' => $notification
-        ];
+        foreach ($notifications as $notification) {
+            $notification->markAsRead();
 
+
+        }
+
+        return ['statusCode' => 200, 'status' => true,
+            'data' => $notifications
+        ];
     }
 
     /**

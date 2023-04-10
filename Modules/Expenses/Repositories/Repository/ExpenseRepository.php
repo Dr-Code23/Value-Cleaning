@@ -1,5 +1,7 @@
 <?php
+
 namespace Modules\Expenses\Repositories\Repository;
+
 use Modules\Expenses\Entities\Expense;
 use Modules\Expenses\Repositories\Interfaces\ExpenseInterface;
 
@@ -22,6 +24,7 @@ class ExpenseRepository implements ExpenseInterface
         $expenses->notes = $request->notes;
         $expenses->type_id = $request->type_id;
         $expenses->save();
+        return $expenses;
     }
 
     public function updateExpense($request)
@@ -33,17 +36,21 @@ class ExpenseRepository implements ExpenseInterface
         $expenses->notes = $request->notes;
         $expenses->type_id = $request->type_id;
         $expenses->save();
+        return $expenses;
+
     }
 
     public function destroy($request)
     {
         $expenses = Expense::where('id', $request->id)->first();
         $expenses->delete();
+        return $expenses;
+
     }
 
     public function getExpense()
     {
-       return $expenses = Expense::all();
+        return $expenses = Expense::all();
     }
 }
 
