@@ -2,8 +2,11 @@
 
 namespace Modules\Expenses\Http\Controllers;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Expenses\Http\Requests\PaymentRequest;
 use Modules\Expenses\Repositories\Interfaces\PaymentInterface;
@@ -17,6 +20,10 @@ class PaymentController extends Controller
 
     public function __construct(PaymentInterface $payment)
     {
+        $this->middleware('permission:payment-list|payment-create|payment-edit|payment-delete');
+        $this->middleware('permission:payment-create', ['only' => ['store']]);
+        $this->middleware('permission:payment-edit', ['only' => ['update']]);
+        $this->middleware('permission:payment-delete', ['only' => ['destroy']]);
         $this->payment = $payment;
     }
 
@@ -26,7 +33,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        return $payment = $this->payment->getPayment();
+        return $payments = $this->payment->getPayment();
     }
 
     /**
@@ -45,7 +52,7 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        return $payment = $this->payment->storePayment($request);
+        return $payments = $this->payment->storePayment($request);
     }
 
     /**
@@ -61,13 +68,13 @@ class PaymentController extends Controller
     /**
      * Show the form for editing the specified resource.
      * @param int $id
-     * @return Renderable
+     * @return Application|ResponseFactory|Response
      */
     public function edit(Request $request)
     {
         $payment = $this->payment->editPayment($request);
         if ($payment) {
-            return $this->expenseResponse(($payment), 'payment Saved', 201);
+            return $this->expenseResponse(($payment), 'payment Saved', 200);
         }
         return $this->expenseResponse(null, 'payment Not Saved', 400);
     }
@@ -76,13 +83,14 @@ class PaymentController extends Controller
      * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
-     * @return Renderable
+     * @return Application|ResponseFactory|Response
      */
     public function update(Request $request)
     {
         $payment = $this->payment->updatePayment($request);
         if ($payment) {
-            return $this->expenseResponse(($payment), 'payment update', 201);
+
+            return $this->expenseResponse(($payment), 'payment update', 200);
         }
         return $this->expenseResponse(null, 'payment Not update', 400);
     }
@@ -90,13 +98,13 @@ class PaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Renderable
+     * @return Application|ResponseFactory|Response
      */
     public function destroy(Request $request)
     {
         $payment = $this->payment->destroy($request);
         if ($payment) {
-            return $this->expenseResponse(($payment), 'payment deleted', 201);
+            return $this->expenseResponse(($payment), 'payment deleted', 200);
         }
         return $this->expenseResponse(null, 'payment Not deleted', 400);
     }

@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Modules\Auth\Emails\EventMail;
-use Modules\Auth\Entities\Notification;
 use Modules\Auth\Entities\SendNotification;
 use Modules\Auth\Entities\TermsAndConditions;
 use Modules\Auth\Events\NewCompany;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
 use Modules\Auth\Transformers\CompanyResource;
 use Modules\Auth\Transformers\UserResource;
+use Modules\Chat\Entities\Room;
+use Modules\Chat\Events\NewRoom;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserRepository implements UserRepositoryInterface
@@ -84,6 +85,15 @@ class UserRepository implements UserRepositoryInterface
                 } elseif ($user->type == 'user') {
                     $user['device_token'] = $data->device_token;
                     $user->update();
+                    // Create Room
+                    $userr = auth()->id();
+                    $room = Room::where('user_id', $userr)->first();
+                    if ($room == null) {
+                        $room = new Room();
+                        $room->user_id = auth()->id();
+                        $room->save();
+                        event(new NewRoom($room));
+                    }
                     return response()->json([
                         'success' => true,
                         'message' => 'User successfully logged in.',
@@ -212,13 +222,13 @@ class UserRepository implements UserRepositoryInterface
 
         // The passwords matches
         if (!Hash::check($data->get('current_password'), $auth->password)) {
-            return response()->json(['error', "Current Password is Invalid"]);
+            return response()->json(['statusCode' => 400, 'status' => false, 'message', "Current Password is Invalid"], 400);
         }
 
         $user = $this->userModel->find($auth->id);
         $user->password = Hash::make($data->new_password);
         $user->save();
-        return response()->json(['success', "Password Changed Successfully"]);
+        return response()->json(['statusCode' => 200, 'status' => true, 'message', "Password Changed Successfully"]);
     }
 
     /**

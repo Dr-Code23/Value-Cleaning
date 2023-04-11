@@ -21,6 +21,10 @@ class TypeController extends Controller
     public function __construct(TypeInterface $typeExpenses)
     {
         $this->typeExpenses = $typeExpenses;
+        $this->middleware('permission:type-list|type-create|type-edit|type-delete');
+        $this->middleware('permission:type-create', ['only' => ['store']]);
+        $this->middleware('permission:type-edit', ['only' => ['update']]);
+        $this->middleware('permission:type-delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -29,7 +33,7 @@ class TypeController extends Controller
      */
     public function index()
     {
-        return $typeExpenses = $this->typeExpenses->getType();
+        return $typeExpense = $this->typeExpenses->getType();
     }
 
     /**
@@ -50,7 +54,7 @@ class TypeController extends Controller
     {
         $typeExpenses = $this->typeExpenses->storeType($request);
         if ($typeExpenses) {
-            return $this->expenseResponse(($typeExpenses), 'type Expenses Saved', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses Saved', 200);
         }
         return $this->expenseResponse(null, 'type Expenses Not Save', 400);
     }
@@ -74,7 +78,7 @@ class TypeController extends Controller
     {
         $typeExpenses = $this->typeExpenses->editType($request);
         if ($typeExpenses) {
-            return $this->expenseResponse(($typeExpenses), 'type Expenses found', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses found', 200);
         }
         return $this->expenseResponse(null, 'type Expenses Not found', 400);
     }
@@ -89,7 +93,7 @@ class TypeController extends Controller
     {
         $typeExpenses = $this->typeExpenses->updateType($request);
         if ($typeExpenses) {
-            return $this->expenseResponse(($typeExpenses), 'type Expenses update', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses update', 200);
         }
         return $this->expenseResponse(null, 'type Expenses Not update', 400);
     }
@@ -97,13 +101,13 @@ class TypeController extends Controller
     /**
      * Remove the specified resource from storage.
      * @param int $id
-     * @return Renderable
+     * @return Application|Response|ResponseFactory
      */
     public function destroy(Request $request)
     {
         $typeExpenses = $this->typeExpenses->destroy($request);
         if ($typeExpenses) {
-            return $this->expenseResponse(($typeExpenses), 'type Expenses delete', 201);
+            return $this->expenseResponse(($typeExpenses), 'type Expenses delete', 200);
         }
         return $this->expenseResponse(null, 'type Expenses Not delete', 400);
     }

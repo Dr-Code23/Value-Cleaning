@@ -59,6 +59,18 @@ class PermissionTableSeeder extends Seeder
             'notification-list',
             'notification-send',
             'notification-delete',
+            'expense-list',
+            'expense-create',
+            'expense-edit',
+            'expense-delete',
+            'payment-list',
+            'payment-create',
+            'payment-edit',
+            'payment-delete',
+            'type-list',
+            'type-create',
+            'type-edit',
+            'type-delete',
 
         ];
 

@@ -92,11 +92,12 @@ class User extends Authenticatable implements HasMedia, JWTSubject
 
     public function room()
     {
-        return $this->belongsToMany(Room::class, 'room_users');
+        return $this->hasMany(Room::class, 'user_2')->orWhere('user_1', $this->id);
     }
 
     public function unreadSendNotifications()
     {
         return $this->hasMany(SendNotification::class)->where('is_read', false);
     }
+
 }

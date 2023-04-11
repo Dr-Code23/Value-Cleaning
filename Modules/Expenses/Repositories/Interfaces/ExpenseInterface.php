@@ -18,6 +18,9 @@ interface ExpenseInterface
 
     // update Expense
     public function updateExpense($request);
+
+    // search
+    public function search($request);
 }
 
 
