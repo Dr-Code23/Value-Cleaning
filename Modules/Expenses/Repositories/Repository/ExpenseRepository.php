@@ -1,5 +1,6 @@
 <?php
 namespace Modules\Expenses\Repositories\Repository;
+use Illuminate\Support\Facades\DB;
 use Modules\Expenses\Entities\Expense;
 use Modules\Expenses\Repositories\Interfaces\ExpenseInterface;
 
@@ -49,11 +50,11 @@ class ExpenseRepository implements ExpenseInterface
     }
     public function search($request)
     {
-//        $from = date('2018-01-01');
-//        $to = date('2018-05-02');
-        $from = $request->start;
-        $to = $request->end;
-      return  Expense::whereBetween('date', [$from, $to])->get();
+        $startDate = $request->start;
+        $endDate = $request->end;
+        return  Expense::whereBetween(DB::raw('DATE(date)'), [$startDate, $endDate])->get();
+//      return $expenses = Expense::whereBetween('date', [$from, $to])->get();
+//        return $expenses;
     }
 }
 

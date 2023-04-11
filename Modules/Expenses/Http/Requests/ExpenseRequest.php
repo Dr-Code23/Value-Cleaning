@@ -24,10 +24,10 @@ class ExpenseRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'message required',
+            'name.required' => 'name required',
             'money.required' => 'money required ',
             'type_id.required' => 'type required',
-            'date.required' => 'date required ',
+            'date' => 'required ',
         ];
     }
 
