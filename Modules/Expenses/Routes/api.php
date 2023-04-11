@@ -27,5 +27,4 @@ Route::get('get-payment', [PaymentController::class, 'index']);
 Route::post('update-payment', [PaymentController::class, 'update']);
 Route::post('delete-payments', [PaymentController::class, 'destroy']);
 Route::post('edit-payment', [PaymentController::class, 'edit']);
-
  });

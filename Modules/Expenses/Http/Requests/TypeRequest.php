@@ -23,6 +23,7 @@ class TypeRequest extends FormRequest
     {
         return [
             'name.required' => 'name required',
+            'name.unique' => 'name unique',
         ];
     }
     /**
@@ -32,6 +33,6 @@ class TypeRequest extends FormRequest
      */
     public function authorize()
     {
-        return False;
+        return true;
     }
 }

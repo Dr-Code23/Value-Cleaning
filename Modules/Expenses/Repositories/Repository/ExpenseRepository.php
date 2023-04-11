@@ -38,6 +38,7 @@ class ExpenseRepository implements ExpenseInterface
         $expenses->save();
         return $expenses;
 
+
     }
 
     public function destroy($request)
@@ -52,13 +53,14 @@ class ExpenseRepository implements ExpenseInterface
     {
         return $expenses = Expense::all();
     }
+
     public function search($request)
     {
 //        $from = date('2018-01-01');
 //        $to = date('2018-05-02');
         $from = $request->start;
         $to = $request->end;
-      return  Expense::whereBetween('date', [$from, $to])->get();
+        return Expense::whereBetween('date', [$from, $to])->get();
     }
 }
 

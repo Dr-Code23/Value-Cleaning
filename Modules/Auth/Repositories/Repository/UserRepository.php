@@ -222,13 +222,13 @@ class UserRepository implements UserRepositoryInterface
 
         // The passwords matches
         if (!Hash::check($data->get('current_password'), $auth->password)) {
-            return response()->json(['statusCode' => 400, 'status' => false, 'message', "Current Password is Invalid"], 400);
+            return response()->json(['statusCode' => 400, 'status' => false, 'message' => "Current Password is Invalid"], 400);
         }
 
         $user = $this->userModel->find($auth->id);
         $user->password = Hash::make($data->new_password);
         $user->save();
-        return response()->json(['statusCode' => 200, 'status' => true, 'message', "Password Changed Successfully"]);
+        return response()->json(['statusCode' => 200, 'status' => true, 'message' => "Password Changed Successfully"]);
     }
 
     /**

@@ -17,7 +17,7 @@ class PaymentRequest extends FormRequest
 
             'name' => 'required',
             'money' => 'required',
-            'date' => 'required',
+            'date' => 'required|date',
         ];
     }
     public function messages()
@@ -36,6 +36,6 @@ class PaymentRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 }
