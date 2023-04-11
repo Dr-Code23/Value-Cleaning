@@ -15,7 +15,7 @@ class ExpenseRequest extends FormRequest
     {
         return [
 
-            'name' => 'required.unique:expenses|max:255',
+            'name' => 'required|max:255',
             'type_id' => 'required',
             'money' => 'required',
             'date' => 'required',
@@ -25,7 +25,7 @@ class ExpenseRequest extends FormRequest
     {
         return [
             'name.required' => 'message required',
-            'money.required' => 'room required ',
+            'money.required' => 'money required ',
             'type_id.required' => 'type required',
             'date.required' => 'date required ',
         ];
@@ -38,6 +38,6 @@ class ExpenseRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 }

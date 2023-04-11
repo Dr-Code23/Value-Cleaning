@@ -22,6 +22,7 @@ class ExpenseRepository implements ExpenseInterface
         $expenses->notes = $request->notes;
         $expenses->type_id = $request->type_id;
         $expenses->save();
+        return $expenses;
     }
 
     public function updateExpense($request)
@@ -33,6 +34,7 @@ class ExpenseRepository implements ExpenseInterface
         $expenses->notes = $request->notes;
         $expenses->type_id = $request->type_id;
         $expenses->save();
+        return $expenses;
     }
 
     public function destroy($request)

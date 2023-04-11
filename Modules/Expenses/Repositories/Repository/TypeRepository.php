@@ -22,6 +22,7 @@ class TypeRepository implements TypeInterface
         $typeExpense->name = $request->name;
         $typeExpense->notes = $request->notes;
         $typeExpense->save();
+        return $typeExpense;
     }
 
     public function destroy($request)
@@ -36,5 +37,6 @@ class TypeRepository implements TypeInterface
         $typeExpense->name = $request->name;
         $typeExpense->notes = $request->notes;
         $typeExpense->save();
+        return $typeExpense;
     }
 }

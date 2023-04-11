@@ -22,6 +22,7 @@ class PaymentRepository implements PaymentInterface
         $payments->date = $request->date;
         $payments->notes = $request->notes;
         $payments->save();
+        return $payments;
     }
 
     public function updatePayment($request)
@@ -32,6 +33,7 @@ class PaymentRepository implements PaymentInterface
         $payments->date = $request->date;
         $payments->notes = $request->notes;
         $payments->save();
+        return $payments;
     }
 
     public function getPayment()
