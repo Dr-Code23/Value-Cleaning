@@ -183,9 +183,5 @@ class MessageRepository implements MessageInterface
         return $roomMessage;
     }
 
-    public function messageAdmin($request)
-    {
-        // TODO: Implement messageAdmin() method.
-    }
 }
 
