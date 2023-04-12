@@ -60,15 +60,16 @@ class MessageRepository implements MessageInterface
             })->with('media')->get();
 
         }
-
-
     }
 
     public function getRoomUser()
     {
-        return $rooms = Message::whereHas('room', function ($q) {
+         $rooms = Message::whereHas('room', function ($q) {
             $q->where('user_id', auth()->id());
         })->with('media')->get();
+//        $user = auth()->id();
+//        $rooms = Room::with('message','media')->where('user_id', auth()->id());
+        return $rooms ;
         //    return  $room = Room::with('message')->where('user_id', $user)->first();
     }
 
