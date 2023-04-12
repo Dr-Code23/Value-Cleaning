@@ -5,6 +5,7 @@ namespace Modules\Auth\Http\Controllers\Api\Auth;
 use App\Models\User;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Modules\Auth\Http\Requests\CreateRequest;
@@ -70,14 +71,20 @@ class AuthController extends Controller
      * @param $provider
      * @return JsonResponse
      */
-    public function handleProviderCallback($provider)
+    public function handleProviderCallback(Request $request, $provider)
     {
         $validated = $this->validateProvider($provider);
         if (!is_null($validated)) {
             return $validated;
         }
+        $accessToken = $request->input('access_token');
+
         try {
-            $user = Socialite::driver($provider)->stateless()->user();
+            if ($accessToken) {
+                $user = Socialite::driver($provider)->stateless()->userFromToken($accessToken);
+            } else {
+                $user = Socialite::driver($provider)->stateless()->user();
+            }
         } catch (ClientException $exception) {
             return response()->json(['error' => 'Invalid credentials provided.'], 422);
         }
@@ -105,7 +112,7 @@ class AuthController extends Controller
 
         $token = jwtAuth::fromUser($userCreated);
         return response()->json(['statusCode' => 200, 'status' => true,
-            'message' => ' success  ', 'data' => new UserResource($userCreated), 'Access-Token' => $token]);
+            'message' => ' success  ', 'data' => new UserResource($userCreated), 'token' => $token]);
     }
 
     /**
