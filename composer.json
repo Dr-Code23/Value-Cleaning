@@ -23,7 +23,8 @@
         "stripe/stripe-php": "^10.8",
         "tomatophp/laravel-agora": "^1.0",
         "tymon/jwt-auth": "^1.0",
-        "willywes/agora-sdk-php": "^0.1.3"
+        "willywes/agora-sdk-php": "^0.1.3",
+        "yasserbelhimer/agora-access-token-generator": "^1.0"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",

@@ -90,10 +90,10 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         return $this->hasMany(Message::class);
     }
 
-    public function room()
-    {
-        return $this->hasMany(Room::class, 'user_2')->orWhere('user_1', $this->id);
-    }
+//    public function room()
+//    {
+//        return $this->hasMany(Room::class, 'user_2')->orWhere('user_1', $this->id);
+//    }
 
     public function unreadSendNotifications()
     {

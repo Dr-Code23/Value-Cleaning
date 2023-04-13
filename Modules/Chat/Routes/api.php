@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Chat\Http\Controllers\ChatController;
+use Modules\Chat\Http\Controllers\VideoCallController;
 
 
 Route::group(['middleware' => 'auth:api'], function () {
@@ -20,7 +21,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('latest-messages', [ChatController::class, 'latestMessage']);
     Route::post('delete/{id}', [ChatController::class, 'destroy']);
     Route::post('/agora/call-user', [ChatController::class, 'callUser']);
-    Route::post('/generate-token', [ChatController::class, 'generateToken']);
+    Route::post('/generate-token', [VideoCallController::class, 'generateToken']);
 
 
 });
