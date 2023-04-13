@@ -58,36 +58,6 @@ class ChatController extends Controller
         return $message = $this->message->getRoomUser();
     }
 
-    // read Message
-    public function read($id)
-    {
-        $message = $this->message->readMessage($id);
-        if ($message) {
-            return $this->messageResponse(($message), 'The Message Seen', 200);
-        }
-        return $this->messageResponse(null, 'The Room Not Save', 400);
-    }
-
-    // delete room
-    public function delete(Request $request)
-    {
-        $message = $this->message->deleteMessage($request);
-        if ($message) {
-            return $this->messageResponse(($message), 'The room delete', 200);
-        }
-        return $this->messageResponse(null, 'The Room Not delete', 400);
-    }
-
-
-    // read Message
-    public function message(Request $request)
-    {
-        $message = $this->message->room($request);
-        if ($message) {
-            return $this->messageResponse(($message), 'The room message', 200);
-        }
-        return $this->messageResponse(null, 'The Room Not found', 400);
-    }
 
     public function store(MessageRequest $request)
     {
@@ -115,6 +85,7 @@ class ChatController extends Controller
     }
 
     // check user or admin
+
     public function checkRoom()
     {
         $message = $this->message->checkUser();

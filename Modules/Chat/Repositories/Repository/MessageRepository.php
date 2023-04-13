@@ -19,33 +19,6 @@ class MessageRepository implements MessageInterface
 {
     use MessageResponseTrait;
 
-    // get room messages
-    public function room($request)
-    {
-        $message = Message::where('room_id', $request->id)->first();
-        if ($message != null) {
-            $message->seen_at = Carbon::now();
-            $message->save();
-        }
-        $roomId = explode(',', $request->input('id'));
-        $rooms = Message::whereHas('room', function ($q) use ($roomId) {
-            $q->where('id', $roomId);
-        })->with('media')->get();
-        return $rooms;
-    }
-
-    // view SoftDelete
-    public function getSoft()
-    {
-        $user = auth()->id();
-        $onlySoftDeleted = MessageUser::onlyTrashed()->pluck('delete_by');
-        foreach ($onlySoftDeleted as $soft) {
-            if ($soft == $user) {
-                return "Message Delete";
-            }
-        }
-    }
-
     // check user or admin
     public function checkUser()
     {
@@ -64,7 +37,7 @@ class MessageRepository implements MessageInterface
 
     public function getRoomUser()
     {
-         $rooms = Message::whereHas('room', function ($q) {
+        $rooms = Message::whereHas('room', function ($q) {
             $q->where('user_id', auth()->id());
         })->with('media')->get();
 //        $user = auth()->id();
@@ -73,35 +46,28 @@ class MessageRepository implements MessageInterface
         //    return  $room = Room::with('message')->where('user_id', $user)->first();
     }
 
-    // get Room
-    public function getRoom($request)
-    {
-        $user_1 = auth()->id();
-        $user_ids = [$user_1, $request->user_2];
-        $message = Room::has('users', '=', count($user_ids))
-            ->whereHas('users', function ($query) use ($user_ids) {
-                $query->whereIn('user_id', $user_ids);
-            }, '=', count($user_ids))->get('id');
-        foreach ($message as $i) {
-            $latest = Message::where(['room_id' => $i->id])->latest()->first();
-            $unRead = Message::where('room_id', $i->id)->where('seen_at', 0)->count();
-        }
-        $data = [
-            'latest' => $latest,
-            'unread' => $unRead,
-            'room' => $message
-        ];
-        return $data;
-    }
 
     //  send Message
     public function sendMessage($request)
     {
+      //  $user = auth()->id();
+        $rooms = Room::where('user_id', auth()->id())->get();
+        foreach ($rooms as $room){
+            $roomss =  $room->id;
+        }
+
         $image = $request->photo;
         $message = new Message();
         $message->sender_id = auth()->id();
-        $message->room_id = $request->room_id;
+        $message->room_id = $roomss;
         $message->message = $request->message;
+        if ($request->message == !null) {
+            $message->type_message = 'text';
+        }elseif ($request->photo == !null ||  $request->photo == 'mimes:jpeg,jpg,png,gif'){
+            $message->type_message = 'image';
+        }else{
+            $message->type_message = 'audio';
+        }
         if ($request->photo == !null) {
             $message->addMedia($image)->toMediaCollection('messages');
         }
@@ -134,29 +100,6 @@ class MessageRepository implements MessageInterface
         $messages->media()->delete();
     }
 
-    // Create Room
-    public function createRoom($request)
-    {
-        $room = new Room();
-        $room->save();
-        $user_1 = auth()->id();
-        //   User::where('type' , 'admin')->first()->id;
-        $user_2 = $request->user_2;
-        $user_ids = [$user_1, $user_2];
-        $room->users()->sync($user_ids);
-        event(new NewRoom($room));
-        return $room;
-    }
-
-    // read Message
-    public function readMessage($id)
-    {
-        $message = Message::find($id);
-        $message->seen_at = Carbon::now();
-        $message->save();
-        return $message;
-    }
-
     // latest Message
     public function latest($request)
     {
@@ -167,15 +110,6 @@ class MessageRepository implements MessageInterface
             'unread' => $unread,
         ];
         return $data;
-    }
-
-    public function deleteMessage($request)
-    {
-        $message = MessageUser::where('message_id', $request->id)->first();
-        $message->delete();
-        $message->delete_by = auth()->id();
-        $message->save();
-        return $message;
     }
 
     public function allRoom()
