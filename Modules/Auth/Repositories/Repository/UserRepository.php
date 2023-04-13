@@ -42,6 +42,11 @@ class UserRepository implements UserRepositoryInterface
             'password' => hash::make($data->password),
 
         ]);
+        $usere = User::latest()->first()->id;
+        $room = new Room();
+        $room->user_id = $usere;
+        $room->save();
+        event(new NewRoom($room));
         $user->assignRole('user');
         Auth::login($user);
 
@@ -58,7 +63,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function Login($data)
     {
-        $credentials = $data->only('email', 'password',);
+        $credentials = $data->only('email', 'password');
         //Create token
 
         try {
@@ -85,15 +90,6 @@ class UserRepository implements UserRepositoryInterface
                 } elseif ($user->type == 'user') {
                     $user['device_token'] = $data->device_token;
                     $user->update();
-                    // Create Room
-                    $userr = auth()->id();
-                    $room = Room::where('user_id', $userr)->first();
-                    if ($room == null) {
-                        $room = new Room();
-                        $room->user_id = auth()->id();
-                        $room->save();
-                        event(new NewRoom($room));
-                    }
                     return response()->json([
                         'success' => true,
                         'message' => 'User successfully logged in.',

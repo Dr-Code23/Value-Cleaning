@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->longText('message');
             $table->Text('seen_at')->default(false);
+            $table->enum('type_message', ['text', 'image', 'audio']);
             $table->foreignId('sender_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('room_id')->constrained('rooms')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
