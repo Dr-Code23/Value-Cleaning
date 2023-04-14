@@ -15,7 +15,7 @@ use Modules\Requirement\Http\Controllers\Admin\RequirementController;
 */
 
 
-Route::middleware(['user_api'])->prefix("admin")->group(function () {
+Route::middleware(['user_api', 'setlocale'])->prefix("admin")->group(function () {
     Route::get('requirement', [RequirementController::class, 'index']);
     Route::post('create/requirement', [RequirementController::class, 'store']);
     Route::get('show/requirement/{id}', [RequirementController::class, 'show']);
