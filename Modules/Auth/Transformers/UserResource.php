@@ -29,6 +29,8 @@ class UserResource extends JsonResource
             'count' => User::count(),
             'type' => $this->type,
             'companyId' => $this->companyId ?? 0,
+            'permission' => $this->getPermissionsViaRoles() ?? []
+
 
 
         ];
