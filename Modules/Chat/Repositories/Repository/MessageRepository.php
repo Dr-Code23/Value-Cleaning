@@ -50,7 +50,7 @@ class MessageRepository implements MessageInterface
     //  send Message
     public function sendMessage($request)
     {
-        //  $user = auth()->id();
+        $user = auth()->user();
         $rooms = Room::where('user_id', auth()->id())->get();
         foreach ($rooms as $room) {
             $roomss = $room->id;
@@ -59,30 +59,33 @@ class MessageRepository implements MessageInterface
         $image = $request->photo;
         $message = new Message();
         $message->sender_id = auth()->id();
-        $message->room_id = $roomss;
-        $message->message = $request->message;
-        if ($request->message == !null) {
-            $message->type_message = 'text';
-        } elseif ($request->photo == !null || $request->photo == 'mimes:jpeg,jpg,png,gif') {
-            $message->type_message = 'image';
+        if ($user->type == 'admin') {
+            $message->room_id = $request->room_id;
         } else {
-            $message->type_message = 'audio';
+            $message->room_id = $roomss;
         }
+        $message->message = $request->message;
+        // if ($request->message == !null) {
+        //     $message->type_message = 'text';
+        // } elseif ($request->photo == !null || $request->photo == 'mimes:jpeg,jpg,png,gif') {
+        //     $message->type_message = 'image';
+        // } else {
+        //     $message->type_message = 'audio';
+        // }
         if ($request->photo == !null) {
             $message->addMedia($image)->toMediaCollection('messages');
         }
         $message->save();
         event(new NewMessage($message));
-        $user = auth()->id();
-        $chat = Room::where('user_id', $user)->get();
-        if ($chat == true) {
+
+        if ($user->type == 'user') {
             $data = [
                 'message' => $message,
+                'photo' => $message->getFirstMediaUrl('messages'),
                 'Auth' => 'User',
             ];
             return $data;
-        }
-        {
+        } else {
             $data = [
                 'message' => $message,
                 'Auth' => 'Admin',

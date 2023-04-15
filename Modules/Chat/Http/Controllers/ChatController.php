@@ -59,7 +59,7 @@ class ChatController extends Controller
     }
 
 
-    public function store(MessageRequest $request)
+    public function store(Request $request)
     {
         $message = $this->message->sendMessage($request);
         if ($message) {

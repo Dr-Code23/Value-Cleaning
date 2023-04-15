@@ -15,17 +15,10 @@ class MessageRequest extends FormRequest
     {
         return [
 
-                'message' => 'required',
-                 'room_id' => 'required',
+            'message' => '',
         ];
     }
-    public function messages()
-    {
-        return [
-            'message.required' => 'message required',
-            'room_id.required' => 'room required ',
-        ];
-    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
