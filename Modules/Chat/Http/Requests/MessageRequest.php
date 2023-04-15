@@ -16,14 +16,14 @@ class MessageRequest extends FormRequest
         return [
 
                 'message' => 'required',
-                 'room_id' => 'required',
+//                 'room_id' => 'required',
         ];
     }
     public function messages()
     {
         return [
             'message.required' => 'message required',
-            'room_id.required' => 'room required ',
+//            'room_id.required' => 'room required ',
         ];
     }
     /**
