@@ -42,7 +42,7 @@ class MessageRepository implements MessageInterface
         })->with('media')->get();
 //        $user = auth()->id();
 //        $rooms = Room::with('message','media')->where('user_id', auth()->id());
-        return $rooms ;
+        return $rooms;
         //    return  $room = Room::with('message')->where('user_id', $user)->first();
     }
 
@@ -50,10 +50,10 @@ class MessageRepository implements MessageInterface
     //  send Message
     public function sendMessage($request)
     {
-      //  $user = auth()->id();
+        //  $user = auth()->id();
         $rooms = Room::where('user_id', auth()->id())->get();
-        foreach ($rooms as $room){
-            $roomss =  $room->id;
+        foreach ($rooms as $room) {
+            $roomss = $room->id;
         }
 
         $image = $request->photo;
@@ -63,9 +63,9 @@ class MessageRepository implements MessageInterface
         $message->message = $request->message;
         if ($request->message == !null) {
             $message->type_message = 'text';
-        }elseif ($request->photo == !null ||  $request->photo == 'mimes:jpeg,jpg,png,gif'){
+        } elseif ($request->photo == !null || $request->photo == 'mimes:jpeg,jpg,png,gif') {
             $message->type_message = 'image';
-        }else{
+        } else {
             $message->type_message = 'audio';
         }
         if ($request->photo == !null) {
@@ -119,4 +119,3 @@ class MessageRepository implements MessageInterface
     }
 
 }
-

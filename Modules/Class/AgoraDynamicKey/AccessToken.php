@@ -1,56 +1,172 @@
 <?php
 
-class Message
+namespace Modules\Class\AgoraDynamicKey;
+
+class Service
 {
-    public $salt;
-    public $ts;
+    public $type;
     public $privileges;
+
+    public function __construct($serviceType)
+    {
+        $this->type = $serviceType;
+    }
+
+    public function addPrivilege($privilege, $expire)
+    {
+        $this->privileges[$privilege] = $expire;
+    }
+
+    public function getServiceType()
+    {
+        return $this->type;
+    }
+
+    public function pack()
+    {
+        return Util::packUint16($this->type) . Util::packMapUint32($this->privileges);
+    }
+
+    public function unpack(&$data)
+    {
+        $this->privileges = Util::unpackMapUint32($data);
+    }
+}
+
+class ServiceRtc extends Service
+{
+    const SERVICE_TYPE = 1;
+    const PRIVILEGE_JOIN_CHANNEL = 1;
+    const PRIVILEGE_PUBLISH_AUDIO_STREAM = 2;
+    const PRIVILEGE_PUBLISH_VIDEO_STREAM = 3;
+    const PRIVILEGE_PUBLISH_DATA_STREAM = 4;
+    public $channelName;
+    public $uid;
+
+    public function __construct($channelName = "", $uid = "")
+    {
+        parent::__construct(self::SERVICE_TYPE);
+        $this->channelName = $channelName;
+        $this->uid = $uid;
+    }
+
+    public function pack()
+    {
+        return parent::pack() . Util::packString($this->channelName) . Util::packString($this->uid);
+    }
+
+    public function unpack(&$data)
+    {
+        parent::unpack($data);
+        $this->channelName = Util::unpackString($data);
+        $this->uid = Util::unpackString($data);
+    }
+}
+
+class ServiceRtm extends Service
+{
+    const SERVICE_TYPE = 2;
+    const PRIVILEGE_LOGIN = 1;
+    public $userId;
+
+    public function __construct($userId = "")
+    {
+        parent::__construct(self::SERVICE_TYPE);
+        $this->userId = $userId;
+    }
+
+    public function pack()
+    {
+        return parent::pack() . Util::packString($this->userId);
+    }
+
+    public function unpack(&$data)
+    {
+        parent::unpack($data);
+        $this->userId = Util::unpackString($data);
+    }
+}
+
+class ServiceFpa extends Service
+{
+    const SERVICE_TYPE = 4;
+    const PRIVILEGE_LOGIN = 1;
 
     public function __construct()
     {
-        $this->salt = rand(0, 100000);
-
-        $date = new DateTime("now", new DateTimeZone('UTC'));
-        $this->ts = $date->getTimestamp() + 24 * 3600;
-
-        $this->privileges = array();
+        parent::__construct(self::SERVICE_TYPE);
     }
 
-    public function packContent()
+    public function pack()
     {
-        $buffer = unpack("C*", pack("V", $this->salt));
-        $buffer = array_merge($buffer, unpack("C*", pack("V", $this->ts)));
-        $buffer = array_merge($buffer, unpack("C*", pack("v", sizeof($this->privileges))));
-        foreach ($this->privileges as $key => $value) {
-            $buffer = array_merge($buffer, unpack("C*", pack("v", $key)));
-            $buffer = array_merge($buffer, unpack("C*", pack("V", $value)));
-        }
-        return $buffer;
+        return parent::pack();
     }
 
-    public function unpackContent($msg)
+    public function unpack(&$data)
     {
-        $pos = 0;
-        $salt = unpack("V", substr($msg, $pos, 4))[1];
-        $pos += 4;
-        $ts = unpack("V", substr($msg, $pos, 4))[1];
-        $pos += 4;
-        $size = unpack("v", substr($msg, $pos, 2))[1];
-        $pos += 2;
-
-        $privileges = array();
-        for ($i = 0; $i < $size; $i++) {
-            $key = unpack("v", substr($msg, $pos, 2));
-            $pos += 2;
-            $value = unpack("V", substr($msg, $pos, 4));
-            $pos += 4;
-            $privileges[$key[1]] = $value[1];
-        }
-        $this->salt = $salt;
-        $this->ts = $ts;
-        $this->privileges = $privileges;
+        parent::unpack($data);
     }
 }
+
+class ServiceChat extends Service
+{
+    const SERVICE_TYPE = 5;
+    const PRIVILEGE_USER = 1;
+    const PRIVILEGE_APP = 2;
+    public $userId;
+
+    public function __construct($userId = "")
+    {
+        parent::__construct(self::SERVICE_TYPE);
+        $this->userId = $userId;
+    }
+
+    public function pack()
+    {
+        return parent::pack() . Util::packString($this->userId);
+    }
+
+    public function unpack(&$data)
+    {
+        parent::unpack($data);
+        $this->userId = Util::unpackString($data);
+    }
+}
+
+class ServiceEducation extends Service
+{
+    const SERVICE_TYPE = 7;
+    const PRIVILEGE_ROOM_USER = 1;
+    const PRIVILEGE_USER = 2;
+    const PRIVILEGE_APP = 3;
+
+    public $roomUuid;
+    public $userUuid;
+    public $role;
+
+
+    public function __construct($roomUuid = "", $userUuid = "", $role = -1)
+    {
+        parent::__construct(self::SERVICE_TYPE);
+        $this->roomUuid = $roomUuid;
+        $this->userUuid = $userUuid;
+        $this->role = $role;
+    }
+
+    public function pack()
+    {
+        return parent::pack() . Util::packString($this->roomUuid) . Util::packString($this->userUuid) . Util::packInt16($this->role);
+    }
+
+    public function unpack(&$data)
+    {
+        parent::unpack($data);
+        $this->roomUuid = Util::unpackString($data);
+        $this->userUuid = Util::unpackString($data);
+        $this->role = Util::unpackInt16($data);
+    }
+}
+
 
 class AccessToken
 {
@@ -77,118 +193,6 @@ class AccessToken
         $this->services[$service->getServiceType()] = $service;
     }
 
-    const Privileges = array(
-        "kJoinChannel" => 1,
-        "kPublishAudioStream" => 2,
-        "kPublishVideoStream" => 3,
-        "kPublishDataStream" => 4,
-        "kRtmLogin" => 1000,
-    );
-
-    public $appID, $appCertificate, $channelName, $uid;
-    public $message;
-
-//    function __construct()
-//    {
-//        $this->message = new Message();
-//    }
-
-    function setUid($uid)
-    {
-        if ($uid === 0) {
-            $this->uid = "";
-        } else {
-            $this->uid = $uid . '';
-        }
-    }
-
-    function is_nonempty_string($name, $str)
-    {
-        if (is_string($str) && $str !== "") {
-            return true;
-        }
-        echo $name . " check failed, should be a non-empty string";
-        return false;
-    }
-
-    static function init($appID, $appCertificate, $channelName, $uid)
-    {
-        $accessToken = new AccessToken();
-
-        if (!$accessToken->is_nonempty_string("appID", $appID) ||
-            !$accessToken->is_nonempty_string("appCertificate", $appCertificate) ||
-            !$accessToken->is_nonempty_string("channelName", $channelName)) {
-            return null;
-        }
-
-        $accessToken->appID = $appID;
-        $accessToken->appCertificate = $appCertificate;
-        $accessToken->channelName = $channelName;
-
-        $accessToken->setUid($uid);
-        $accessToken->message = new Message();
-        return $accessToken;
-    }
-
-    static function initWithToken($token, $appCertificate, $channel, $uid)
-    {
-        $accessToken = new AccessToken();
-        if (!$accessToken->extract($token, $appCertificate, $channel, $uid)) {
-            return null;
-        }
-        return $accessToken;
-    }
-
-    function addPrivilege($key, $expireTimestamp)
-    {
-        $this->message->privileges[$key] = $expireTimestamp;
-        return $this;
-    }
-
-    function extract($token, $appCertificate, $channelName, $uid)
-    {
-        $ver_len = 3;
-        $appid_len = 32;
-        $version = substr($token, 0, $ver_len);
-        if ($version !== "006") {
-            echo 'invalid version ' . $version;
-            return false;
-        }
-
-        if (!$this->is_nonempty_string("token", $token) ||
-            !$this->is_nonempty_string("appCertificate", $appCertificate) ||
-            !$this->is_nonempty_string("channelName", $channelName)) {
-            return false;
-        }
-
-        $appid = substr($token, $ver_len, $appid_len);
-        $content = (base64_decode(substr($token, $ver_len + $appid_len, strlen($token) - ($ver_len + $appid_len))));
-
-        $pos = 0;
-        $len = unpack("v", $content . substr($pos, 2))[1];
-        $pos += 2;
-        $sig = substr($content, $pos, $len);
-        $pos += $len;
-        $crc_channel = unpack("V", substr($content, $pos, 4))[1];
-        $pos += 4;
-        $crc_uid = unpack("V", substr($content, $pos, 4))[1];
-        $pos += 4;
-        $msgLen = unpack("v", substr($content, $pos, 2))[1];
-        $pos += 2;
-        $msg = substr($content, $pos, $msgLen);
-
-        $this->appID = $appid;
-        $message = new Message();
-        $message->unpackContent($msg);
-        $this->message = $message;
-
-        //non reversable values
-        $this->appCertificate = $appCertificate;
-        $this->channelName = $channelName;
-        $this->setUid($uid);
-        return true;
-    }
-
     public function build()
     {
         if (!self::isUUid($this->appId) || !self::isUUid($this->appCert)) {
@@ -208,9 +212,139 @@ class AccessToken
 
         return self::getVersion() . base64_encode(zlib_encode(Util::packString($signature) . $data, ZLIB_ENCODING_DEFLATE));
     }
+
+    public function getSign()
+    {
+        $hh = hash_hmac("sha256", $this->appCert, Util::packUint32($this->issueTs), true);
+        return hash_hmac("sha256", $hh, Util::packUint32($this->salt), true);
+    }
+
+    public static function getVersion()
+    {
+        return self::VERSION;
+    }
+
+    public static function isUUid($str)
+    {
+        if (strlen($str) != 32) {
+            return false;
+        }
+        return ctype_xdigit($str);
+    }
+
+    public function parse($token)
+    {
+        if (substr($token, 0, self::VERSION_LENGTH) != self::getVersion()) {
+            return false;
+        }
+
+        $data = zlib_decode(base64_decode(substr($token, self::VERSION_LENGTH)));
+        $signature = Util::unpackString($data);
+        $this->appId = Util::unpackString($data);
+        $this->issueTs = Util::unpackUint32($data);
+        $this->expire = Util::unpackUint32($data);
+        $this->salt = Util::unpackUint32($data);
+        $serviceNum = Util::unpackUint16($data);
+
+        $servicesObj = [
+            ServiceRtc::SERVICE_TYPE => new ServiceRtc(),
+            ServiceRtm::SERVICE_TYPE => new ServiceRtm(),
+            ServiceFpa::SERVICE_TYPE => new ServiceFpa(),
+            ServiceChat::SERVICE_TYPE => new ServiceChat(),
+            ServiceEducation::SERVICE_TYPE => new ServiceEducation(),
+        ];
+        for ($i = 0; $i < $serviceNum; $i++) {
+            $serviceTye = Util::unpackUint16($data);
+            $service = $servicesObj[$serviceTye];
+            if ($service == null) {
+                return false;
+            }
+            $service->unpack($data);
+            $this->services[$serviceTye] = $service;
+        }
+        return true;
+    }
 }
 
-function packString($value)
+class Util
 {
-    return pack("v", strlen($value)) . $value;
+    public static function assertEqual($expected, $actual)
+    {
+        $debug = debug_backtrace();
+        $info = "\n- File:" . basename($debug[1]["file"]) . ", Func:" . $debug[1]["function"] . ", Line:" . $debug[1]["line"];
+        if ($expected != $actual) {
+            echo $info . "\n  Assert failed" . "\n    Expected :" . $expected . "\n    Actual   :" . $actual;
+        } else {
+            echo $info . "\n  Assert ok";
+        }
+    }
+
+    public static function packUint16($x)
+    {
+        return pack("v", $x);
+    }
+
+    public static function unpackUint16(&$data)
+    {
+        $up = unpack("v", substr($data, 0, 2));
+        $data = substr($data, 2);
+        return $up[1];
+    }
+
+    public static function packUint32($x)
+    {
+        return pack("V", $x);
+    }
+
+    public static function unpackUint32(&$data)
+    {
+        $up = unpack("V", substr($data, 0, 4));
+        $data = substr($data, 4);
+        return $up[1];
+    }
+
+    public static function packInt16($x)
+    {
+        return pack("s", $x);
+    }
+
+    public static function unpackInt16(&$data)
+    {
+        $up = unpack("s", substr($data, 0, 2));
+        $data = substr($data, 2);
+        return $up[1];
+    }
+
+    public static function packString($str)
+    {
+        return self::packUint16(strlen($str)) . $str;
+    }
+
+    public static function unpackString(&$data)
+    {
+        $len = self::unpackUint16($data);
+        $up = unpack("C*", substr($data, 0, $len));
+        $data = substr($data, $len);
+        return implode(array_map("chr", $up));
+    }
+
+    public static function packMapUint32($arr)
+    {
+        ksort($arr);
+        $kv = "";
+        foreach ($arr as $key => $val) {
+            $kv .= self::packUint16($key) . self::packUint32($val);
+        }
+        return self::packUint16(count($arr)) . $kv;
+    }
+
+    public static function unpackMapUint32(&$data)
+    {
+        $len = self::unpackUint16($data);
+        $arr = [];
+        for ($i = 0; $i < $len; $i++) {
+            $arr[self::unpackUint16($data)] = self::unpackUint32($data);
+        }
+        return $arr;
+    }
 }

@@ -92,13 +92,13 @@ class UserRepository implements UserRepositoryInterface
                     $user->update();
                     // Create Room
                     $userr = auth()->id();
-//                    $room = Room::where('user_1', $userr)->first();
-//                    if ($room == null) {
-//                        $room = new Room();
-////                        $room->user_id = auth()->id();
-//                        $room->save();
-//                        event(new NewRoom($room));
-//                    }
+                    $room = Room::where('user_1', $userr)->first();
+                    if ($room == null) {
+                        $room = new Room();
+                        $room->user_id = auth()->id();
+                        $room->save();
+                        event(new NewRoom($room));
+                    }
                     return response()->json([
                         'success' => true,
                         'message' => 'User successfully logged in.',
