@@ -7,8 +7,6 @@ use Carbon\Carbon;
 use Modules\Chat\Entities\Message;
 use Modules\Chat\Entities\MessageUser;
 use Modules\Chat\Entities\Room;
-use Modules\Chat\Events\MessageToAdmin;
-use Modules\Chat\Events\MessageToUser;
 use Modules\Chat\Events\NewMessage;
 use Modules\Chat\Events\NewRoom;
 use Modules\Chat\Http\Controllers\MessageResponseTrait;
@@ -65,13 +63,14 @@ class MessageRepository implements MessageInterface
             $message->room_id = $roomss;
         }
         $message->message = $request->message;
-        // if ($request->message == !null) {
-        //     $message->type_message = 'text';
-        // } elseif ($request->photo == !null || $request->photo == 'mimes:jpeg,jpg,png,gif') {
-        //     $message->type_message = 'image';
-        // } else {
-        //     $message->type_message = 'audio';
-        // }
+
+//        if ($request->message == !null) {
+//            $message->type_message = 'text';
+//        }elseif ($request->photo == !null ||  $request->photo == 'mimes:jpeg,jpg,png,gif'){
+//            $message->type_message = 'image';
+//        }else{
+//            $message->type_message = 'audio';
+//        }
         if ($request->photo == !null) {
             $message->addMedia($image)->toMediaCollection('messages');
         }
