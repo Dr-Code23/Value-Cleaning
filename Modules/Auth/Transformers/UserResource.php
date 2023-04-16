@@ -24,13 +24,13 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'address' => json_decode($this->address) ?? [],
+            'phone' => $this->phone,
+            'NiN' => $this->NIN ?? 0,
             'photo' => $this->getFirstMediaUrl('avatar'),
             'avatar' => $this->providers,
-            'count' => User::count(),
-            'type' => $this->type,
+            'type' => $this->type ?? '',
             'companyId' => $this->companyId ?? 0,
             'permission' => $this->getPermissionsViaRoles() ?? []
-
 
 
         ];

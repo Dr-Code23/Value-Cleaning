@@ -27,7 +27,7 @@ class HomeController extends Controller
         $categories = Category::latest()->get();
         $announcement = Announcement::latest()->get();
         $notification = SendNotification::where('is_read', false)->count();
-        return response()->json(['notification' => $notification ?? 0, "announcement" => AnnouncementResource::collection($announcement), "Service" => SubServiceResource::collection($Service), "categories" => CategoryResource::collection($categories)]);
+        return response()->json(['notification' => $notification ?? 0, "announcement" => AnnouncementResource::collection($announcement), "Service" => ServiceResource::collection($Service), "categories" => CategoryResource::collection($categories)]);
 
     }
 

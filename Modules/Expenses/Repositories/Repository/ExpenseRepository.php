@@ -52,7 +52,7 @@ class ExpenseRepository implements ExpenseInterface
 
     public function getExpense()
     {
-        return $expenses = Expense::all();
+        return $expenses = Expense::with('type')->get();
     }
 
     public function search($request)

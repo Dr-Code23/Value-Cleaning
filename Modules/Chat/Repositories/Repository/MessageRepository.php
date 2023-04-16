@@ -74,6 +74,9 @@ class MessageRepository implements MessageInterface
         if ($request->photo == !null) {
             $message->addMedia($image)->toMediaCollection('messages');
         }
+        if ($request->audio == !null) {
+            $message->addMedia('audio')->toMediaCollection('messages');
+        }
         $message->save();
         event(new NewMessage($message));
 
