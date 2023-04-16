@@ -59,8 +59,11 @@ class HomeController extends Controller
     }
 
 
-    public function topServices()
+    public function topServices(Request $request)
     {
+        if ($request->category_id) {
+            $services = Service::query()->where(['category_id' => $request->category_id])->get();
+        }
         $skus = Order::selectRaw('COUNT(*)')
             ->whereColumn('service_id', 'services.id')
             ->getQuery();

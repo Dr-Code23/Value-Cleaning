@@ -11,6 +11,7 @@ use Modules\Chat\Events\NewMessage;
 use Modules\Chat\Events\NewRoom;
 use Modules\Chat\Http\Controllers\MessageResponseTrait;
 use Modules\Chat\Repositories\Interfaces\MessageInterface;
+use Modules\Chat\Transformers\MessageResource;
 
 
 class MessageRepository implements MessageInterface
@@ -82,14 +83,14 @@ class MessageRepository implements MessageInterface
 
         if ($user->type == 'user') {
             $data = [
-                'message' => $message,
-                'photo' => $message->getFirstMediaUrl('messages'),
+                'message' => new MessageResource($message),
+
                 'Auth' => 'User',
             ];
             return $data;
         } else {
             $data = [
-                'message' => $message,
+                'message' => new MessageResource($message),
                 'Auth' => 'Admin',
             ];
         }

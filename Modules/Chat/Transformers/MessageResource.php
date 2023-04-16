@@ -11,11 +11,12 @@ class MessageResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' =>  $this->id,
-            'messages'   => $this->messages,
+            'id' => $this->id,
+            'message' => $this->message,
             'sender_id' => auth()->id(),
-            "room_id"=> $this->room_id,
-            'gallery'  => $this->getFirstMediaUrl('attachments'),
+            "room_id" => $this->room_id,
+            'audio' => $this->getFirstMediaUrl('audio'),
+            'photo' => $this->getFirstMediaUrl('messages'),
         ];
     }
 }
