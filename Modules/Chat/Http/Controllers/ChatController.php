@@ -5,11 +5,9 @@ namespace Modules\Chat\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
-use Modules\Chat\Events\MakeAgoraCall;
-use Modules\Chat\Http\Requests\MessageRequest;
 use Modules\Chat\Repositories\Interfaces\MessageInterface;
-use Modules\Class\AgoraDynamicKey\RtcTokenBuilder;
+use Modules\Chat\Transformers\MessageResource;
+
 
 class ChatController extends Controller
 {
@@ -89,12 +87,12 @@ class ChatController extends Controller
     public function checkRoom()
     {
         $message = $this->message->checkUser();
-        return $this->messageResponse($message, 'found', 200);
+        return $this->messageResponse(MessageResource::collection($message), 'found', 200);
     }
 
-    public function latestMessage(Request $request)
+    public function latestMessage()
     {
-        $message = $this->message->latest($request);
+        $message = $this->message->latest();
         return $this->messageResponse($message, 'all', 200);
     }
 

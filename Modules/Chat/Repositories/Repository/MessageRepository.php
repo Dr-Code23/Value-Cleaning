@@ -7,12 +7,14 @@ use Carbon\Carbon;
 use Modules\Chat\Entities\Message;
 use Modules\Chat\Entities\MessageUser;
 use Modules\Chat\Entities\Room;
+use Modules\Chat\Events\MessageToAdmin;
+use Modules\Chat\Events\MessageToUser;
 use Modules\Chat\Events\NewMessage;
 use Modules\Chat\Events\NewRoom;
 use Modules\Chat\Http\Controllers\MessageResponseTrait;
 use Modules\Chat\Repositories\Interfaces\MessageInterface;
 use Modules\Chat\Transformers\MessageResource;
-
+use Auth;
 
 class MessageRepository implements MessageInterface
 {
@@ -27,11 +29,19 @@ class MessageRepository implements MessageInterface
         if ($users == true) {
             return $rooms = Room::all();
         } elseif ($userss == true) {
-            return $rooms = Message::whereHas('room', function ($q) {
+            $rooms = Message::whereHas('room', function ($q) {
                 $q->where('user_id', auth()->id());
             })->with('media')->get();
+            if ($rooms != null) {
 
+                foreach ($rooms as $roomss) {
+                    $roomss->seen_at = Carbon::now();
+                    $roomss->save();
+                }
+
+            }
         }
+        return $rooms;
     }
 
     public function getRoomUser()
@@ -39,9 +49,11 @@ class MessageRepository implements MessageInterface
         $rooms = Message::whereHas('room', function ($q) {
             $q->where('user_id', auth()->id());
         })->with('media')->get();
+
+
 //        $user = auth()->id();
 //        $rooms = Room::with('message','media')->where('user_id', auth()->id());
-        return $rooms;
+        return MessageResource::collection($rooms);
         //    return  $room = Room::with('message')->where('user_id', $user)->first();
     }
 
@@ -64,19 +76,18 @@ class MessageRepository implements MessageInterface
             $message->room_id = $roomss;
         }
         $message->message = $request->message;
-
-//        if ($request->message == !null) {
-//            $message->type_message = 'text';
-//        }elseif ($request->photo == !null ||  $request->photo == 'mimes:jpeg,jpg,png,gif'){
-//            $message->type_message = 'image';
-//        }else{
-//            $message->type_message = 'audio';
-//        }
+        // if ($request->message == !null) {
+        //     $message->type_message = 'text';
+        // } elseif ($request->photo == !null || $request->photo == 'mimes:jpeg,jpg,png,gif') {
+        //     $message->type_message = 'image';
+        // } else {
+        //     $message->type_message = 'audio';
+        // }
         if ($request->photo == !null) {
             $message->addMedia($image)->toMediaCollection('messages');
         }
         if ($request->audio == !null) {
-            $message->addMedia('audio')->toMediaCollection('messages');
+            $message->addMedia($request->audio)->toMediaCollection('audio');
         }
         $message->save();
         event(new NewMessage($message));
@@ -84,6 +95,7 @@ class MessageRepository implements MessageInterface
         if ($user->type == 'user') {
             $data = [
                 'message' => new MessageResource($message),
+
 
                 'Auth' => 'User',
             ];
@@ -107,10 +119,13 @@ class MessageRepository implements MessageInterface
     }
 
     // latest Message
-    public function latest($request)
+    public function latest()
     {
-        $latest = Message::where(['room_id' => $request->id])->first();
-        $unread = Message::where('room_id', $request->id)->where('seen_at', 0)->count();
+
+        $rooms = Room::where('user_id', auth()->id())->first();
+
+        $latest = Message::where('room_id', $rooms->id)->latest()->first();
+        $unread = Message::where('room_id', $rooms->id)->where('seen_at', 0)->count();
         $data = [
             'latest' => $latest,
             'unread' => $unread,

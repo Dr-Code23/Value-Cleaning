@@ -16,8 +16,11 @@ interface MessageInterface
     // get Room User
     public function getRoomUser();
 
-     // check user or admin
-    public  function checkUser();
+    // check user or admin
+    public function checkUser();
+
+    public function latest();
+
 }
 
 
