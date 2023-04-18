@@ -23,7 +23,7 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
      */
     private $orderModel;
     private Service $serviceModel;
-    private Category $categoryMpdel;
+    private Category $categoryModel;
     private SubService $subServiceModel;
     private User $userModel;
     private Worker $workerModel;
@@ -36,7 +36,7 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     {
         $this->orderModel = $order;
         $this->serviceModel = $service;
-        $this->categoryMpdel = $category;
+        $this->categoryModel = $category;
         $this->subServiceModel = $subService;
         $this->userModel = $user;
         $this->workerModel = $worker;
@@ -166,7 +166,7 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     {
         $service = $this->serviceModel->query()->count();
 
-        $category = $this->categoryMpdel->query()->count();
+        $category = $this->categoryModel->query()->count();
 
         $subService = $this->subServiceModel->query()->count();
 
