@@ -63,13 +63,14 @@ class HomeController extends Controller
     {
         if ($request->category_id) {
             $services = Service::query()->where(['category_id' => $request->category_id])->get();
+        } else {
+            $skus = Order::selectRaw('COUNT(*)')
+                ->whereColumn('service_id', 'services.id')
+                ->getQuery();
+            $services = Service::select('*')
+                ->selectSub($skus, 'skus_count')
+                ->orderBy('skus_count', 'DESC')->get();
         }
-        $skus = Order::selectRaw('COUNT(*)')
-            ->whereColumn('service_id', 'services.id')
-            ->getQuery();
-        $services = Service::select('*')
-            ->selectSub($skus, 'skus_count')
-            ->orderBy('skus_count', 'DESC')->get();
         return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services)];
 
     }
