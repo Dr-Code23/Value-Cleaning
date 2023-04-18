@@ -76,10 +76,13 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     /**
      * @return array
      */
-    public function index(): array
+    public function index($data): array
     {
-        $order = $this->orderModel->latest()->get();
-
+        if ($data->status) {
+            $order = $this->orderModel->query()->where(['status' => $data->status])->latest()->get();
+        } else {
+            $order = $this->orderModel->latest()->get();
+        }
         return ['statusCode' => 200, 'status' => true,
             'data' => OrderAdminIndexResource::collection($order)
         ];

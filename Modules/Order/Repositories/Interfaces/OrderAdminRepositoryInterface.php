@@ -5,7 +5,7 @@ namespace Modules\Order\Repositories\Interfaces;
 interface OrderAdminRepositoryInterface
 {
 
-    public function index();
+    public function index($data);
 
     public function canceledOrder();
 

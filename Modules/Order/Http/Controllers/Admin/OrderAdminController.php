@@ -22,9 +22,9 @@ class OrderAdminController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->OrderAdminRepository->index();
+        return $this->OrderAdminRepository->index($request);
     }
 
     public function canceledOrder()
