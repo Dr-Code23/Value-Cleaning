@@ -80,9 +80,9 @@ class CompanyController extends Controller
 
     }
 
-    public function allCompanies()
+    public function allCompanies(Request $request)
     {
-        return $this->userRepository->allCompanies();
+        return $this->userRepository->allCompanies($request);
     }
 
     public function showCompany($id)

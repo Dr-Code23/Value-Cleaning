@@ -30,7 +30,7 @@ interface UserRepositoryInterface
 
     public function companyRegister($data);
 
-    public function allCompanies();
+    public function allCompanies($data);
 
     public function ShowCompany($id);
 

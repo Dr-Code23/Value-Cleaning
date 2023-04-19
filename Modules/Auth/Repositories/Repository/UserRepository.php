@@ -324,15 +324,23 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @return array
+     * @return JsonResponse
      */
-    public function allCompanies(): array
+    public function allCompanies($data): JsonResponse
     {
+        if ($data->q) {
+            $data = $this->userModel->where("email", "like", "%$$data->q%")
+                ->orwhere("name", "like", "%$$data->q%")->orderBy('id', 'DESC')->get();
+            return response()->json([
+                'success' => true,
+                'data' => CompanyResource::collection($data)
+            ], 201);
+        }
         $companies = $this->userModel->query()->where(['type' => 'company'])->latest()->get();
 
-        return ['statusCode' => 200, 'status' => true,
+        return response()->json(['statusCode' => 200, 'status' => true,
             'data' => CompanyResource::collection($companies)
-        ];
+        ]);
     }
 
     /**
