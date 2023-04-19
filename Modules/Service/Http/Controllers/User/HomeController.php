@@ -44,6 +44,7 @@ class HomeController extends Controller
 
     public function subService($id)
     {
+        
         $SubService = SubService::where('service_id', $id)->get();
         return ['statusCode' => 200,
             'status' => true,
@@ -52,10 +53,12 @@ class HomeController extends Controller
 
     public function requirement($id)
     {
+
         $requirement = Requirement::where('service_id', $id)->get();
         return ['statusCode' => 200,
             'status' => true,
             'data' => RequirementResource::collection($requirement)];
+
     }
 
 
