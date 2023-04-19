@@ -1,0 +1,11 @@
+{
+    "name": "Requirement",
+    "alias": "requirement",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Requirement\\Providers\\RequirementServiceProvider"
+    ],
+    "files": []
+}
