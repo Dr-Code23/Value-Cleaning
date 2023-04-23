@@ -1,6 +1,6 @@
 <p align="center">
 <h3> value clean </h3>
-<a href="https://travis-ci.org/laravel/framework"><img src="https://valuclean.co/favicon.ico" alt="Build Status"></a>
+<a href="https://valuclean.co/home"><img src="https://valuclean.co/favicon.ico" alt="Build Status"></a>
 
 </p>
 
