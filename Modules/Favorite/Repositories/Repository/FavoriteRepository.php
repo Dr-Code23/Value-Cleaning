@@ -24,7 +24,7 @@ class FavoriteRepository implements FavoriteRepositoryInterface
     public function index()
     {
 
-        $Favorite = $this->favoriteModel->with('services')->latest()->get();
+        $Favorite = $this->favoriteModel->where('user_id',Auth::id())->with('services')->latest()->get();
         return ['statusCode' => 200, 'status' => true,
             'data' => FavoriteResource::collection($Favorite)
         ];
@@ -79,7 +79,7 @@ class FavoriteRepository implements FavoriteRepositoryInterface
      */
     public function destroy($id)
     {
-        $favorite = $this->favoriteModel->where('service_id', $id)->delete();
+        $favorite = $this->favoriteModel->where(['service_id'=>$id,'user_id'=>Auth::id()])->delete();
         $msg = 'Deleted';
         return response()->json(['statusCode' => 200, 'status' => true, 'message' => $msg]);
     }

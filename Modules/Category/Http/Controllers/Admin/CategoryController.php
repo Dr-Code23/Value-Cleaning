@@ -87,15 +87,15 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
 
-        $category = $this->categoryModel->find($id)->first();
-        if($request['title_en'] || $request['title_sv']){
+        $category = $this->categoryModel->find($id);
+       
             $category->update([
                 'title' =>
                     [
                         'en' => $request['title_en'],
                         'sv' => $request['title_sv']
                     ]
-            ]);}
+            ]);
         if ($request->hasFile('gallery')) {
             $category->media()->delete();
             $category->addMediaFromRequest('gallery')->toMediaCollection('categories');

@@ -111,7 +111,7 @@ class AuthController extends Controller
         $userCreated->assignRole('user');
 
         $token = jwtAuth::fromUser($userCreated);
-        return response()->json(['statusCode' => 200, 'status' => true,
+        return response()->json(['statusCode' => 200, 'success' => true,
             'message' => ' success  ', 'data' => new UserResource($userCreated), 'token' => $token]);
     }
 

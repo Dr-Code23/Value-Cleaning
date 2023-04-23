@@ -44,7 +44,6 @@ class HomeController extends Controller
 
     public function subService($id)
     {
-        
         $SubService = SubService::where('service_id', $id)->get();
         return ['statusCode' => 200,
             'status' => true,
@@ -53,19 +52,31 @@ class HomeController extends Controller
 
     public function requirement($id)
     {
-
         $requirement = Requirement::where('service_id', $id)->get();
         return ['statusCode' => 200,
             'status' => true,
             'data' => RequirementResource::collection($requirement)];
-
     }
 
 
     public function topServices(Request $request)
     {
-        if ($request->category_id) {
-            $services = Service::query()->where(['category_id' => $request->category_id])->get();
+        if ($request->q) {
+        $services = Service::where("title", "like", "%$request->q%")
+            ->orderBy("id", "DESC")
+            ->get();
+            return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services)];
+
+             }
+        elseif ($request->category_id) {
+            $services = Service::query()
+    ->join('categories', 'services.category_id', '=', 'categories.id')
+    ->where('categories.title', "like" ,"%$request->category_id%")
+    ->select('services.*')
+    ->get();
+    
+            return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services)];
+
         } else {
             $skus = Order::selectRaw('COUNT(*)')
                 ->whereColumn('service_id', 'services.id')
@@ -73,8 +84,9 @@ class HomeController extends Controller
             $services = Service::select('*')
                 ->selectSub($skus, 'skus_count')
                 ->orderBy('skus_count', 'DESC')->get();
+                return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services)];
+
         }
-        return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services)];
 
     }
 

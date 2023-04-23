@@ -15,7 +15,8 @@ class MessageRequest extends FormRequest
     {
         return [
 
-            'message' => 'required',
+            'message' => '',
+            'audio' => ''
         ];
     }
 

@@ -96,8 +96,8 @@ class ServiceRepository implements ServiceRepositoryInterface
                 'en' => $data['description_en'],
                 'sv' => $data['description_sv']
             ],
-            "category_id" => $data['category_id'],
-            'price' => $data['price'],
+            "category_id" => $data['category_id'] ?? $service->category_id,
+            'price' => $data['price']?? $service->price,
         ]);
         if ($data->hasFile('gallery')) {
             $service->media()->delete();

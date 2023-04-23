@@ -36,7 +36,7 @@ Route::post('change/password', [RestePasswordController::class, 'forgotPassword'
 Route::post('forgot/check-code', [RestePasswordController::class, 'checkCode']);
 Route::post('reset/password', [RestePasswordController::class, 'reset']);
 Route::get('/auth/{provider}', [AuthController::class, 'redirectToProvider']);
-Route::get('/auth/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
+Route::post('/auth/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 
 /**
  * user

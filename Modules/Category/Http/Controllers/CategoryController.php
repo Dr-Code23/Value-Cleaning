@@ -89,7 +89,7 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
 
-        $category = $this->categoryModel->find($id)->first();
+        $category = $this->categoryModel->where('id',$id)->first();
         if ($request['title_en'] || $request['title_sv']) {
             $category->update([
                 'title' =>

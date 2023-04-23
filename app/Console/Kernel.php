@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command(CreateOrderCommand::class)->weeklyOn(3, '1:00 PM');
+        $schedule->command("media-library:clean")->daily();
     }
 
     /**

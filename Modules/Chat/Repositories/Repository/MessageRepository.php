@@ -45,6 +45,7 @@ class MessageRepository implements MessageInterface
     }
 
     public function getRoomUser()
+    
     {
         $rooms = Message::whereHas('room', function ($q) {
             $q->where('user_id', auth()->id());
@@ -86,8 +87,28 @@ class MessageRepository implements MessageInterface
         if ($request->photo == !null) {
             $message->addMedia($image)->toMediaCollection('messages');
         }
-        if ($request->audio == !null) {
-            $message->addMedia($request->audio)->toMediaCollection('audio');
+        
+        
+        if ($request->audio) {
+
+                        $message->addMedia($request->audio)->toMediaCollection('audio');
+        }
+
+        if ($request->audioo !== null && file_exists($request->audioo)) {
+            
+            $audio = $request->audioo . '.wav';
+            $fileName=rand() . "_" . time();
+            $dest_dir='storage/166';
+
+            if(!file_exists($dest_dir)) mkdir($dest_dir, 0777);
+           if(move_uploaded_file($_FILES['audioo']['tmp_name'], $dest_dir ."/". $fileName . ".wav"))
+           {
+
+            $url ="https://api.valuclean.co/".$dest_dir.'/'.$fileName.".wav";
+            $message->audio=$url;
+           }
+
+            // $message->addMedia($url)->toMediaCollection('audio');
         }
         $message->save();
         event(new NewMessage($message));
@@ -96,14 +117,15 @@ class MessageRepository implements MessageInterface
             $data = [
                 'message' => new MessageResource($message),
 
-
                 'Auth' => 'User',
+
             ];
             return $data;
         } else {
             $data = [
                 'message' => new MessageResource($message),
                 'Auth' => 'Admin',
+
             ];
         }
         return $data;
@@ -127,7 +149,7 @@ class MessageRepository implements MessageInterface
         $latest = Message::where('room_id', $rooms->id)->latest()->first();
         $unread = Message::where('room_id', $rooms->id)->where('seen_at', 0)->count();
         $data = [
-            'latest' => $latest,
+            'latest' => new MessageResource($latest),
             'unread' => $unread,
         ];
         return $data;
@@ -136,6 +158,8 @@ class MessageRepository implements MessageInterface
     public function allRoom()
     {
         $roomMessage = Room::with('message', 'users')->get();
+
+        
         return $roomMessage;
     }
 

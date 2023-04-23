@@ -15,7 +15,7 @@ class MessageResource extends JsonResource
             'message' => $this->message,
             'sender_id' => auth()->id(),
             "room_id" => $this->room_id,
-            'audio' => $this->getFirstMediaUrl('audio'),
+            'audio' => $this->audio ?? $this->getFirstMediaUrl('audio'),
             'photo' => $this->getFirstMediaUrl('messages'),
         ];
     }

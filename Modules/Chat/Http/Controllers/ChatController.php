@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Chat\Repositories\Interfaces\MessageInterface;
 use Modules\Chat\Transformers\MessageResource;
-
+use Modules\Chat\Http\Requests\MessageRequest;
 
 class ChatController extends Controller
 {
@@ -57,7 +57,7 @@ class ChatController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(MessageRequest $request)
     {
         $message = $this->message->sendMessage($request);
         if ($message) {

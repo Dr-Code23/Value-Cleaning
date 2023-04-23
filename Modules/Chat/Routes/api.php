@@ -18,7 +18,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('delete-soft', [ChatController::class, 'delete']);
     Route::post('room-messages', [ChatController::class, 'message']);
     Route::get('all-room-message', [ChatController::class, 'index']);
-    Route::post('latest-messages', [ChatController::class, 'latestMessage']);
+    Route::get('latest-messages', [ChatController::class, 'latestMessage']);
     Route::post('delete/{id}', [ChatController::class, 'destroy']);
     Route::post('/agora/call-user', [ChatController::class, 'callUser']);
     Route::post('/generate-token', [VideoCallController::class, 'generateToken']);
