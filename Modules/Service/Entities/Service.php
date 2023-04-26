@@ -17,9 +17,8 @@ class Service extends Model implements HasMedia
     use HasFactory,InteractsWithMedia,HasTranslations;
 
 
-    public $translatable = [ 'title',
-        'description',
-        ];
+    public $translatable = ['title', 'description', 'en', 'sv'];
+
     protected $guarded = [];
 
 

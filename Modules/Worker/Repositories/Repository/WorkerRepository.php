@@ -39,8 +39,22 @@ class WorkerRepository implements WorkerRepositoryInterface
     {
 
         //Request is valid, create new user
-        $worker =  $this->workerModel->create($data);
+       
+
+        $worker=$this->workerModel->create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'address' => $data['address'],
+            'latitude' => $data['latitude'] ?? 0,
+            'longitude' => $data['longitude'] ?? 0,
+            'phone' => $data['phone'],
+            'NIN' =>$data['NIN'],
+        ]);
+
+if (isset($data['photo'])) {
         $worker->addMediaFromRequest('photo')->toMediaCollection('workers');
+        $worker->save();
+    }
         $worker->save();
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Worker successfully created ',
@@ -71,8 +85,17 @@ class WorkerRepository implements WorkerRepositoryInterface
     {
 
         $worker =  $this->workerModel->find($id);
-        $worker->update($data->all());
-        if ($data->hasFile('photo')) {
+       
+        $worker->update([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'address' => $data['address'],
+            'latitude' => $data['latitude'] ?? 0,
+            'longitude' => $data['longitude'] ?? 0,
+            'phone' => $data['phone'],
+        ]);
+
+       if ($data['photo']) {
             $worker->media()->delete();
             $worker->addMediaFromRequest('photo')->toMediaCollection('workers');
             $worker->save();

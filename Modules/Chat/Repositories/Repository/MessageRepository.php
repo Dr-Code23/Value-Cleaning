@@ -14,6 +14,8 @@ use Modules\Chat\Events\NewRoom;
 use Modules\Chat\Http\Controllers\MessageResponseTrait;
 use Modules\Chat\Repositories\Interfaces\MessageInterface;
 use Modules\Chat\Transformers\MessageResource;
+use Modules\Chat\Transformers\RoomResource;
+
 use Auth;
 
 class MessageRepository implements MessageInterface
@@ -58,7 +60,22 @@ class MessageRepository implements MessageInterface
         //    return  $room = Room::with('message')->where('user_id', $user)->first();
     }
 
+    public function getRoomUserToAdmin($request)
+    
+    {
+        $rooms = Message::where('room_id', $request->room_id)->with('media')->get();
+        if ($rooms != null) {
 
+foreach ($rooms as $roomss) {
+    $roomss->seen_at = Carbon::now();
+    $roomss->save();
+}
+
+}
+            return MessageResource::collection($rooms);
+
+
+    }
     //  send Message
     public function sendMessage($request)
     {
@@ -77,15 +94,11 @@ class MessageRepository implements MessageInterface
             $message->room_id = $roomss;
         }
         $message->message = $request->message;
-        // if ($request->message == !null) {
-        //     $message->type_message = 'text';
-        // } elseif ($request->photo == !null || $request->photo == 'mimes:jpeg,jpg,png,gif') {
-        //     $message->type_message = 'image';
-        // } else {
-        //     $message->type_message = 'audio';
-        // }
-        if ($request->photo == !null) {
+       
+        if (isset($request->photo)) {
             $message->addMedia($image)->toMediaCollection('messages');
+            $message->save();
+
         }
         
         
@@ -94,9 +107,9 @@ class MessageRepository implements MessageInterface
                         $message->addMedia($request->audio)->toMediaCollection('audio');
         }
 
-        if ($request->audioo !== null && file_exists($request->audioo)) {
+        if ($request->audioo !== null) {
             
-            $audio = $request->audioo . '.wav';
+            $audioo = $request->audioo . '.wav';
             $fileName=rand() . "_" . time();
             $dest_dir='storage/166';
 
@@ -111,7 +124,7 @@ class MessageRepository implements MessageInterface
             // $message->addMedia($url)->toMediaCollection('audio');
         }
         $message->save();
-        event(new NewMessage($message));
+        event(new NewMessage(new MessageResource($message)));
 
         if ($user->type == 'user') {
             $data = [
@@ -157,10 +170,9 @@ class MessageRepository implements MessageInterface
 
     public function allRoom()
     {
-        $roomMessage = Room::with('message', 'users')->get();
-
+        $roomMessage = Room::with('users')->get();
+        return  RoomResource::collection($roomMessage);
         
-        return $roomMessage;
     }
 
 }

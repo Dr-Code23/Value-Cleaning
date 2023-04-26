@@ -11,6 +11,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('read/{id}', [ChatController::class, 'read']);
     Route::get('check-user-admin', [ChatController::class, 'checkRoom']);
     Route::get('get-room-user', [ChatController::class, 'getUser']);
+    Route::post('get-room-user-to-admin', [ChatController::class, 'getUserToAmind']);
     Route::post('store-message', [ChatController::class, 'store']);
     Route::post('message-admin', [ChatController::class, 'storeMessage']);
     Route::post('room', [ChatController::class, 'room']);

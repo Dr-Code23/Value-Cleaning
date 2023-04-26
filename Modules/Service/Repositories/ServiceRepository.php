@@ -48,13 +48,16 @@ class ServiceRepository implements ServiceRepositoryInterface
             "category_id" => $data['category_id'],
             'price' => $data['price'],
         ]);
+        if($data['gallery']){
         $service->addMediaFromRequest('gallery')->toMediaCollection('services');
         $service->save();
-
+        }
+        $service->save();
+        if($data['worker_id']){
         $workerIds = explode(',', $data['worker_id']);
 
         $service->workers()->sync($workerIds);
-
+        }
         return ['statusCode' => 200, 'status' => true, 'data' => $service];
     }
 
@@ -85,16 +88,16 @@ class ServiceRepository implements ServiceRepositoryInterface
     public function updateService($data, $id)
     {
         $service = $this->serviceModel->where('id', $id)->first();
-
+ $services = json_decode($service) ;
         //sending the model data to the frontend
         $service->update([
             'title' => [
-                'en' => $data['title_en'],
-                'sv' => $data['title_sv']
+                'en' => $data['title_en'] ?? $services->title->en,
+                'sv' => $data['title_sv'] ??  $services->title->sv
             ],
             'description' => [
-                'en' => $data['description_en'],
-                'sv' => $data['description_sv']
+                'en' => $data['description_en'] ?? $services->description->en,
+                'sv' => $data['description_sv'] ?? $services->description->sv
             ],
             "category_id" => $data['category_id'] ?? $service->category_id,
             'price' => $data['price']?? $service->price,

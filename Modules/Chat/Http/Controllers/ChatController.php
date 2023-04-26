@@ -56,6 +56,11 @@ class ChatController extends Controller
         return $message = $this->message->getRoomUser();
     }
 
+    public function getUserToAmind(Request $request)
+    {
+        return $message = $this->message->getRoomUserToAdmin($request);
+        
+    }
 
     public function store(MessageRequest $request)
     {

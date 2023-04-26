@@ -20,9 +20,16 @@ class CategoryController extends Controller
      * Display a listing of the resource.
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->q) {
+            $data = $this->categoryModel->where("title", "like", "%$request->q%")
+                ->orderBy('id', 'DESC')->get();
+
+                return CategoryResource::collection($data);
+            }
         $Categories = $this->categoryModel->latest()->get();
+
         return CategoryResource::collection($Categories);
 
     }
@@ -88,12 +95,12 @@ class CategoryController extends Controller
     {
 
         $category = $this->categoryModel->find($id);
-       
+        $categories = json_decode($category) ;
             $category->update([
                 'title' =>
                     [
-                        'en' => $request['title_en'],
-                        'sv' => $request['title_sv']
+                        'en' => $request['title_en'] ?? $categories->title->en,
+                        'sv' => $request['title_sv'] ?? $categories->title->sv
                     ]
             ]);
         if ($request->hasFile('gallery')) {
@@ -104,7 +111,7 @@ class CategoryController extends Controller
 
         return ['statusCode' => 200, 'status' => true,
             'message' => 'Category updated successfully ',
-            'data' => new CategoryResource($category)
+            'data' => $category
         ];
 
     }

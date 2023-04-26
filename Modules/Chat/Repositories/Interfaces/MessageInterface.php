@@ -17,6 +17,8 @@ interface MessageInterface
     public function getRoomUser();
 
     // check user or admin
+    public function getRoomUserToAdmin($request);
+
     public function checkUser();
 
     public function latest();

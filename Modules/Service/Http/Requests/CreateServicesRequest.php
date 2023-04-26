@@ -18,11 +18,11 @@ class CreateServicesRequest extends FormRequest
             'description_en' => 'required|string',
             'title_sv' => 'required|string|max:255',
             'description_sv' => 'required|string',
-            'price' => 'required|numeric',
+            'price' => 'required|integer|min:0',
             'gallery.*' => ['image','mimes:jpg,png,jpeg,webp','max:2048'],
             "category_id"=> 'required',
             "offer_id"=>'max:2048',
-            "worker_id"=>'required',
+            "worker_id"=>'',
         ];
     }
 

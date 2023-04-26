@@ -83,7 +83,7 @@ class WorkerController extends Controller
     public function update(UpdateRequest $request, $id)
     {
 
-        return $this->WorkerRepository->update($request, $id);
+        return $this->WorkerRepository->update($request->all(), $id);
 
     }
 

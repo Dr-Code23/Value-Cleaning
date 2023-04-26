@@ -44,7 +44,7 @@ class UserRepository implements UserRepositoryInterface
         ]);
         $usere = User::latest()->first()->id;
         $room = new Room();
-        $room->user_id = $usere;
+        $room['user_id'] = $user->id;
         $room->save();
         event(new NewRoom($room));
         $user->assignRole('user');

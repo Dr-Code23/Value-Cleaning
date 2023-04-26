@@ -65,7 +65,7 @@ class SubServiceController extends Controller
         $SubService = $this->subserviceModel->findOrFail($id);
         return ['statusCode' => 200,
             'status' => true,
-            'data' => new SubServiceResource($SubService)];
+            'data' => $SubService];
     }
 
     public function showWith($id)
@@ -85,13 +85,14 @@ class SubServiceController extends Controller
     public function update(UpdateSubServiceRequest $request, $id)
     {
         $SubService = $this->subserviceModel->where('id', $id)->first();
+        $SubServices = json_decode($SubService) ;
         $SubService->update([
             'title' => [
-                'en' => $request['title_en'],
-                'sv' => $request['title_sv'],
+                'en' => $request['title_en'] ?? $SubServices->title->en,
+                'sv' => $request['title_sv'] ?? $SubServices->title->sv,
             ],
-            'price' => $request['price'],
-            'service_id' => $request['service_id']
+            'price' => $request['price'] ?? $SubService->price,
+            'service_id' => $request['service_id'] ?? $SubService->service_id
         ]);
         return ['statusCode' => 200,
             'status' => true,
