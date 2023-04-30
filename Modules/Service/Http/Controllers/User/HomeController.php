@@ -13,8 +13,10 @@ use Modules\Order\Entities\Order;
 use Modules\Requirement\Entities\Requirement;
 use Modules\Requirement\Transformers\RequirementResource;
 use Modules\Review\Entities\Review;
+use Modules\Service\Entities\Portfolio;
 use Modules\Service\Entities\Service;
 use Modules\Service\Entities\SubService;
+use Modules\Service\Transformers\PortfolioResource;
 use Modules\Service\Transformers\ServiceResource;
 use Modules\Service\Transformers\SubServiceResource;
 
@@ -26,8 +28,9 @@ class HomeController extends Controller
         $Service = Service::where('active', 1)->get();
         $categories = Category::latest()->get();
         $announcement = Announcement::latest()->get();
+        $portfolios = Portfolio::all();
         $notification = SendNotification::where('is_read', false)->count();
-        return response()->json(['notification' => $notification ?? 0, "announcement" => AnnouncementResource::collection($announcement), "Service" => ServiceResource::collection($Service), "categories" => CategoryResource::collection($categories)]);
+        return response()->json(['notification' => $notification ?? 0, 'portfolio' => PortfolioResource::collection($portfolios), "announcement" => AnnouncementResource::collection($announcement), "Service" => ServiceResource::collection($Service), "categories" => CategoryResource::collection($categories)]);
 
     }
 
@@ -62,19 +65,18 @@ class HomeController extends Controller
     public function topServices(Request $request)
     {
         if ($request->q) {
-        $services = Service::where("title", "like", "%$request->q%")
-            ->orderBy("id", "DESC")
-            ->get();
+            $services = Service::where("title", "like", "%$request->q%")
+                ->orderBy("id", "DESC")
+                ->get();
             return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services)];
 
-             }
-        elseif ($request->category_id) {
+        } elseif ($request->category_id) {
             $services = Service::query()
-    ->join('categories', 'services.category_id', '=', 'categories.id')
-    ->where('categories.title', "like" ,"%$request->category_id%")
-    ->select('services.*')
-    ->get();
-    
+                ->join('categories', 'services.category_id', '=', 'categories.id')
+                ->where('categories.title', "like", "%$request->category_id%")
+                ->select('services.*')
+                ->get();
+
             return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services)];
 
         } else {
@@ -84,7 +86,7 @@ class HomeController extends Controller
             $services = Service::select('*')
                 ->selectSub($skus, 'skus_count')
                 ->orderBy('skus_count', 'DESC')->get();
-                return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services)];
+            return ['statusCode' => 200, 'status' => true, 'data' => ServiceResource::collection($services)];
 
         }
 
@@ -96,4 +98,9 @@ class HomeController extends Controller
         return ['statusCode' => 200, 'status' => true, 'job_done' => $job_done];
     }
 
+    public function portfolio()
+    {
+        $portfolios = Portfolio::all();
+        return PortfolioResource::collection($portfolios);
+    }
 }

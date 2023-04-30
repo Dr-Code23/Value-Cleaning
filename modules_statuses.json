@@ -10,5 +10,6 @@
     "Announcement": true,
     "Chat": true,
     "Requirement": true,
-    "Expenses": true
+    "Expenses": true,
+    "Controller": true
 }

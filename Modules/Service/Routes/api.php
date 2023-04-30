@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Service\Http\Controllers\Admin\ServiceController;
 use Modules\Service\Http\Controllers\Admin\SubServiceController;
 use Modules\Service\Http\Controllers\User\HomeController;
+use Modules\Service\Http\Controllers\User\PortfolioController;
 
 
 /*
@@ -33,7 +34,11 @@ Route::middleware(['user_api', 'setlocale'])->prefix("admin")->group(function ()
     Route::post('create/SubService', [SubServiceController::class, 'store']);
     Route::post('update/SubService/{id}', [SubServiceController::class, 'update']);
     Route::delete('delete/SubService/{id}', [SubServiceController::class, 'destroy']);
-
+    Route::get('portfolios', [PortfolioController::class, 'index']);
+    Route::post('portfolios', [PortfolioController::class, 'store']);
+    Route::get('portfolios/{id}', [PortfolioController::class, 'show']);
+    Route::post('portfolios/{id}', [PortfolioController::class, 'update']);
+    Route::delete('portfolios/{id}', [PortfolioController::class, 'destroy']);
 
 });
 Route::middleware(['user_api', 'setlocale'])->group(function () {
@@ -45,6 +50,7 @@ Route::middleware(['user_api', 'setlocale'])->group(function () {
     Route::get('top-services', [HomeController::class, 'topServices']);
     Route::get('userHome', [HomeController::class, 'userHome']);
     Route::get('requirement/with/requirement/{id}', [HomeController::class, 'requirement']);
+    Route::get('portfolios', [HomeController::class, 'portfolio']);
 
 
 });
