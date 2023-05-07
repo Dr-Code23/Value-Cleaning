@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller;
 use Modules\Announcement\Entities\Announcement;
 use Modules\Announcement\Transformers\AnnouncementResource;
 use Modules\Auth\Entities\SendNotification;
-use Modules\Category\Entities\Category;
+use Modules\Category\Entities\SubSubCategory;
 use Modules\Category\Transformers\CategoryResource;
 use Modules\Order\Entities\Order;
 use Modules\Requirement\Entities\Requirement;
@@ -26,7 +26,7 @@ class HomeController extends Controller
     public function userHome()
     {
         $Service = Service::where('active', 1)->get();
-        $categories = Category::latest()->get();
+        $categories = SubSubCategory::latest()->get();
         $announcement = Announcement::latest()->get();
         $portfolios = Portfolio::all();
         $notification = SendNotification::where('is_read', false)->count();

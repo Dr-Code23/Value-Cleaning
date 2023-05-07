@@ -1,6 +1,8 @@
 {
     "Service": true,
     "Category": true,
+    "SubCategory": true,
+    "SubSubCategory": true,
     "Auth": true,
     "Offer": true,
     "Worker": true,

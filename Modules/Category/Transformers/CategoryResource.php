@@ -3,6 +3,7 @@
 namespace Modules\Category\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\SubCategory\Transformers\SubCategoryResource;
 
 class CategoryResource extends JsonResource
 {
@@ -17,6 +18,7 @@ class CategoryResource extends JsonResource
         return [
             'id'      =>  $this->id,
             'title'   => $this->title,
+            'subCategory' => new SubCategoryResource($this->subcategory),
             'images'  => $this->getFirstMediaUrl('categories'),
         ];    }
 }

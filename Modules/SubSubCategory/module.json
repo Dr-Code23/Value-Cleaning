@@ -1,0 +1,11 @@
+{
+    "name": "SubSubCategory",
+    "alias": "subsubcategory",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SubSubCategory\\Providers\\SubSubCategoryServiceProvider"
+    ],
+    "files": []
+}

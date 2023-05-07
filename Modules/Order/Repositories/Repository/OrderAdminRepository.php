@@ -6,7 +6,7 @@ namespace Modules\Order\Repositories\Repository;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Modules\Category\Entities\Category;
+use Modules\Category\Entities\SubSubCategory;
 use Modules\Order\Entities\Order;
 use Modules\Order\Repositories\Interfaces\OrderAdminRepositoryInterface;
 use Modules\Order\Transformers\OrderAdminIndexResource;
@@ -23,7 +23,7 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
      */
     private $orderModel;
     private Service $serviceModel;
-    private Category $categoryModel;
+    private SubSubCategory $categoryModel;
     private SubService $subServiceModel;
     private User $userModel;
     private Worker $workerModel;
@@ -32,7 +32,7 @@ class OrderAdminRepository implements OrderAdminRepositoryInterface
     /**
      * @param Order $order
      */
-    public function __construct(Order $order, Service $service, SubService $subService, Category $category, Worker $worker, User $user, Role $role)
+    public function __construct(Order $order, Service $service, SubService $subService, SubSubCategory $category, Worker $worker, User $user, Role $role)
     {
         $this->orderModel = $order;
         $this->serviceModel = $service;
