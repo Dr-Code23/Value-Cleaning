@@ -36,6 +36,8 @@ interface UserRepositoryInterface
 
     public function allCompaniesUnapproved();
 
+    public function registerClientCompany($data);
+
 
 }
 

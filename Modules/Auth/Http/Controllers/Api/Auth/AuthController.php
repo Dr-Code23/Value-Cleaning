@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Laravel\Socialite\Facades\Socialite;
+use Modules\Auth\Http\Requests\CreateCompanyRequest;
 use Modules\Auth\Http\Requests\CreateRequest;
 use Modules\Auth\Http\Requests\loginRequest;
 use Modules\Auth\Repositories\Interfaces\UserRepositoryInterface;
@@ -33,6 +34,16 @@ class AuthController extends Controller
 
     }
 
+    /**
+     * @param CreateRequest $request
+     * @return mixed
+     */
+    public function clientCompanyRegister(CreateRequest $request)
+    {
+
+        return $this->UserRepository->registerClientCompany($request);
+
+    }
 
     /**
      * @param loginRequest $request

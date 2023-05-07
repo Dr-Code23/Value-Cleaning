@@ -32,6 +32,7 @@ use Modules\Auth\Http\Controllers\Api\Auth\UserProfileController;
 
 Route::post('login', [AuthController::class, 'Login']);
 Route::post('register', [AuthController::class, 'register']);
+Route::post('client-company-register', [AuthController::class, 'clientCompanyRegister']);
 Route::post('change/password', [RestePasswordController::class, 'forgotPassword']);
 Route::post('forgot/check-code', [RestePasswordController::class, 'checkCode']);
 Route::post('reset/password', [RestePasswordController::class, 'reset']);

@@ -57,6 +57,34 @@ class UserRepository implements UserRepositoryInterface
 
     }
 
+    public function registerClientCompany($data)
+    {
+        $user = $this->userModel->create([
+            'name' => $data->name,
+            'email' => $data->email,
+            'address' => json_encode($data['address']),
+            'latitude' => $data->latitude,
+            'longitude' => $data->latitude,
+            'phone' => $data->phone,
+            'password' => hash::make($data->password),
+            'companyId' => $data->companyId,
+            'type' => 'client-company',
+
+        ]);
+        $usere = User::latest()->first()->id;
+        $room = new Room();
+        $room['user_id'] = $user->id;
+        $room->save();
+        event(new NewRoom($room));
+        Auth::login($user);
+
+        return ['statusCode' => 200, 'status' => true,
+            'message' => 'client-company successfully registered ',
+            'data' => new UserResource($user)
+        ];
+
+    }
+
     /**
      * @param $data
      * @return array|JsonResponse
@@ -87,13 +115,13 @@ class UserRepository implements UserRepositoryInterface
                         'data' => new CompanyResource($user),
                         'token' => $token
                     ]);
-                } elseif ($user->type == 'user') {
+                } elseif ($user->type == 'user' || $user->type == 'client-company') {
                     $user['device_token'] = $data->device_token;
                     $user->update();
 
                     return response()->json([
                         'success' => true,
-                        'message' => 'User successfully logged in.',
+                        'message' => $user->type . ' successfully logged in.',
                         'data' => new UserResource($user),
                         'token' => $token
                     ]);
